@@ -1,0 +1,169 @@
+if &shell =~# 'fish$'
+    set shell=sh
+endif
+
+" Space is my leader
+let mapleader="\<Space>"
+
+set nocompatible
+filetype off
+
+" ### Plugin config ###
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+"
+" Let Vundle manage Vundle
+Plugin 'gmarik/Vundle.vim'
+
+" Emacs keybindings
+Plugin 'maxbrunsfeld/vim-emacs-bindings'
+
+" Add bash-like command history
+Plugin 'suy/vim-ctrlp-commandline'
+command! CtrlPCommandLine call ctrlp#init(ctrlp#commandline#id())
+cnoremap <silent> <C-r> <C-c>:call ctrlp#init(ctrlp#commandline#id())<CR>
+
+" Surround
+Plugin 'tpope/vim-surround'
+
+Plugin 'dag/vim-fish'
+Plugin 'elzr/vim-json'
+
+" Expand region
+Plugin 'terryma/vim-expand-region'
+
+" Window swap
+Plugin 'wesQ3/vim-windowswap'
+
+" Control Space
+Plugin 'szw/vim-ctrlspace'
+if executable("ag") 
+  let g:ctrlspace_glob_command = 'ag -l --nocolor -g ""'
+endif
+set hidden
+
+" Easymotion 
+Plugin 'Lokaltog/vim-easymotion'
+let g:EasyMotion_smartcase=1
+nmap <Leader>j <Plug>(easymotion-s)
+
+" Nerd Commenter
+Plugin 'scrooloose/nerdcommenter'
+
+" Nerd Tree
+Plugin 'scrooloose/nerdtree'
+noremap <Leader>n :NERDTreeToggle<CR>
+
+" Vinegar
+Plugin 'tpope/vim-vinegar'
+
+" Airline
+Plugin 'bling/vim-airline'
+let g:airline_powerline_fonts = 1
+
+" Badwolf color scheme
+Plugin 'sjl/badwolf'
+
+" CtrlP
+Plugin 'kien/ctrlp.vim'
+Plugin 'FelikZ/ctrlp-py-matcher'
+let g:ctrlp_max_height = 15
+let g:ctrlp_jump_to_buffer = 2
+let g:ctrlp_lazy_update = 150
+let g:ctrlp_max_files = 0
+let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' -g ""'
+
+" Vim coffee-script
+Plugin 'kchmck/vim-coffee-script'
+autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
+
+" Vim Javascript
+Plugin 'pangloss/vim-javascript'
+
+" Vim Golang
+Plugin 'fatih/vim-go'
+
+call vundle#end()
+
+" ### General config ###
+" Basic things
+colorscheme badwolf
+
+filetype plugin indent on
+set history=1000
+set autoread
+set number
+set ruler
+set cursorline
+set so=7
+set wildmenu
+set wildmode=list:longest
+set wildignore=*.o,*~,*.pyc
+set backspace=eol,start,indent
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+set lazyredraw
+set magic
+set showmatch
+set mat=2
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+set list
+set listchars=tab:⋅›,trail:⋅,nbsp:⋅
+set encoding=utf8
+set ffs=unix,dos,mac
+set nobackup
+set nowb
+set noswapfile
+set expandtab
+set smarttab
+set shiftwidth=4
+set tabstop=4
+set lbr
+set tw=120
+set ai
+set si
+set wrap
+set laststatus=2
+set ttyfast
+set ttymouse=xterm2
+set mouse=a
+set clipboard=unnamed
+
+" Remove stuff from gvim
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
+
+" Colors
+syntax enable
+set t_Co=256
+
+" ### Key mappings ###
+noremap <Leader>bd :bd<CR>
+nmap <Leader>h :noh<CR>
+nmap <tab> <c-w>
+nmap <tab><tab> <c-w><c-w>
+
+" ### File config ###
+au FileType gitcommit set tw=72
+au FileType javascript setlocal ts=2 sw=2 expandtab
+au FileType go setlocal ts=4 sw=4 expandtab
+
+autocmd BufWrite *.py :call DeleteTrailingWS()
+autocmd BufWrite *.coffee :call DeleteTrailingWS()
+autocmd BufWrite *.java :call DeleteTrailingWS()
+
+" Delete trailing whitespaces on save
+func! DeleteTrailingWS()
+   exe "normal mz"
+   %s/\s\+$//ge
+   exe "normal `z"
+endfunc
+

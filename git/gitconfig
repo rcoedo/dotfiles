@@ -1,0 +1,39 @@
+[hub]
+protocol = https
+
+[user]
+name = Roman Coedo
+email = romancoedo@gmail.com
+
+[credential]
+helper = CREDENTIAL
+
+[alias]
+co = checkout
+
+[color]
+diff = auto
+status = auto
+branch = auto
+ui = true
+
+[core]
+editor = vim
+
+[help]
+autocorrect = 1
+
+[push]
+	default = simple
+
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+
+[mergetool "sourcetree"]
+	trustExitCode = true
+
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
