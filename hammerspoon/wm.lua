@@ -3,8 +3,8 @@ require "smartgrid"
 hs.window.animationDuration = 0
 hs.grid.MARGINX = 0
 hs.grid.MARGINY = 0
-hs.grid.GRIDWIDTH = 3
-hs.grid.GRIDHEIGHT = 3
+hs.grid.GRIDWIDTH = 2
+hs.grid.GRIDHEIGHT = 2
 
 local cmd = {"cmd"}
 local cmdalt = {"cmd", "alt"}
@@ -23,6 +23,9 @@ hs.hotkey.bind(cmdalt, "u", smartResizeWindowDown)
 hs.hotkey.bind(cmdalt, "i", smartResizeWindowUp)
 hs.hotkey.bind(cmdalt, "o", smartResizeWindowRight)
 hs.hotkey.bind(cmdalt, "y", smartResizeWindowLeft)
+
+hs.hotkey.bind(cmdalt, "[", decreaseGrid)
+hs.hotkey.bind(cmdalt, "]", increaseGrid)
 
 hs.hotkey.bind(cmdalt, "n", hs.grid.pushWindowNextScreen)
 hs.hotkey.bind(cmdalt, "p", hs.grid.pushWindowPreviousScreen)

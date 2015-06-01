@@ -1,81 +1,82 @@
-function gridOp(op, g, win)
+function gridOp(op, cell)
     if (op.x ~= null) then
-        g.x = g.x + op.x
+        cell.x = cell.x + op.x
     end
     if (op.y ~= null) then
-        g.y = g.y + op.y
+        cell.y = cell.y + op.y
     end
     if (op.w ~= null) then
-        g.w = g.w + op.w
+        cell.w = cell.w + op.w
     end
     if (op.h ~= null) then
-        g.h = g.h + op.h
+        cell.h = cell.h + op.h
     end
-    hs.grid.set(win, g, win:screen())
+    return cell
 end
 
-function expandToRight(g, w)  gridOp({w = 1},         g, w) end
-function expandToLeft(g, w)   gridOp({x = -1, w = 1}, g, w) end
-function expandToBottom(g, w) gridOp({h = 1},         g, w) end
-function expandToTop(g, w)    gridOp({y = -1, h = 1}, g, w) end
+function expandToRight(cell)  return gridOp({w = 1},         cell) end
+function expandToLeft(cell)   return gridOp({x = -1, w = 1}, cell) end
+function expandToBottom(cell) return gridOp({h = 1},         cell) end
+function expandToTop(cell)    return gridOp({y = -1, h = 1}, cell) end
 
-function shrinkToRight(g, w)  gridOp({x = 1, w = -1}, g, w) end
-function shrinkToLeft(g, w)   gridOp({w = -1},        g, w) end
-function shrinkToBottom(g, w) gridOp({y = 1, h = -1}, g, w) end
-function shrinkToTop(g, w)    gridOp({h = -1}       , g, w) end
+function shrinkToRight(cell)  return gridOp({x = 1, w = -1}, cell) end
+function shrinkToLeft(cell)   return gridOp({w = -1},        cell) end
+function shrinkToBottom(cell) return gridOp({y = 1, h = -1}, cell) end
+function shrinkToTop(cell)    return gridOp({h = -1}       , cell) end
 
-function smartResizeWindowRight()
-    local win = hs.window.focusedWindow()
-    local g = hs.grid.get(win)
-    if ((g.x + g.w >= hs.grid.GRIDWIDTH) and (g.w > 1)) then
-        shrinkToRight(g, win)
-    elseif ((g.x + g.w < hs.grid.GRIDWIDTH) and (g.w < hs.grid.GRIDWIDTH)) then
-        expandToRight(g, win)
+function smartResizeRight(cell)
+    if ((cell.x + cell.w >= hs.grid.GRIDWIDTH) and (cell.w > 1)) then
+        return shrinkToRight(cell)
+    elseif ((cell.x + cell.w < hs.grid.GRIDWIDTH) and (cell.w < hs.grid.GRIDWIDTH)) then
+        return expandToRight(cell)
     end
 end
 
-function smartResizeWindowLeft()
-    local win = hs.window.focusedWindow()
-    local g = hs.grid.get(win)
-    if (g.x + g.w >= hs.grid.GRIDWIDTH) then
-        if (g.x > 0) then
-            expandToLeft(g, win)
+function smartResizeLeft(cell)
+    if (cell.x + cell.w >= hs.grid.GRIDWIDTH) then
+        if (cell.x > 0) then
+            return expandToLeft(cell)
         else
-            shrinkToLeft(g, win)
+            return shrinkToLeft(cell)
         end
     else
-        if (g.w > 1) then
-            shrinkToLeft(g, win)
-        elseif (g.x > 0) then
-            expandToLeft(g, win)
+        if (cell.w > 1) then
+            return shrinkToLeft(cell)
+        elseif (cell.x > 0) then
+            return expandToLeft(cell)
         end
     end
 end
 
-function smartResizeWindowDown()
-    local win = hs.window.focusedWindow()
-    local g = hs.grid.get(win)
-    if ((g.y + g.h >= hs.grid.GRIDHEIGHT) and (g.h > 1)) then
-        shrinkToBottom(g, win)
-    elseif ((g.y + g.h < hs.grid.GRIDHEIGHT) and (g.h < hs.grid.GRIDHEIGHT)) then
-        expandToBottom(g, win)
+function smartResizeDown(cell)
+    if ((cell.y + cell.h >= hs.grid.GRIDHEIGHT) and (cell.h > 1)) then
+        return shrinkToBottom(cell)
+    elseif ((cell.y + cell.h < hs.grid.GRIDHEIGHT) and (cell.h < hs.grid.GRIDHEIGHT)) then
+        return expandToBottom(cell)
     end
 end
 
-function smartResizeWindowUp()
-    local win = hs.window.focusedWindow()
-    local g = hs.grid.get(win)
-    if (g.y + g.h >= hs.grid.GRIDHEIGHT) then
-        if (g.y > 0) then
-            expandToTop(g, win)
+function smartResizeUp(cell)
+    if (cell.y + cell.h >= hs.grid.GRIDHEIGHT) then
+        if (cell.y > 0) then
+            return expandToTop(cell)
         else
-            shrinkToTop(g, win)
+            return shrinkToTop(cell)
         end
     else
-        if (g.h > 1) then
-            shrinkToTop(g, win)
-        elseif (g.y > 0) then
-            expandToTop(g, win)
+        if (cell.h > 1) then
+            return shrinkToTop(cell)
+        elseif (cell.y > 0) then
+            return expandToTop(cell)
         end
     end
 end
+
+function smartResizeWindowRight() hs.grid.adjustFocusedWindow(smartResizeRight) end
+function smartResizeWindowLeft() hs.grid.adjustFocusedWindow(smartResizeLeft) end
+function smartResizeWindowUp() hs.grid.adjustFocusedWindow(smartResizeUp) end
+function smartResizeWindowDown() hs.grid.adjustFocusedWindow(smartResizeDown) end
+
+function adjustGrid(h, w) hs.grid.adjustHeight(h) hs.grid.adjustWidth(w) end
+function increaseGrid() adjustGrid(1, 1) end
+function decreaseGrid() adjustGrid(-1, -1) end
