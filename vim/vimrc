@@ -11,60 +11,43 @@ filetype off
 " ### Plugin config ###
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-"
-" Let Vundle manage Vundle
 Plugin 'gmarik/Vundle.vim'
 
-" Emacs keybindings
+Plugin 'tpope/vim-surround'
+Plugin 'dag/vim-fish'
+Plugin 'elzr/vim-json'
 Plugin 'maxbrunsfeld/vim-emacs-bindings'
+Plugin 'mhinz/vim-sayonara'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'terryma/vim-expand-region'
+Plugin 'wesQ3/vim-windowswap'
+Plugin 'tmux-plugins/vim-tmux'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-vinegar'
+Plugin 'sjl/badwolf'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'pangloss/vim-javascript'
+Plugin 'fatih/vim-go'
 
-" Add bash-like command history
 Plugin 'suy/vim-ctrlp-commandline'
 command! CtrlPCommandLine call ctrlp#init(ctrlp#commandline#id())
 cnoremap <silent> <C-r> <C-c>:call ctrlp#init(ctrlp#commandline#id())<CR>
 
-" Surround
-Plugin 'tpope/vim-surround'
-
-Plugin 'dag/vim-fish'
-Plugin 'elzr/vim-json'
-
-" Expand region
-Plugin 'terryma/vim-expand-region'
-
-" Window swap
-Plugin 'wesQ3/vim-windowswap'
-
-" Control Space
 Plugin 'szw/vim-ctrlspace'
 if executable("ag") 
   let g:ctrlspace_glob_command = 'ag -l --nocolor -g ""'
 endif
 set hidden
 
-" Easymotion 
 Plugin 'Lokaltog/vim-easymotion'
 let g:EasyMotion_smartcase=1
 nmap <Leader>j <Plug>(easymotion-s)
 
-" Nerd Commenter
-Plugin 'scrooloose/nerdcommenter'
-
-" Nerd Tree
-Plugin 'scrooloose/nerdtree'
-noremap <Leader>n :NERDTreeToggle<CR>
-
-" Vinegar
-Plugin 'tpope/vim-vinegar'
-
-" Airline
 Plugin 'bling/vim-airline'
 let g:airline_powerline_fonts = 1
 
-" Badwolf color scheme
-Plugin 'sjl/badwolf'
-
-" CtrlP
 Plugin 'kien/ctrlp.vim'
 Plugin 'FelikZ/ctrlp-py-matcher'
 let g:ctrlp_max_height = 15
@@ -74,20 +57,9 @@ let g:ctrlp_max_files = 0
 let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' -g ""'
 
-" Vim coffee-script
-Plugin 'kchmck/vim-coffee-script'
-autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
-
-" Vim Javascript
-Plugin 'pangloss/vim-javascript'
-
-" Vim Golang
-Plugin 'fatih/vim-go'
-
 call vundle#end()
 
 " ### General config ###
-" Basic things
 colorscheme badwolf
 
 filetype plugin indent on
@@ -145,16 +117,20 @@ set guioptions-=L  "remove left-hand scroll bar
 syntax enable
 set t_Co=256
 
-" ### Key mappings ###
+" Key mappings
 noremap <Leader>bd :bd<CR>
 nmap <Leader>h :noh<CR>
+nnoremap <leader>q :Sayonara<cr>
+nnoremap <leader>Q :Sayonara!<cr>
 nmap <tab> <c-w>
 nmap <tab><tab> <c-w><c-w>
+noremap <Leader>n :NERDTreeToggle<CR>
 
-" ### File config ###
+" File config
 au FileType gitcommit set tw=72
 au FileType javascript setlocal ts=2 sw=2 expandtab
 au FileType go setlocal ts=4 sw=4 expandtab
+autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
 
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.coffee :call DeleteTrailingWS()
