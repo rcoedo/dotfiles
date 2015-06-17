@@ -1,0 +1,6 @@
+(source melpa)
+
+(depends-on "evil")
+(depends-on "helm")
+(depends-on "osx-clipboard")
+(depends-on "pallet")
