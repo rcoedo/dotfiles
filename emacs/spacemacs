@@ -20,9 +20,11 @@
      ;; auto-completion
      ;; better-defaults
 
-     emacs-lisp
-     perspectives :variables
-                   perspective-enable-persp-projectile t
+     (emacs-lisp)
+     (perspectives :variables
+                   perspective-enable-persp-projectile t)
+     (shell)
+     (erlang-elixir)
      ;; eyebrowse
      ;; (git :variables
      ;;      git-gutter-use-fringe t)
@@ -127,14 +129,13 @@ before layers configuration."
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "pt")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
-  (defun dotspacemacs/config () (setq powerline-default-separator 'arrow))
   (setq-default dotspacemacs-themes '(solarized-dark))
   (setq-default dotspacemacs-default-font '("Monaco for Powerline"
                                             :size 12
@@ -144,12 +145,19 @@ before layers configuration."
   (when (eq system-type 'darwin) ;; mac specific settings
     (setq mac-option-modifier 'alt)
     (setq mac-command-modifier 'meta))
+
+  (defun make-shell (name)
+    "Create a shell buffer named NAME."
+    (interactive "sName: ")
+    (setq name (concat "$" name))
+    (eshell)
+    (rename-buffer name))
   )
 
 (defun dotspacemacs/config ()
-  "Configuration function.
- This function is called at the very end of Spacemacs initialization after
-layers configuration."
+  (setq powerline-default-separator 'arrow)
+  (add-to-list 'projectile-globally-ignored-directories "node_modules")
+  (add-to-list 'projectile-globally-ignored-directories "bower_components")
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
