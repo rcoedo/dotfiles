@@ -4,12 +4,16 @@
 (pallet-mode t)
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
-(load "global.el")
-(load "evil-mode.el")
+(load "global-file.el")
+(load "evil-file.el")
+(load "helm-file.el")
+(load "elixir-file.el")
 
-(require 'helm)
-(helm-mode 1)
-(helm-autoresize-mode 1)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(require 'powerline)
+(require 'powerline-evil)
+(require 'moe-theme)
+(powerline-moe-theme)
+(moe-theme-set-color 'w/b)
+(moe-dark)
+
+(load "modal-keys.el")
