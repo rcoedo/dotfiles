@@ -1,0 +1,10 @@
+(require 'powerline)
+(require 'powerline-evil)
+(require 'moe-theme)
+(powerline-moe-theme)
+(moe-theme-set-color 'red)
+(moe-dark)
+
+(set-face-italic 'italic nil)
+(set-face-italic-p 'italic nil)
+(set-frame-font (font-spec :family "Monaco" :size 13))

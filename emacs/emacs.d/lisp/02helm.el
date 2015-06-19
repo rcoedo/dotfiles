@@ -3,6 +3,7 @@
 (require 'helm-projectile)
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-z")  'helm-select-action)
 
 (define-key helm-find-files-map (kbd "C-c C-d") 'helm-ff-run-delete-file)
@@ -11,6 +12,9 @@
 
 (helm-mode 1)
 (helm-autoresize-mode 1)
+
+(projectile-global-mode)
+(setq projectile-enable-caching t)
 
 (add-hook 'emacs-startup-hook #'(lambda ()
                                   (let ((default-directory (getenv "HOME")))

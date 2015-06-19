@@ -13,11 +13,6 @@
   "pf" 'helm-projectile-find-file
   "pa" 'helm-projectile-ag
 
-  "wh" 'evil-window-left
-  "wj" 'evil-window-bottom
-  "wk" 'evil-window-top
-  "wl" 'evil-window-right
-
   "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
   "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
@@ -27,6 +22,6 @@
   "cv" 'evilnc-toggle-invert-comment-line-by-line
   "\\" 'evilnc-comment-operator ; if you prefer backslash key
 
-  "jl"  'helm-buffers-list
+  "jj"  'helm-buffers-list
 
   "i"  'package-install)
