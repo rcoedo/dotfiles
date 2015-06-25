@@ -1,5 +1,3 @@
-# ENV EXAMPLE
-#
 #set -x SLASH_HOME $HOME/.slash
 #__add_to_path $SLASH_HOME/bin
 
@@ -24,6 +22,16 @@
 #__add_to_path $NDENV_ROOT/bin
 #__add_to_path $NDENV_ROOT/shims
 #ndenv rehash
+
+#set -x EXENV_ROOT $HOME/.exenv
+#__add_to_path $EXENV_ROOT/bin
+#__add_to_path $EXENV_ROOT/shims
+#exenv rehash
+
+#set -x PYENV_ROOT $HOME/.pyenv
+#__add_to_path $PYENV_ROOT/bin
+#__add_to_path $PYENV_ROOT/shims
+#pyenv rehash
 
 #set -x GOPATH $HOME/Workspace/go
 #__add_to_path $GOPATH/bin
