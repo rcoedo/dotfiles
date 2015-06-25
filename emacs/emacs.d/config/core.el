@@ -7,6 +7,8 @@
       (scroll-bar-mode -1)))
 (menu-bar-mode -1)
 (osx-clipboard-mode t)
+(setq-default c-basic-offset 4
+              tab-width 4)
 
 (global-linum-mode t)
 (setq linum-format 'dynamic)
@@ -50,6 +52,8 @@
 (require 'evil-search-highlight-persist)
 (global-evil-search-highlight-persist t)
 
+(define-key evil-normal-state-map (kbd "TAB") 'evil-window-next)
+
 ;; Helm stuff
 (require 'helm)
 (require 'helm-config)
@@ -82,6 +86,14 @@
 (guide-key-mode t)
 
 
+(require 'direx)
+(add-hook 'direx:direx-mode-hook
+            (lambda ()
+              (define-key evil-normal-state-local-map (kbd "O") 'direx:expand-item-recursively)
+              (define-key evil-normal-state-local-map (kbd "r") 'direx:refresh-whole-tree)
+              (define-key evil-normal-state-local-map (kbd "c") 'direx:jump-to-directory)
+              (define-key evil-normal-state-local-map (kbd "RET") 'direx:toggle-item)))
+
 ;; Evil leader stuff
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
@@ -89,11 +101,14 @@
 
   "ff"    'helm-find-files
   "fd"    'dired
+  "ft"    'direx:jump-to-directory
 
   "pf"    'helm-projectile-find-file
   "pp"    'helm-projectile-switch-project
   "pa"    'helm-projectile-ag
   "pr"    'projectile-invalidate-cache
+
+  "bb"    'helm-buffers-list
 
   "\\"    'evilnc-comment-or-uncomment-lines
   "cl"    'evilnc-quick-comment-or-uncomment-to-the-line

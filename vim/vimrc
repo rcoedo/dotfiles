@@ -13,9 +13,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'tpope/vim-surround'
 Plugin 'dag/vim-fish'
-Plugin 'elzr/vim-json'
 Plugin 'maxbrunsfeld/vim-emacs-bindings'
 Plugin 'mhinz/vim-sayonara'
 Plugin 'airblade/vim-gitgutter'
@@ -25,37 +23,35 @@ Plugin 'tmux-plugins/vim-tmux'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-ragtag'
 Plugin 'sjl/badwolf'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'pangloss/vim-javascript'
 Plugin 'fatih/vim-go'
+Plugin 'elixir-lang/vim-elixir'
 
-Plugin 'suy/vim-ctrlp-commandline'
-command! CtrlPCommandLine call ctrlp#init(ctrlp#commandline#id())
-cnoremap <silent> <C-r> <C-c>:call ctrlp#init(ctrlp#commandline#id())<CR>
+Plugin 'mxw/vim-jsx'
+let g:jsx_ext_required = 0
+
+Plugin 'takac/vim-hardtime'
+"let g:hardtime_default_on = 1
+let g:hardtime_ignore_buffer_patterns = [ "NERD.*" ]
+let g:hardtime_allow_different_key = 1
 
 Plugin 'szw/vim-ctrlspace'
-if executable("ag") 
-  let g:ctrlspace_glob_command = 'ag -l --nocolor -g ""'
+if executable("pt") 
+  let g:ctrlspace_glob_command = 'pt -l --nocolor --nogroup --ignore .git --ignore .DS_Store --ignore node_modules --ignore bower_components -g .'
 endif
 set hidden
 
 Plugin 'Lokaltog/vim-easymotion'
 let g:EasyMotion_smartcase=1
-nmap <Leader>j <Plug>(easymotion-s)
 
 Plugin 'bling/vim-airline'
 let g:airline_powerline_fonts = 1
-
-Plugin 'kien/ctrlp.vim'
-Plugin 'FelikZ/ctrlp-py-matcher'
-let g:ctrlp_max_height = 15
-let g:ctrlp_jump_to_buffer = 2
-let g:ctrlp_lazy_update = 150
-let g:ctrlp_max_files = 0
-let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' -g ""'
+let g:airline_exclude_preview = 1
 
 call vundle#end()
 
@@ -72,6 +68,8 @@ set so=7
 set wildmenu
 set wildmode=list:longest
 set wildignore=*.o,*~,*.pyc
+set wildignore+=*/node_modules/**
+set wildignore+=*/bower_components/**
 set backspace=eol,start,indent
 set ignorecase
 set smartcase
@@ -103,7 +101,6 @@ set si
 set wrap
 set laststatus=2
 set ttyfast
-set ttymouse=xterm2
 set mouse=a
 set clipboard=unnamed
 
@@ -120,16 +117,22 @@ set t_Co=256
 " Key mappings
 noremap <Leader>bd :bd<CR>
 nmap <Leader>h :noh<CR>
+nnoremap <leader>w :w<cr>
 nnoremap <leader>q :Sayonara<cr>
 nnoremap <leader>Q :Sayonara!<cr>
-nmap <tab> <c-w>
-nmap <tab><tab> <c-w><c-w>
-noremap <Leader>n :NERDTreeToggle<CR>
+nmap <tab> <c-w><c-w>
+
+nmap <Leader><Leader> <Plug>(easymotion-s)
+
+noremap <Leader>ft :NERDTreeToggle<cr>
+noremap <Leader>fi :NERDTreeFind<cr>
+noremap <c-p> :CtrlSpace O<cr>
 
 " File config
 au FileType gitcommit set tw=72
 au FileType javascript setlocal ts=2 sw=2 expandtab
 au FileType go setlocal ts=4 sw=4 expandtab
+autocmd FileType html :setlocal sw=2 ts=2 sts=2
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
 
 autocmd BufWrite *.py :call DeleteTrailingWS()

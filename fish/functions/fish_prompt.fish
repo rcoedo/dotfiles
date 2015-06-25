@@ -16,6 +16,10 @@ function __nd_prompt
   echo -n (set_color green)''(ndenv version | awk '{print $1}')(set_color normal)
 end
 
+function __ex_prompt
+  echo -n (set_color blue)''(exenv version | awk '{print $1}')(set_color normal)
+end
+
 set __fish_git_prompt_color 'magenta'
 set __fish_git_prompt_show_informative_status 'yes'
 set __fish_git_prompt_showdirtystate 'yes'
@@ -42,6 +46,8 @@ function fish_right_prompt
   __nd_prompt
   echo "|"
   __rb_prompt
+  echo "|"
+  __ex_prompt
   set -l st $status
   if [ $st != 0 ];
     echo (set_color red) ↵ $st(set_color normal)
