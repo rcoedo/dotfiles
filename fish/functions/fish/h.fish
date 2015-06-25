@@ -1,5 +1,5 @@
 function h
-    history | percol | read foo
+    history | peco | read foo
     if [ $foo ]
         commandline $foo
     else
