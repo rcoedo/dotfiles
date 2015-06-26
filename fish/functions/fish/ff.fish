@@ -1,3 +1,3 @@
 function ff
-    f | pbcopy
+    f $argv | pbcopy
 end
