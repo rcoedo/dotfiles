@@ -8,9 +8,13 @@
 (eval-when-compile
   (require 'use-package))
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 (load "core.el")
 (load "layer/company.el")
 (load "layer/elixir.el")
 (load "layer/js2.el")
-(load "layer/powerline.el")
-(load "layer/color.el")
+(load "layer/rust.el")
+(load "layer/web.el")
+(load "layer/modeline.el")
