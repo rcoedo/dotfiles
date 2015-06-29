@@ -1,4 +1,14 @@
+;;; elixir.el --- elixir layer
+
+;;; Commentary:
+;;; Configures elixir and alchemist
+
+;;; Code:
+(eval-when-compile
+  (require 'use-package))
+
 (use-package elixir-mode
+  ;;; Load elixir layer
   :ensure t
   :ensure alchemist
   :config
@@ -39,3 +49,6 @@
     "mxf" 'alchemist-execute-file
     "mx:" 'alchemist-execute
     ))
+
+(provide 'elixir)
+;;; elixir.el ends here

@@ -16,6 +16,8 @@
 (depends-on "evil-terminal-cursor-changer")
 (depends-on "exec-path-from-shell")
 (depends-on "fish-mode")
+(depends-on "flycheck")
+(depends-on "flycheck-rust")
 (depends-on "guide-key")
 (depends-on "helm")
 (depends-on "helm-ag")

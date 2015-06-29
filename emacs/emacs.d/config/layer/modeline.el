@@ -1,6 +1,15 @@
-(require 'powerline)
-(require 'powerline-evil)
-(powerline-default-theme)
+;;; modeline.el --- modeline layer
+
+;;; Commentary:
+;;; Configures modeline
+
+;;; Code:
+(eval-when-compile
+  (require 'use-package))
+
+;;(require 'powerline)
+;;(require 'powerline-evil)
+;;(powerline-default-theme)
 
 (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "black" :background "#eab700")))))
 
@@ -50,7 +59,7 @@
 
 ;; Helper function
 (defun shorten-directory (dir max-length)
-  "Show up to `max-length' characters of a directory name `dir'."
+  "Shortens `DIR to `MAX-LENGTH' characters."
   (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
         (output ""))
     (when (and path (equal "" (car path)))
@@ -112,3 +121,6 @@
 
 (load-theme 'zenburn t)
 (set-frame-font (font-spec :family "Monaco" :size 12))
+
+(provide 'modeline)
+;;; modeline.el ends here

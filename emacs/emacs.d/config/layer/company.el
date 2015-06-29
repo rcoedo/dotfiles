@@ -1,3 +1,12 @@
+;;; company.el --- company layer
+
+;;; Commentary:
+;;; Configures company mode
+
+;;; Code:
+(eval-when-compile
+  (require 'use-package))
+
 (use-package company
   :ensure t
   :ensure helm-company
@@ -11,3 +20,6 @@
   (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "\C-n") 'company-select-next)
   (define-key company-active-map (kbd "\C-p") 'company-select-previous))
+
+(provide 'company)
+;;; company.el ends here

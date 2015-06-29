@@ -1,3 +1,12 @@
+;;; web.el --- web layer
+
+;;; Commentary:
+;;; Configures web mode
+
+;;; Code:
+(eval-when-compile
+  (require 'use-package))
+
 (use-package web-mode
   :ensure t
   :config
@@ -16,3 +25,6 @@
   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.ejs\\'" . web-mode)))
+
+(provide 'web)
+;;; web.el ends here

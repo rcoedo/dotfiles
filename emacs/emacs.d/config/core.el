@@ -1,3 +1,9 @@
+;;; core.el --- Basic emacs configuration
+
+;;; Commentary:
+
+;;; Code:
+
 ;; Global stuff
 (setq inhibit-splash-screen t)
 
@@ -9,6 +15,8 @@
 (osx-clipboard-mode t)
 (setq-default c-basic-offset 4
               tab-width 4)
+
+(electric-pair-mode 1)
 
 (require 'transpose-frame)
 
@@ -160,3 +168,6 @@ Repeated invocations toggle between the two most recently open buffers."
   "TAB" 'transpose-frame
 
   "i"     'package-install)
+
+(provide 'core)
+;;; core.el ends here
