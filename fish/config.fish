@@ -9,6 +9,7 @@ set -x GREP_OPTIONS "--color=auto"
 
 source $HOME/.config/fish/env.fish
 source $HOME/.config/fish/colors.fish
+source $HOME/.config/fish/alias.fish
 
 set -x NO_FISHMARKS_COMPAT_ALIASES
 source $HOME/.fishmarks/marks.fish

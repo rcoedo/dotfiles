@@ -1,39 +1,46 @@
-#set -x SLASH_HOME $HOME/.slash
-#__add_to_path $SLASH_HOME/bin
+set -x SLASH_HOME $HOME/.slash
+__add_to_path $SLASH_HOME/bin
 
-#set -x JAVA_HOME (/usr/libexec/java_home)
-#__add_to_path $JAVA_HOME/bin
+set -x JAVA_HOME (/usr/libexec/java_home)
+__add_to_path $JAVA_HOME/bin
 
-#set -x M2_REPO $HOME/.m2/repository
-#set -x M2_HOME $SLASH_HOME/apache-maven-3.2.3
-#__add_to_path $M2_HOME/bin
-#__add_to_path $M2_REPO
+set -x M2_REPO $HOME/.m2/repository
+set -x M2_HOME $SLASH_HOME/apache-maven-3.2.3
+__add_to_path $M2_HOME/bin
+__add_to_path $M2_REPO
 
-#set -x ANDROID_HOME $SLASH_HOME/android-sdk-macosx
+set -x TOMCATS $HOME/Workspace/tomcats
+set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.26
 
-#set -gx RBENV_ROOT /usr/local/var/rbenv
-#__add_to_path $HOME/.rbenv/bin
-#status --is-interactive; and . (rbenv init -|psub)
+set -x ANDROID_HOME $HOME/Library/Android/sdk
+__add_to_path $ANDROID_HOME/platform-tools
 
-#set -x DOCKER_HOST tcp://192.168.200.2:2375
-#set -x OCH_MEMORY 2048
+set -gx RBENV_ROOT /usr/local/var/rbenv
+__add_to_path $HOME/.rbenv/bin
+status --is-interactive; and . (rbenv init -|psub)
 
-#set -x NDENV_ROOT $HOME/.ndenv
-#__add_to_path $NDENV_ROOT/bin
-#__add_to_path $NDENV_ROOT/shims
-#ndenv rehash
+set -x DOCKER_HOST tcp://192.168.200.2:2375
+set -x OCH_MEMORY 2048
 
-#set -x EXENV_ROOT $HOME/.exenv
-#__add_to_path $EXENV_ROOT/bin
-#__add_to_path $EXENV_ROOT/shims
-#exenv rehash
+set -x NDENV_ROOT $HOME/.ndenv
+__add_to_path $NDENV_ROOT/bin
+__add_to_path $NDENV_ROOT/shims
+ndenv rehash
 
-#set -x PYENV_ROOT $HOME/.pyenv
-#__add_to_path $PYENV_ROOT/bin
-#__add_to_path $PYENV_ROOT/shims
-#pyenv rehash
+set -x EXENV_ROOT $HOME/.exenv
+__add_to_path $EXENV_ROOT/bin
+__add_to_path $EXENV_ROOT/shims
+exenv rehash
 
-#set -x GOPATH $HOME/Workspace/go
-#__add_to_path $GOPATH/bin
+set -x PYENV_ROOT $HOME/.pyenv
+__add_to_path $PYENV_ROOT/bin
+__add_to_path $PYENV_ROOT/shims
+pyenv rehash
 
-#eval (direnv hook fish)
+set -x GOPATH $HOME/Workspace/go
+__add_to_path $GOPATH/bin
+
+set -x TEXPATH /usr/texbin
+__add_to_path $TEXPATH
+
+eval (direnv hook fish)
