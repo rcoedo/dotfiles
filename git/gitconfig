@@ -8,9 +8,6 @@ email = romancoedo@gmail.com
 [credential]
 helper = CREDENTIAL
 
-[alias]
-co = checkout
-
 [color]
 diff = auto
 status = auto
@@ -18,22 +15,58 @@ branch = auto
 ui = true
 
 [core]
+excludesfile = /Users/rcoedo/.gitignore_global
 editor = vim
 
 [help]
 autocorrect = 1
 
 [push]
-	default = simple
+default = simple
 
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-
-[mergetool "sourcetree"]
-	trustExitCode = true
-
-[filter "hawser"]
-	clean = git hawser clean %f
-	smudge = git hawser smudge %f
-	required = true
+[alias]
+aa = add -A
+addall = add -A
+ai = !fish -c git-ai
+aliases = "!git config -l | grep alias | cut -c 7-"
+amend = commit --amend -C HEAD
+ap = add -A --patch
+arc = "!git add . && git rebase --continue"
+assume = update-index --assume-unchanged
+assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+branches = branch -a
+ci = commit
+cim = commit -m
+co = checkout
+cot = checkout -t
+cp = cherry-pick
+d  = diff
+dc = diff --cached
+delete-branch = branch -d
+delete-branch-for-good = branch -D
+fl = log -u
+fp = fetch --prune
+ireset = !fish -c git-ireset-head
+l = log --oneline
+ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+local = log @{u}.. --oneline
+ls = log --graph --pretty=format:\"%C(yellow)%h %C(blue)%ad%C(red)%d %C(reset)%s%C(green) [%an]\" --decorate --date=short
+mnf = merge --no-ff
+mom = merge origin/master
+nuke = reset --hard HEAD
+po = push origin
+pou = push --set-upstream origin
+pt = push --tags
+punch = push --force
+put = push -u origin
+rc = rebase --continue
+rename-branch = branch -m
+reword = commit --amend
+ri = rebase -i
+riu = rebase -i @{u}
+st = status -sb
+standup = log --since '1 day ago' --pretty=format:\"%C(yellow)%h %C(blue)%ar% %C(reset) %s%C(green) [%an]\" --date=short
+stu = stash -u
+unassume = update-index --no-assume-unchanged
+undo = reset --soft HEAD^
+week = log --since '7 day ago' --pretty=format:\"%C(yellow)%h %C(blue)%ar% %C(reset) %s%C(green) [%an]\" --date=short
