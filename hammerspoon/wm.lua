@@ -9,10 +9,14 @@ hs.grid.GRIDHEIGHT = 2
 local cmd = {"cmd"}
 local cmdalt = {"cmd", "alt"}
 
+hs.hotkey.bind(cmd, "s", function() hs.hints.windowHints() end)
+
 hs.hotkey.bind(cmd, "h", function() hs.window.focusedWindow():focusWindowWest() end)
 hs.hotkey.bind(cmd, "l", function() hs.window.focusedWindow():focusWindowEast() end)
 hs.hotkey.bind(cmd, "k", function() hs.window.focusedWindow():focusWindowNorth() end)
 hs.hotkey.bind(cmd, "j", function() hs.window.focusedWindow():focusWindowSouth() end)
+
+hs.hotkey.bind(cmdalt, "f", function() hs.window.focusedWindow():toggleFullScreen() end)
 
 hs.hotkey.bind(cmdalt, "h", hs.grid.pushWindowLeft)
 hs.hotkey.bind(cmdalt, "j", hs.grid.pushWindowDown)
@@ -27,8 +31,8 @@ hs.hotkey.bind(cmdalt, "y", smartResizeWindowLeft)
 hs.hotkey.bind(cmdalt, "[", decreaseGrid)
 hs.hotkey.bind(cmdalt, "]", increaseGrid)
 
-hs.hotkey.bind(cmdalt, "n", hs.grid.pushWindowNextScreen)
-hs.hotkey.bind(cmdalt, "p", hs.grid.pushWindowPreviousScreen)
+hs.hotkey.bind(cmdalt, "n", function() hs.grid.pushWindowNextScreen() end)
+hs.hotkey.bind(cmdalt, "p", function() hs.grid.pushWindowPreviousScreen() end)
 
 hs.hotkey.bind(cmdalt, "m", hs.grid.maximizeWindow)
 
