@@ -3,7 +3,7 @@
 ;;; Commentary:
 
 ;;; Code:
-(require 'cask "/usr/local/share/emacs/site-lisp/cask.el")
+(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
 (cask-initialize)
 (require 'pallet)
 (pallet-mode t)
@@ -20,8 +20,10 @@
 (load "layer/elixir.el")
 (load "layer/javascript.el")
 (load "layer/rust.el")
+(load "layer/elm.el")
 (load "layer/web.el")
 (load "layer/modeline.el")
+(load "layer/magit.el")
 
 (provide 'init)
 ;;; init.el ends here

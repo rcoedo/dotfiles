@@ -11,7 +11,7 @@
   :ensure t
   :ensure jsx-mode
   :config
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . jsx-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-hook 'js2-mode-hook 'ac-js2-mode)
 
@@ -19,8 +19,7 @@
                 (append flycheck-disabled-checkers '(javascript-jshint)))
 
   ;; use eslint for jsx files
-  (flycheck-add-mode 'javascript-eslint 'jsx-mode)
-
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
   (setq-default js2-basic-offset 2))
 
 (provide 'javascript)
