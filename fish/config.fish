@@ -7,6 +7,7 @@ set -x EDITOR "vim"
 set -x GIT_EDITOR "vim"
 set -x GREP_OPTIONS "--color=auto"
 set -x CDPATH . "$HOME/Workspace"
+set -x GHQ_ROOT "$HOME/Workspace/ghq"
 
 source $HOME/.config/fish/env.fish
 source $HOME/.config/fish/colors.fish
