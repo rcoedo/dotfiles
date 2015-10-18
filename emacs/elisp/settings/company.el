@@ -13,6 +13,7 @@
   :config
   (add-hook 'after-init-hook 'global-company-mode)
 
+  (defvar company-dabbrev-downcase)
   (setq company-idle-delay 0
         company-dabbrev-downcase nil)
 

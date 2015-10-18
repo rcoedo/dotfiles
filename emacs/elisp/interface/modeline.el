@@ -119,8 +119,5 @@
                     :inherit 'mode-line-position-face
                     :foreground "black" :background "#eab700")
 
-(load-theme 'zenburn t)
-(set-frame-font (font-spec :family "Monaco" :size 12))
-
 (provide 'modeline)
 ;;; modeline.el ends here
