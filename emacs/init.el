@@ -7,8 +7,8 @@
 (cask-initialize)
 (require 'pallet)
 (pallet-mode t)
-(add-to-list 'load-path "~/.emacs.d/elisp/")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elisp/interface/themes")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/interface/themes")
 
 (load "platform/darwin.el")
 (load "interface/main.el")

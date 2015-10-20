@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;;; window.el --- User defined window functions
 
 ;;; Commentary:
@@ -33,6 +34,12 @@ Repeated invocations toggle between the two most recently open buffers."
          (not (eq (buffer-name) tmp-orig))
          (emacs-buffer-p (buffer-name)))
         (previous-non-emacs-buffer tmp-orig))))
+
+(defun call-other-window (fun position)
+  "Call FUN in a new window located in POSITION."
+  (lambda (args)
+    (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
+    (funcall fun args)))
 
 (provide 'window)
 ;;; window.el ends here
