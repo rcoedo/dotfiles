@@ -20,19 +20,9 @@
 (electric-pair-mode t)
 (transient-mark-mode t)
 
-;; Bind some buffer stuff
-(define-key global-map (kbd "M-n") 'next-non-emacs-buffer)
-(define-key global-map (kbd "M-p") 'previous-non-emacs-buffer)
-(define-key global-map (kbd "C-;") 'other-window)
-
-;; Always run eshell
-(add-hook 'emacs-startup-hook #'(lambda ()
-                                  (let ((default-directory (getenv "HOME")))
-                                    (command-execute 'eshell)
-                                    (bury-buffer))))
-
 ;; load ~/.emacs.d/settings
 (load "settings/evil.el")
+(load "settings/eshell.el")
 (load "settings/helm-projectile.el")
 (load "settings/flycheck.el")
 (load "settings/transpose-frame.el")
@@ -45,3 +35,14 @@
 (load "settings/magit.el")
 (load "settings/guide-key.el")
 (load "settings/backup.el")
+
+;; Bind some buffer stuff
+(define-key global-map (kbd "M-n") 'next-non-emacs-buffer)
+(define-key global-map (kbd "M-p") 'previous-non-emacs-buffer)
+(define-key global-map (kbd "C-;") 'other-window)
+
+;; ;; Run eshell
+;; (add-hook 'emacs-startup-hook #'(lambda ()
+;;                                   (let ((default-directory (getenv "HOME")))
+;;                                     (command-execute 'eshell)
+;;                                     (bury-buffer))))

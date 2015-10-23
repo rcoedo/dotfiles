@@ -1,0 +1,6 @@
+(defun eshell-maybe-bol ()
+      (interactive)
+      (let ((p (point)))
+        (eshell-bol)
+        (if (= p (point))
+            (beginning-of-line))))

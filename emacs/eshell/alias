@@ -1,0 +1,4 @@
+alias g      git $*
+alias dc     docker-compose $*
+alias gg     ghq get $*
+alias gitx   open -a GitX .
