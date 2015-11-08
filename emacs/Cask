@@ -37,3 +37,4 @@
 (depends-on "transpose-frame")
 (depends-on "use-package")
 (depends-on "web-mode")
+(depends-on "dash")

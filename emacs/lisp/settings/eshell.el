@@ -10,7 +10,6 @@
 (defalias 'ff 'find-file)
 (defalias 'd  'dired)
 
-
 ;; Eshell-prompt
 (setq eshell-prompt-function
       #'(lambda nil (concat (getenv "USER") "@" (system-name) ":"
@@ -25,6 +24,8 @@
                                     (propertize (with-temp-buffer (call-process "uname" nil t nil "-r")
                                                                   (buffer-string))
                                                 'face '((:foreground "magenta")))))
+
+(define-key global-map (kbd "M-e")     'eshell-here)
 
 ;; ;; Compatibility 24.2/24.3
 ;; (unless (fboundp 'eshell-pcomplete)

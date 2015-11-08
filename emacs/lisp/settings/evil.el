@@ -8,6 +8,8 @@
 
 (defvar evil-mode-list
       '((eshell-mode         insert)
+        (comint-mode         insert)
+        (alchemist-iex-mode  insert)
         (magit-mode          emacs)
         (magit-status        emacs)
         (magit-log-mode      emacs)
