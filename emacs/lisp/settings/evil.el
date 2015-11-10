@@ -18,6 +18,7 @@
         (magit-popup-mode    emacs)
         (magit-merge-popup   emacs)
         (magit-revision-mode emacs)
+        (direx:direx-mode    emacs)
         (git-commit-mode     insert)))
 
 (dolist (mode evil-mode-list)
@@ -32,6 +33,10 @@
 (define-key evil-insert-state-map "\C-p" 'previous-line)
 (define-key evil-insert-state-map "\C-w" 'evil-delete)
 (define-key evil-insert-state-map "\C-k" 'kill-line)
+
+;; (define-key evil-insert-state-map (kbd "<C-delete>") 'kill-buffer-and-window)
+;; (define-key evil-normal-state-map (kbd "<C-delete>") 'kill-buffer-and-window)
+;; (define-key evil-visual-state-map (kbd "<C-delete>") 'kill-buffer-and-window)
 
 ;; Evil leader
 (require 'evil-leader)

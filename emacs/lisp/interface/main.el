@@ -18,5 +18,5 @@
 
 (load "interface/modeline.el")
 
-(load-theme 'zenburn t)
+(load-theme 'spacemacs-dark t)
 (set-frame-font (font-spec :family "Monaco" :size 12))
