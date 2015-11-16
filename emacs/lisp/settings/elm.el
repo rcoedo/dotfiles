@@ -4,11 +4,10 @@
 ;;; Configures elm mode
 
 ;;; Code:
-(eval-when-compile
-  (require 'use-package))
+(require 'req-package)
 
-(use-package elm-mode
-  :ensure t
+(req-package elm-mode
+  :require flycheck
   :config
   (flycheck-define-checker elm
     "An Elm syntax checker
@@ -35,6 +34,5 @@ Uses Elm compiler. See URL
 
   (add-to-list 'auto-mode-alist '("\\.elm\\'" . elm-mode))
   (add-to-list 'flycheck-checkers 'elm))
-
 (provide 'elm)
 ;;; elm.el ends here

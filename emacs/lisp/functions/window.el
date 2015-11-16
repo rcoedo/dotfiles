@@ -4,7 +4,6 @@
 ;;; Commentary:
 
 ;;; Code:
-
 (defun go-to-previous-buffer ()
   "Switch to previously open buffer.
 Repeated invocations toggle between the two most recently open buffers."

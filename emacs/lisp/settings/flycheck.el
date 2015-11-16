@@ -4,12 +4,9 @@
 ;;; Configures flycheck
 
 ;;; Code:
-(eval-when-compile
-  (require 'use-package))
+(require 'req-package)
 
-(use-package flycheck
-  ;;; Load flycheck layer
-  :ensure t
+(req-package flycheck
   :config
   (add-hook 'after-init-hook 'global-flycheck-mode))
 

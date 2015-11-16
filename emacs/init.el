@@ -9,11 +9,13 @@
 (pallet-mode t)
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/interface/themes")
+(require 'req-package)
 
 (load "platform/darwin.el")
 (load "interface/main.el")
 (load "settings/main.el")
 
+(req-package-finish)
 (provide 'init)
 ;;; init.el ends here
 (put 'erase-buffer 'disabled nil)
