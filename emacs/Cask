@@ -35,6 +35,7 @@
 (depends-on "projectile")
 (depends-on "rainbow-mode")
 (depends-on "rust-mode")
+(depends-on "smartparens")
 (depends-on "spacemacs-theme")
 (depends-on "transpose-frame")
 (depends-on "use-package")

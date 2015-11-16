@@ -51,7 +51,7 @@
 (define-key helm-map (kbd "C-j")     'helm-next-source)
 
 (define-key global-map (kbd "C-x C-f")    'helm-find-files)
-(define-key global-map (kbd "<C-return>") 'helm-mini)
+(define-key global-map (kbd "C-SPC") 'helm-mini)
 
 (define-key projectile-command-map (kbd "p")   'helm-projectile-switch-project)
 (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)

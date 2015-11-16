@@ -102,13 +102,13 @@
                     :foreground "gray60")
 (set-face-attribute 'mode-line-filename-face nil
                     :inherit 'mode-line-face
-                    :foreground "#eab700"
+                    :foreground "#black"
                     :weight 'bold)
 (set-face-attribute 'mode-line-position-face nil
                     :inherit 'mode-line-face)
 (set-face-attribute 'mode-line-mode-face nil
                     :inherit 'mode-line-face
-                    :foreground "gray80")
+                    :foreground "black")
 (set-face-attribute 'mode-line-minor-mode-face nil
                     :inherit 'mode-line-mode-face
                     :foreground "gray40")

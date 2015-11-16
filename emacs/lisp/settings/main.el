@@ -1,14 +1,7 @@
 (load "functions/window.el")
 (load "functions/buffer.el")
 
-(setq backup-directory-alist `((".*" . "~/.saves"))
-      auto-save-file-name-transforms '((".*" "~/.saves/" t))
-      backup-by-copying t
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t
-      search-highlight t
+(setq search-highlight t
       prefer-coding-system 'utf-8
       global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
@@ -38,6 +31,7 @@
 (load "settings/javascript.el")
 (load "settings/rust.el")
 (load "settings/elm.el")
+(load "settings/latex.el")
 (load "settings/web.el")
 (load "settings/magit.el")
 (load "settings/guide-key.el")

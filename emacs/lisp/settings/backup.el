@@ -1,7 +1,12 @@
 (defvar --backup-directory "~/.save")
+
 (if (not (file-exists-p --backup-directory))
         (make-directory --backup-directory t))
-(setq backup-directory-alist `(("." . ,--backup-directory)))
+
+(custom-set-variables
+  '(auto-save-file-name-transforms '((".*" "~/.save/\\1" t)))
+  '(backup-directory-alist '((".*" . "~/.save/backups/"))))
+
 (setq make-backup-files t               ; backup of a file the first time it is saved.
       backup-by-copying t               ; don't clobber symlinks
       version-control t                 ; version numbers for backup files
