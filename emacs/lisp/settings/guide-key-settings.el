@@ -1,4 +1,4 @@
-;;; guide-key.el --- Settings
+;;; guide-key-settings.el --- Settings
 
 ;;; Commentary:
 ;;; Configure guide-key.
@@ -7,6 +7,7 @@
 (require 'req-package)
 
 (req-package guide-key
+  :defer t
   :config
   (setq guide-key/guide-key-sequence '("<SPC>" "C-c")
         guide-key/recursive-key-sequence-flag t
@@ -14,5 +15,5 @@
         guide-key/popup-window-position 'bottom)
   (guide-key-mode t))
 
-(provide 'guide-key.el)
-;;; guide-key.el ends here
+(provide 'guide-key-settings)
+;;; guide-key-settings.el ends here

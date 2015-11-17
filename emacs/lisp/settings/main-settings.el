@@ -1,4 +1,4 @@
-;;; main.el --- Settings
+;;; main-settings.el --- Settings
 
 ;;; Commentary:
 ;;; Settings entry point.
@@ -6,25 +6,26 @@
 ;;; Code:
 (load "functions/window.el")
 (load "functions/buffer.el")
+(load "functions/eshell.el")
 
 ;;; Setting layers
-(load "settings/flycheck.el")
-(load "settings/evil.el")
-(load "settings/comint.el")
-(load "settings/company.el")
-(load "settings/elixir.el")
-(load "settings/smartparens.el")
-(load "settings/elm.el")
-(load "settings/javascript.el")
-(load "settings/guide-key.el")
-
-(load "settings/eshell.el")
-(load "settings/helm-projectile.el")
-(load "settings/transpose-frame.el")
-(load "settings/rust.el")
-(load "settings/latex.el")
-(load "settings/web.el")
-(load "settings/magit.el")
+(load "settings/comint-settings.el")
+(load "settings/company-settings.el")
+(load "settings/eshell-settings.el")
+(load "settings/flycheck-settings.el")
+(load "settings/evil-settings.el")
+(load "settings/elixir-settings.el")
+(load "settings/smartparens-settings.el")
+(load "settings/latex-settings.el")
+(load "settings/elm-settings.el")
+(load "settings/guide-key-settings.el")
+(load "settings/javascript-settings.el")
+(load "settings/rust-settings.el")
+(load "settings/web-settings.el")
+(load "settings/transpose-frame-settings.el")
+(load "settings/magit-settings.el")
+(load "settings/projectile-settings.el")
+(load "settings/helm-settings.el")
 ;;;
 
 ;;; Global settings
@@ -47,11 +48,12 @@
 ;;; Global bindings
 (define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
 (define-key key-translation-map (kbd "C-.") (kbd "C-c"))
-(define-key key-translation-map "\e" (kbd "C-g"))
+(define-key key-translation-map "\e"        (kbd "C-g"))
 
 (define-key global-map (kbd "M-n")           'next-non-emacs-buffer)
 (define-key global-map (kbd "M-p")           'previous-non-emacs-buffer)
 (define-key global-map (kbd "M-f")           'delete-other-windows)
+(define-key global-map (kbd "M-e")           'eshell-projectile)
 (define-key global-map (kbd "M-q")           'delete-window)
 (define-key global-map (kbd "<C-backspace>") 'kill-buffer-and-window)
 (define-key global-map (kbd "M-t")           'transpose-frame)
@@ -60,5 +62,5 @@
 (define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
 ;;;
 
-(provide 'main)
-;;; main.el ends here
+(provide 'main-settings)
+;;; main-settings.el ends here

@@ -1,4 +1,4 @@
-;;; evil.el --- Evil configuration
+;;; evil-settings.el --- Evil configuration
 ;;; Commentary:
 ;;; Code:
 
@@ -63,5 +63,5 @@
   :config
   (global-evil-search-highlight-persist t))
 
-(provide 'evil)
-;;; evil.el ends here
+(provide 'evi-settingsl)
+;;; evil-settings.el ends here

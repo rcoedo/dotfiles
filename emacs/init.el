@@ -11,9 +11,9 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/interface/themes")
 (require 'req-package)
 
-(load "platform/darwin.el")
+(load "platform/darwin-platform.el")
 (load "interface/main.el")
-(load "settings/main.el")
+(load "settings/main-settings.el")
 
 (req-package-finish)
 (provide 'init)

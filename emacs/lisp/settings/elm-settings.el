@@ -1,4 +1,4 @@
-;;; elm.el --- elm layer
+;;; elm-settings.el --- elm layer
 
 ;;; Commentary:
 ;;; Configures elm mode
@@ -7,6 +7,7 @@
 (require 'req-package)
 
 (req-package elm-mode
+  :defer t
   :require flycheck
   :config
   (flycheck-define-checker elm
@@ -34,5 +35,5 @@ Uses Elm compiler. See URL
 
   (add-to-list 'auto-mode-alist '("\\.elm\\'" . elm-mode))
   (add-to-list 'flycheck-checkers 'elm))
-(provide 'elm)
-;;; elm.el ends here
+(provide 'elm-settings)
+;;; elm-settings.el ends here

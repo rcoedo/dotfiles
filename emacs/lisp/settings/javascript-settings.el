@@ -1,4 +1,4 @@
-;;; javascript.el --- javascript layer
+;;; javascript-settings.el --- javascript layer
 
 ;;; Commentary:
 ;;; Configures javascript mode
@@ -7,6 +7,7 @@
 (require 'req-package)
 
 (req-package js2-mode
+  :defer t
   :require flycheck
   :config
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
@@ -19,5 +20,5 @@
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (setq-default js2-basic-offset 2))
 
-(provide 'javascript)
-;;; javascript.el ends here
+(provide 'javascript-settings)
+;;; javascript-settings.el ends here

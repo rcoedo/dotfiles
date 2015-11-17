@@ -1,4 +1,4 @@
-;;; smartparens.el --- smartparens settings
+;;; smartparens-settings.el --- smartparens settings
 
 ;;; Commentary:
 ;;; Configures smartparens
@@ -10,5 +10,5 @@
   :config
   (smartparens-global-mode))
 
-(provide 'smartparens)
-;;; smartparens.el ends here
+(provide 'smartparens-settings)
+;;; smartparens-settings.el ends here

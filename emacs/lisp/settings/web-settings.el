@@ -1,22 +1,14 @@
-;;; web.el --- web layer
+;;; web-settings.el --- web layer
 
 ;;; Commentary:
 ;;; Configures web mode
 
 ;;; Code:
-(eval-when-compile
-  (require 'use-package))
+(require 'req-package)
 
-(use-package web-mode
-  :ensure t
+(req-package web-mode
+  :defer t
   :config
-  (defun my-web-mode-hook ()
-    "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2))
-  (add-hook 'web-mode-hook  'my-web-mode-hook)
-
   (add-to-list 'auto-mode-alist '("\\.phtml\\'"     . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'"   . web-mode))
@@ -25,7 +17,11 @@
   (add-to-list 'auto-mode-alist '("\\.mustache\\'"  . web-mode))
   (add-to-list 'auto-mode-alist '("\\.djhtml\\'"    . web-mode))
   (add-to-list 'auto-mode-alist '("\\.ejs\\'"       . web-mode))
-  )
+  (add-hook 'web-mode-hook
+            #'(lambda ()
+                (setq web-mode-markup-indent-offset 2)
+                (setq web-mode-css-indent-offset 2)
+                (setq web-mode-code-indent-offset 2))))
 
-(provide 'web)
-;;; web.el ends here
+(provide 'web-settings)
+;;; web-settings.el ends here

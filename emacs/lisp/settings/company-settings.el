@@ -1,4 +1,4 @@
-;;; company.el --- Company layer
+;;; company-settings.el --- Company layer
 
 ;;; Commentary:
 ;;; Configures company mode
@@ -7,6 +7,7 @@
 (require 'req-package)
 
 (req-package company
+  :defer t
   :require helm-company
   :config
   (add-hook 'after-init-hook 'global-company-mode)
@@ -20,5 +21,5 @@
                 (define-key company-active-map (kbd "\C-n") 'company-select-next)
                 (define-key company-active-map (kbd "\C-p") 'company-select-previous))))
 
-(provide 'company)
-;;; company.el ends here
+(provide 'company-settings)
+;;; company-settings.el ends here

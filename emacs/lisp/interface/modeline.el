@@ -4,13 +4,6 @@
 ;;; Configures modeline
 
 ;;; Code:
-(eval-when-compile
-  (require 'use-package))
-
-;;(require 'powerline)
-;;(require 'powerline-evil)
-;;(powerline-default-theme)
-
 (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "black" :background "#eab700")))))
 
 ;; Mode line setup

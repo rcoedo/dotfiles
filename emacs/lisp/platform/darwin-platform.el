@@ -1,3 +1,9 @@
+;;; darwin-platform.el --- Company layer
+
+;;; Commentary:
+;;; Settings for Os X
+
+;;; Code:
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
@@ -6,3 +12,6 @@
       mac-option-modifier 'none
       system-uses-terminfo nil
       osx-clipboard-mode t)
+
+(provide 'darwin-platform)
+;;; darwin-platform.el ends here

@@ -1,4 +1,4 @@
-;;; elixir.el --- elixir layer
+;;; elixir-settings.el --- elixir layer
 
 ;;; Commentary:
 ;;; Configures elixir and alchemist
@@ -7,6 +7,7 @@
 (require 'req-package)
 
 (req-package elixir-mode
+  :defer t
   :require smartparens
   :config
   (add-hook 'elixir-mode-hook 'alchemist-mode)
@@ -31,5 +32,5 @@
                    :post-handlers '(:add my-elixir-do-end-close-action)
                    :actions '(insert))))
 
-(provide 'elixir)
-;;; elixir.el ends here
+(provide 'elixir-settings)
+;;; elixir-settings.el ends here
