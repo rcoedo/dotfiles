@@ -1,0 +1,736 @@
+#+AUTHOR: Roman Coedo
+#+TITLE: Emacs Settings
+
+* I like lexical binding
+#+BEGIN_SRC emacs-lisp :tangle yes :padline no
+;;; -*- lexical-binding: t -*-
+#+END_SRC
+
+
+* Package management
+** Cask
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+(cask-initialize)
+#+END_SRC
+
+** Pallet
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'pallet)
+(pallet-mode t)
+#+END_SRC
+
+** Dependency management
+#+BEGIN_SRC emacs-lisp :tangle yes
+(require 'req-package)
+#+END_SRC
+   
+
+* Platform
+#+BEGIN_SRC emacs-lisp :tangle yes
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+(setq mac-command-modifier 'meta
+      mac-option-key-is-meta nil
+      mac-option-modifier 'none
+      system-uses-terminfo nil
+      osx-clipboard-mode t)
+
+(provide 'darwin-platform)
+#+END_SRC
+
+  
+* Interface
+** Global interface settings
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (if (display-graphic-p)
+      (progn
+        (scroll-bar-mode -1)
+        (tool-bar-mode -1)))
+
+  (setq inhibit-splash-screen t
+        menu-bar-mode -1)
+#+END_SRC
+
+** Linum mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package linum
+    :init
+    (global-linum-mode t)
+    :config
+    (setq linum-format 'dynamic)
+
+    (set-face-attribute 'linum nil :height 100)
+    (defadvice linum-update-window (around linum-dynamic activate)
+      "Number into string with enough spaces."
+      (let* ((w (length (number-to-string
+                         (count-lines (point-min) (point-max)))))
+             (linum-format (concat " %" (number-to-string w) "d ")))
+        ad-do-it)))
+#+END_SRC
+
+** Modeline
+This modeline is copied from somewhere I don't remember anymore. I will replace it soon. I think.
+#+BEGIN_SRC emacs-lisp :tangle yes
+(custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "black" :background "#eab700")))))
+(setq-default
+ mode-line-format
+ '(; Position, including warning for 80 columns
+   (:propertize "%4l:" face mode-line-position-face)
+   (:eval (propertize "%3c" 'face
+                      (if (>= (current-column) 80)
+                          'mode-line-80col-face
+                        'mode-line-position-face)))
+   ;; emacsclient [default -- keep?]
+   mode-line-client
+   " "
+   ;; read-only or modified status
+   (:eval
+    (cond (buffer-read-only
+           (propertize " RO " 'face 'mode-line-read-only-face))
+          ((buffer-modified-p)
+           (propertize " ** " 'face 'mode-line-modified-face))
+          (t " ")))
+   " "
+   ;; directory and buffer/file name
+   (:propertize (:eval (shorten-directory default-directory 30))
+                face mode-line-folder-face)
+   (:propertize "%b"
+                face mode-line-filename-face)
+   ;; narrow [default -- keep?]
+   ;;" %n "
+   ;; mode indicators: vc, recursive edit, major mode, minor modes, process, global
+   (vc-mode vc-mode)
+   "  %["
+   (:propertize mode-name face mode-line-mode-face)
+   "%] "
+   (:eval (propertize (format-mode-line minor-mode-alist)
+                      'face 'mode-line-minor-mode-face))
+   (:propertize mode-line-process
+                face mode-line-process-face)
+   " "
+   ;; mode-line-misc-info is better than Amit's version
+   mode-line-misc-info
+   "  "
+   ;; nyan-mode uses nyan cat as an alternative to %p
+   (:eval (when nyan-mode (list (nyan-create))))
+   ))
+
+;; Helper function
+(defun shorten-directory (dir max-length)
+  "Shortens `DIR to `MAX-LENGTH' characters."
+  (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+        (output ""))
+    (when (and path (equal "" (car path)))
+      (setq path (cdr path)))
+    (while (and path (< (length output) (- max-length 4)))
+      (setq output (concat (car path) "/" output))
+      (setq path (cdr path)))
+    (when path
+      (setq output (concat ".../" output)))
+    output))
+
+(make-face 'mode-line-read-only-face)
+(make-face 'mode-line-modified-face)
+(make-face 'mode-line-folder-face)
+(make-face 'mode-line-filename-face)
+(make-face 'mode-line-position-face)
+(make-face 'mode-line-mode-face)
+(make-face 'mode-line-minor-mode-face)
+(make-face 'mode-line-process-face)
+(make-face 'mode-line-80col-face)
+
+(set-face-attribute 'mode-line nil
+                    :foreground "gray60" :background "gray20"
+                    :inverse-video nil
+                    :box '(:line-width 2 :color "gray20" :style nil))
+(set-face-attribute 'mode-line-inactive nil
+                    :foreground "gray80" :background "gray40"
+                    :inverse-video nil
+                    :box '(:line-width 2 :color "gray40" :style nil))
+(set-face-attribute 'mode-line-read-only-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#4271ae")
+(set-face-attribute 'mode-line-modified-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#c82829"
+                    :background "#ffffff")
+(set-face-attribute 'mode-line-folder-face nil
+                    :inherit 'mode-line-face
+                    :foreground "gray60")
+(set-face-attribute 'mode-line-filename-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#black"
+                    :weight 'bold)
+(set-face-attribute 'mode-line-position-face nil
+                    :inherit 'mode-line-face)
+(set-face-attribute 'mode-line-mode-face nil
+                    :inherit 'mode-line-face
+                    :foreground "black")
+(set-face-attribute 'mode-line-minor-mode-face nil
+                    :inherit 'mode-line-mode-face
+                    :foreground "gray40")
+(set-face-attribute 'mode-line-process-face nil
+                    :inherit 'mode-line-face
+                    :foreground "#718c00")
+(set-face-attribute 'mode-line-80col-face nil
+                    :inherit 'mode-line-position-face
+                    :foreground "black" :background "#eab700")
+#+END_SRC
+
+** Theme
+#+BEGIN_SRC emacs-lisp :tangle yes
+(load-theme 'spacemacs-light t)
+#+END_SRC
+** Font
+#+BEGIN_SRC emacs-lisp :tangle yes
+(set-frame-font (font-spec :family "Monaco" :size 12))
+#+END_SRC
+
+   
+* Functions
+** Buffer
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun rename-current-buffer-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " filename)))
+        (if (get-buffer new-name)
+            (error "A buffer named '%s' already exists!" new-name)
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)
+          (message "File '%s' successfully renamed to '%s'"
+                   name (file-name-nondirectory new-name)))))))
+
+(defun delete-current-buffer-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (ido-kill-buffer)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
+
+(defun call-other-window (fun position)
+  (lambda (args)
+    (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
+    (funcall fun args)))
+#+END_SRC
+
+** Eshell
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun eshell-maybe-bol ()
+      (interactive)
+      (let ((p (point)))
+        (eshell-bol)
+        (if (= p (point))
+            (beginning-of-line))))
+
+(defun eshell-here ()
+  "Opens up a new shell in the directory associated with the
+current buffer's file. The eshell is renamed to match that
+directory to make multiple eshell windows easier."
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name))
+                   default-directory))
+         (height (/ (window-total-height) 3))
+         (name   (car (last (split-string parent "/" t)))))
+    (split-window-vertically (- height))
+    (other-window 1)
+    (eshell "new")
+    (rename-buffer (concat "*eshell: " name "*"))
+
+    (insert (concat "ls"))
+    (eshell-send-input)))
+
+(defun eshell/clear ()
+  "Clear the eshell buffer."
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(defun eshell-projectile ()
+  (interactive)
+  (let* ((height (/ (window-total-height) 3))
+         (name   (projectile-project-root)))
+    (split-window-vertically (- height))
+    (other-window 1)
+    (eshell "new")
+    (rename-buffer (concat "*eshell: " name "*"))
+
+    (cd (projectile-project-root)))
+  (eshell/clear)
+  (insert "ls")
+  (eshell-send-input))
+
+(defun eshell/x ()
+  (kill-buffer-and-window))
+#+END_SRC
+** Window
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun go-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+(defun emacs-buffer-p (name)
+  "Returns true if the name matches an Emacs buffer."
+  (string-match-p "\\*.*\\*" name))
+
+(defun next-non-emacs-buffer (&optional original)
+  "Similar to next-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
+  (interactive)
+  (let ((tmp-orig (or original (buffer-name))))
+    (next-buffer)
+    (if (and
+         (not (eq (buffer-name) tmp-orig))
+         (emacs-buffer-p (buffer-name)))
+        (next-non-emacs-buffer tmp-orig))))
+
+(defun previous-non-emacs-buffer (&optional original)
+  "Similar to previous-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
+  (interactive)
+  (let ((tmp-orig (or original (buffer-name))))
+    (previous-buffer)
+    (if (and
+         (not (eq (buffer-name) tmp-orig))
+         (emacs-buffer-p (buffer-name)))
+        (previous-non-emacs-buffer tmp-orig))))
+#+END_SRC
+
+
+* Package settings
+** Evil
+*** Evil mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package evil
+  :config
+  (evil-mode t)
+
+  (defvar evil-mode-list
+    '((eshell-mode         insert)
+      (comint-mode         insert)
+      (alchemist-iex-mode  insert)
+      (magit-mode          emacs)
+      (magit-status        emacs)
+      (magit-log-mode      emacs)
+      (magit-commit-mode   emacs)
+      (magit-diff-mode     emacs)
+      (magit-popup-mode    emacs)
+      (magit-merge-popup   emacs)
+      (magit-revision-mode emacs)
+      (direx:direx-mode    emacs)
+      (git-commit-mode     insert)))
+
+  (dolist (mode evil-mode-list)
+    (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
+
+  (define-key evil-insert-state-map "\C-a" 'beginning-of-line)
+  (define-key evil-insert-state-map "\C-e" 'end-of-line)
+  (define-key evil-insert-state-map "\C-f" 'forward-char)
+  (define-key evil-insert-state-map "\C-b" 'backward-char)
+  (define-key evil-insert-state-map "\C-d" 'delete-char)
+  (define-key evil-insert-state-map "\C-n" 'next-line)
+  (define-key evil-insert-state-map "\C-p" 'previous-line)
+  (define-key evil-insert-state-map "\C-w" 'evil-delete)
+  (define-key evil-insert-state-map "\C-k" 'kill-line))
+#+END_SRC
+
+*** Evil leader
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package evil-leader
+  :require evil
+  :config
+  (global-evil-leader-mode)
+  (setq evil-leader/in-all-states t)
+
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "yy"    'helm-show-kill-ring
+    "cc"    'evilnc-comment-or-uncomment-lines
+    "cp"    'evilnc-copy-and-comment-lines
+    "cb"    'evilnc-comment-or-uncomment-paragraphs
+    "co"    'evilnc-comment-operator
+    "sh"    'evil-search-highlight-persist-remove-all
+    "TAB"   'transpose-frame))
+#+END_SRC
+
+*** Evil surround
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package evil-surround
+  :require evil
+  :config
+  (global-evil-surround-mode t))
+#+END_SRC
+
+*** Evil search highlight persist
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package evil-search-highlight-persist
+  :require evil
+  :config
+  (global-evil-search-highlight-persist t))
+#+END_SRC
+
+** Projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package projectile
+  :config
+  (setq projectile-enable-caching t
+        projectile-switch-project-action 'projectile-dired
+        projectile-require-project-root nil
+        projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
+        projectile-project-root-files (append '("init.el") projectile-project-root-files))
+  (projectile-global-mode))
+#+END_SRC
+
+** Helm
+*** Helm config
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package helm-config)
+#+END_SRC
+
+*** Helm
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package helm
+  :require helm-config
+  :config
+  (setq helm-ff-skip-boring-files t
+        helm-boring-file-regexp-list   '("\\.git$" "\\.hg$" "\\.svn$" "\\.CVS$" "\\._darcs$" "\\.la$" "\\.o$" "~$" "\\.so$" "\\.a$"
+                                         "\\.elc$" "\\.fas$" "\\.fasl$" "\\.pyc$" "\\.pyo$" "bower_components" "node_modules")
+        helm-boring-buffer-regexp-list '("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*tramp" "\\*Minibuf" "\\*epc"))
+
+  (advice-add 'helm-ff-filter-candidate-one-by-one
+              :around (lambda (fcn file)
+                        (unless (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)
+                          (funcall fcn file))))
+
+  (helm-autoresize-mode t)
+  (helm-mode t)
+
+  (define-key global-map (kbd "C-x C-f")    'helm-find-files)
+  (define-key global-map (kbd "C-SPC")      'helm-mini)
+  (define-key helm-map   (kbd "<tab>")      'helm-execute-persistent-action)
+  (define-key helm-map   (kbd "C-i")        'helm-execute-persistent-action)
+  (define-key helm-map   (kbd "C-z")        'helm-select-action)
+  (define-key helm-map   (kbd "C-k")        'helm-previous-source)
+  (define-key helm-map   (kbd "C-j")        'helm-next-source)
+
+  (define-key helm-buffer-map     (kbd "<C-backspace>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (lambda (buffer) (kill-buffer buffer) (helm-mini))))))
+
+  (define-key helm-buffer-map     (kbd "<C-return>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'switch-to-buffer 'right)))))
+
+  (define-key helm-buffer-map     (kbd "<C-S-return>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'switch-to-buffer 'right)))))
+
+  (define-key helm-find-files-map (kbd "<C-return>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
+
+  (define-key helm-find-files-map (kbd "<C-S-return>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
+#+END_SRC
+
+*** Helm projectile
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package helm-projectile
+  :require projectile helm grep
+  :config
+  (define-key helm-projectile-find-file-map (kbd "<C-return>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
+
+  (define-key helm-projectile-find-file-map (kbd "<C-S-return>")
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below)))))
+
+  (define-key projectile-command-map (kbd "p")   'helm-projectile-switch-project)
+  (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag))
+#+END_SRC
+
+** Comint
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package comint
+  :defer t
+  :require evil
+  :config
+  (add-hook 'comint-mode-hook
+            #'(lambda ()
+                (evil-define-key 'insert comint-mode-map
+                  (kbd "C-r") 'helm-comint-input-ring
+                  (kbd "C-p") 'comint-previous-input
+                  (kbd "C-n") 'comint-next-input))))
+#+END_SRC
+
+** Company
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package company
+  :defer t
+  :require helm-company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (add-hook 'global-company-mode-hook
+            #'(lambda ()
+                (setq company-idle-delay 0
+                      company-dabbrev-downcase nil)
+                (define-key company-active-map (kbd "M-n") nil)
+                (define-key company-active-map (kbd "M-p") nil)
+                (define-key company-active-map (kbd "\C-n") 'company-select-next)
+                (define-key company-active-map (kbd "\C-p") 'company-select-previous))))
+#+END_SRC
+    
+** Eshell
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package eshell
+    :defer t
+    :require evil
+    :config
+    (setq eshell-history-size 1000
+          eshell-aliases-file (concat user-emacs-directory "eshell-aliases")
+          eshell-prompt-function #'(lambda nil (concat (getenv "USER") "@" (system-name) ":"
+                                                       (abbreviate-file-name (eshell/pwd))
+                                                       (if (= (user-uid) 0) " # " " $ "))))
+
+    (add-hook 'eshell-mode-hook #'(lambda ()
+                                    (evil-define-key 'insert eshell-mode-map
+                                      (kbd "C-a") 'eshell-maybe-bol
+                                      (kbd "C-r") 'helm-eshell-history
+                                      (kbd "C-p") 'eshell-previous-matching-input-from-input
+                                      (kbd "C-n") 'eshell-next-matching-input-from-input)
+
+                                    (company-mode -1)
+
+                                    (defalias 'ff 'find-file)
+                                    (defalias 'd  'dired))))
+#+END_SRC
+
+** Flycheck
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package flycheck
+  :defer t
+  :init
+  (add-hook 'after-init-hook 'global-flycheck-mode))
+#+END_SRC
+
+** Elixir
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package elixir-mode
+  :defer t
+  :require smartparens
+  :config
+  (setq blink-matching-delay 0.1)
+
+  (add-hook 'elixir-mode-hook 'alchemist-mode)
+
+  (defun my-elixir-do-end-close-action (id action context)
+    (when (eq action 'insert)
+      (newline-and-indent)
+      (forward-line -1)
+      (indent-according-to-mode)))
+
+  (sp-with-modes '(elixir-mode)
+    (sp-local-pair "->" "end"
+                   :when '(("RET"))
+                   :post-handlers '(:add my-elixir-do-end-close-action)
+                   :actions '(insert)))
+
+  (sp-with-modes '(elixir-mode)
+    (sp-local-pair "do" "end"
+                   :when '(("SPC" "RET"))
+                   :post-handlers '(:add my-elixir-do-end-close-action)
+                   :actions '(insert))))
+#+END_SRC
+
+** Smartparens
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package smartparens
+  :config
+  (smartparens-global-mode))
+#+END_SRC
+
+** Latex
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package latex-mode
+  :defer t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.tex$\\'" . latex-mode))
+  :config
+  (add-hook 'latex-mode-hook
+            #'(lambda ()
+                (flyspell-mode t)
+                (ispell-change-dictionary "english")
+                (local-unset-key (kbd "C-SPC")))))
+#+END_SRC
+
+** Elm
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package elm-mode
+  :defer t
+  :require flycheck
+  :init
+  (add-to-list 'auto-mode-alist '("\\.elm\\'" . elm-mode))
+  :config
+  (flycheck-define-checker elm
+    "An Elm syntax checker
+Uses Elm compiler. See URL
+`http://elm-lang.org'."
+    :command ("elm"
+              "-m"
+              "-o"        ; only javascript
+              source)
+    :error-patterns
+    ((error line-start "Parse error at (line " line ", column " column "):\n"
+            (message) line-end)
+     (error line-start "Error on line " line ", column " column " to " (one-or-more digit) ":\n"
+            (message) line-end)
+     (error line-start "Type error on line " line ", column " column " to " (one-or-more digit)":\n"
+            (message (one-or-more (or not-newline "\n")))
+            line-end)
+     (error line-start "Type Error: "
+            (message (one-or-more (or not-newline "\n")))
+            line-end)
+     (error line-start "Syntax Error: "
+            (message (one-or-more (or not-newline "\n")))))
+    :modes (elm-mode))
+
+  (add-to-list 'flycheck-checkers 'elm))
+#+END_SRC
+
+** Guide-key
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package guide-key
+  :config
+  (setq guide-key/guide-key-sequence '("<SPC>" "C-c")
+        guide-key/recursive-key-sequence-flag t
+        guide-key/idle-delay 0.1
+        guide-key/popup-window-position 'bottom)
+  (guide-key-mode t))
+#+END_SRC
+
+** Javascript
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package js2-mode
+  :defer t
+  :require flycheck
+  :init
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  :config
+  (setq-default js2-basic-offset 2)
+
+  (add-hook 'js2-mode-hook 'ac-js2-mode))
+#+END_SRC
+
+** Rust
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package rust-mode
+  :defer t
+  :require flycheck-rust
+  :init
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  :config
+  (setq-default rust-basic-offset 4)
+  (add-hook 'flycheck-mode-hook 'flycheck-rust-setup))
+#+END_SRC
+
+** Web
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package web-mode
+  :defer t
+  :require flycheck
+  :init
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'"     . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'"   . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'"   . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'"       . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'"  . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'"    . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.ejs\\'"       . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'"       . web-mode))
+  :config
+  (setq-default flycheck-disabled-checkers
+                 (append flycheck-disabled-checkers '(javascript-jshint)))
+
+  (add-hook 'web-mode-hook
+            #'(lambda ()
+                (setq web-mode-markup-indent-offset 2)
+                (setq web-mode-css-indent-offset 2)
+                (setq web-mode-code-indent-offset 2)))
+
+  (flycheck-add-mode 'javascript-eslint 'web-mode))
+#+END_SRC
+
+** Transpose-frame
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package transpose-frame
+  :defer t)
+#+END_SRC
+
+** Magit
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package magit
+  :defer t
+  :config
+  (global-set-key (kbd "C-c g s")   'magit-status)
+  (global-set-key (kbd "C-c g l l") 'magit-log)
+  (global-set-key (kbd "C-c g l c") 'magit-log-current))
+#+END_SRC
+
+** Org mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package org
+  :config
+  (add-hook 'org-mode-hook #'(lambda ())))
+#+END_SRC
+   
+
+* Globals
+#+BEGIN_SRC emacs-lisp :tangle yes
+(put 'dired-find-alternate-file 'disabled nil)
+(put 'erase-buffer 'disabled nil)                 ; Allow the use of erase-buffer
+(windmove-default-keybindings)                    ; Move between windows with shift + arrow keys
+(transient-mark-mode t)                           ; Show the mark as selected
+(global-auto-revert-mode t)                       ; Reload buffers when they change outside emacs
+
+(setq-default c-basic-offset 4
+              truncate-lines nil
+              prefer-coding-system 'utf-8
+              indent-tabs-mode nil
+              global-auto-revert-non-file-buffers t ;; Auto-revert
+              auto-revert-verbose nil
+              tab-width 4
+              backup-inhibited t
+              auto-save-default nil)
+
+(define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
+(define-key key-translation-map (kbd "C-.") (kbd "C-c"))
+(define-key key-translation-map "\e"        (kbd "C-g"))
+
+(define-key global-map (kbd "M-n")           'next-non-emacs-buffer)
+(define-key global-map (kbd "M-p")           'previous-non-emacs-buffer)
+(define-key global-map (kbd "M-f")           'delete-other-windows)
+(define-key global-map (kbd "M-e")           'eshell-projectile)
+(define-key global-map (kbd "M-q")           'delete-window)
+(define-key global-map (kbd "<C-backspace>") 'kill-buffer-and-window)
+(define-key global-map (kbd "M-t")           'transpose-frame)
+(define-key global-map (kbd "C-;")           'other-window)
+(define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
+(define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
+#+END_SRC
+
+
+* It's about time
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package-finish)
+#+END_SRC
