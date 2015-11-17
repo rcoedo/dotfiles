@@ -10,9 +10,9 @@
   :defer t
   :require smartparens
   :config
-  (add-hook 'elixir-mode-hook 'alchemist-mode)
-
   (setq blink-matching-delay 0.1)
+
+  (add-hook 'elixir-mode-hook 'alchemist-mode)
 
   (defun my-elixir-do-end-close-action (id action context)
     (when (eq action 'insert)

@@ -7,7 +7,6 @@
 (require 'req-package)
 
 (req-package guide-key
-  :defer t
   :config
   (setq guide-key/guide-key-sequence '("<SPC>" "C-c")
         guide-key/recursive-key-sequence-flag t

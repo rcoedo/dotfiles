@@ -10,8 +10,6 @@
   :defer t
   :require evil
   :config
-  (require 'evil)
-  (require 'comint)
   (add-hook 'comint-mode-hook
             #'(lambda ()
                 (evil-define-key 'insert comint-mode-map

@@ -9,6 +9,8 @@
 (req-package elm-mode
   :defer t
   :require flycheck
+  :init
+  (add-to-list 'auto-mode-alist '("\\.elm\\'" . elm-mode))
   :config
   (flycheck-define-checker elm
     "An Elm syntax checker
@@ -33,7 +35,6 @@ Uses Elm compiler. See URL
             (message (one-or-more (or not-newline "\n")))))
     :modes (elm-mode))
 
-  (add-to-list 'auto-mode-alist '("\\.elm\\'" . elm-mode))
   (add-to-list 'flycheck-checkers 'elm))
 (provide 'elm-settings)
 ;;; elm-settings.el ends here
