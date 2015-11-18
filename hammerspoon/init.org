@@ -1,0 +1,210 @@
+#+AUTHOR: Roman Coedo
+#+TITLE: Hammerspoon Settings
+
+* Configuration watcher
+#+BEGIN_SRC lua :tangle yes :padline no
+hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()
+hs.alert("Config loaded")
+#+END_SRC
+
+
+* Modal bindings
+#+BEGIN_SRC lua :tangle yes
+b = hs.hotkey.modal.new({"cmd"}, "return")
+
+b:bind({"cmd"}, "return", function() end)
+b:bind({}, "escape", function() b:exit() end)
+
+b:bind({}, "c", function() hs.application.launchOrFocus("Google Chrome") b:exit() end)
+b:bind({}, "t", function() hs.application.launchOrFocus("iTerm") b:exit() end)
+b:bind({}, "s", function() hs.application.launchOrFocus("Spotify") b:exit() end)
+b:bind({}, "n", function() hs.application.launchOrFocus("Evernote") b:exit() end)
+b:bind({}, "e", function() hs.application.launchOrFocus("Emacs") b:exit() end)
+b:bind({}, "i", function() hs.application.launchOrFocus("IntelliJ IDEA 15") b:exit() end)
+#+END_SRC
+
+  
+* Window management
+** Smart grid
+#+BEGIN_SRC lua :tangle yes
+function gridOp(op, cell)
+    if (op.x ~= null) then
+        cell.x = cell.x + op.x
+    end
+    if (op.y ~= null) then
+        cell.y = cell.y + op.y
+    end
+    if (op.w ~= null) then
+        cell.w = cell.w + op.w
+    end
+    if (op.h ~= null) then
+        cell.h = cell.h + op.h
+    end
+    return cell
+end
+
+function expandToRight(cell)  return gridOp({w = 1},         cell) end
+function expandToLeft(cell)   return gridOp({x = -1, w = 1}, cell) end
+function expandToBottom(cell) return gridOp({h = 1},         cell) end
+function expandToTop(cell)    return gridOp({y = -1, h = 1}, cell) end
+
+function shrinkToRight(cell)  return gridOp({x = 1, w = -1}, cell) end
+function shrinkToLeft(cell)   return gridOp({w = -1},        cell) end
+function shrinkToBottom(cell) return gridOp({y = 1, h = -1}, cell) end
+function shrinkToTop(cell)    return gridOp({h = -1}       , cell) end
+
+function smartResizeRight(cell)
+    if ((cell.x + cell.w >= hs.grid.GRIDWIDTH) and (cell.w > 1)) then
+        return shrinkToRight(cell)
+    elseif ((cell.x + cell.w < hs.grid.GRIDWIDTH) and (cell.w < hs.grid.GRIDWIDTH)) then
+        return expandToRight(cell)
+    end
+end
+
+function smartResizeLeft(cell)
+    if (cell.x + cell.w >= hs.grid.GRIDWIDTH) then
+        if (cell.x > 0) then
+            return expandToLeft(cell)
+        else
+            return shrinkToLeft(cell)
+        end
+    else
+        if (cell.w > 1) then
+            return shrinkToLeft(cell)
+        elseif (cell.x > 0) then
+            return expandToLeft(cell)
+        end
+    end
+end
+
+function smartResizeDown(cell)
+    if ((cell.y + cell.h >= hs.grid.GRIDHEIGHT) and (cell.h > 1)) then
+        return shrinkToBottom(cell)
+    elseif ((cell.y + cell.h < hs.grid.GRIDHEIGHT) and (cell.h < hs.grid.GRIDHEIGHT)) then
+        return expandToBottom(cell)
+    end
+end
+
+function smartResizeUp(cell)
+    if (cell.y + cell.h >= hs.grid.GRIDHEIGHT) then
+        if (cell.y > 0) then
+            return expandToTop(cell)
+        else
+            return shrinkToTop(cell)
+        end
+    else
+        if (cell.h > 1) then
+            return shrinkToTop(cell)
+        elseif (cell.y > 0) then
+            return expandToTop(cell)
+        end
+    end
+end
+
+function smartResizeWindowRight() hs.grid.adjustFocusedWindow(smartResizeRight) end
+function smartResizeWindowLeft() hs.grid.adjustFocusedWindow(smartResizeLeft) end
+function smartResizeWindowUp() hs.grid.adjustFocusedWindow(smartResizeUp) end
+function smartResizeWindowDown() hs.grid.adjustFocusedWindow(smartResizeDown) end
+
+function adjustGrid(h, w) hs.grid.adjustHeight(h) hs.grid.adjustWidth(w) end
+function increaseGrid() adjustGrid(1, 1) end
+function decreaseGrid() adjustGrid(-1, -1) end
+#+END_SRC
+
+** Bindings
+#+BEGIN_SRC lua :tangle yes :padline no
+hs.window.animationDuration = 0
+hs.grid.MARGINX = 0
+hs.grid.MARGINY = 0
+hs.grid.GRIDWIDTH = 2
+hs.grid.GRIDHEIGHT = 2
+
+local cmd = {"cmd"}
+local cmdalt = {"cmd", "alt"}
+
+hs.hotkey.bind(cmd, "s", function() hs.hints.windowHints() end)
+
+hs.hotkey.bind(cmd, "h", function() hs.window.focusedWindow():focusWindowWest() end)
+hs.hotkey.bind(cmd, "l", function() hs.window.focusedWindow():focusWindowEast() end)
+hs.hotkey.bind(cmd, "k", function() hs.window.focusedWindow():focusWindowNorth() end)
+hs.hotkey.bind(cmd, "j", function() hs.window.focusedWindow():focusWindowSouth() end)
+
+hs.hotkey.bind(cmdalt, "f", function() hs.window.focusedWindow():toggleFullScreen() end)
+
+hs.hotkey.bind(cmdalt, "h", hs.grid.pushWindowLeft)
+hs.hotkey.bind(cmdalt, "j", hs.grid.pushWindowDown)
+hs.hotkey.bind(cmdalt, "k", hs.grid.pushWindowUp)
+hs.hotkey.bind(cmdalt, "l", hs.grid.pushWindowRight)
+
+hs.hotkey.bind(cmdalt, "u", smartResizeWindowDown)
+hs.hotkey.bind(cmdalt, "i", smartResizeWindowUp)
+hs.hotkey.bind(cmdalt, "o", smartResizeWindowRight)
+hs.hotkey.bind(cmdalt, "y", smartResizeWindowLeft)
+
+hs.hotkey.bind(cmdalt, "[", decreaseGrid)
+hs.hotkey.bind(cmdalt, "]", increaseGrid)
+
+hs.hotkey.bind(cmdalt, "n", function() hs.grid.pushWindowNextScreen() end)
+hs.hotkey.bind(cmdalt, "p", function() hs.grid.pushWindowPreviousScreen() end)
+
+hs.hotkey.bind(cmdalt, "m", hs.grid.maximizeWindow)
+
+hs.hotkey.bind(cmd, "delete", function() hs.window.focusedWindow():close() end)
+hs.hotkey.bind(cmdalt, "delete", function() hs.window.focusedWindow():application():kill() end)
+#+END_SRC
+   
+
+* Spotify
+#+BEGIN_SRC lua :tangle yes
+s = hs.hotkey.modal.new({"alt"}, "space")
+
+s:bind({}, "escape", function() s:exit() end)
+
+s:bind({"alt"}, "space", function() hs.spotify.play() s:exit() end)
+s:bind({}, "p", function() hs.spotify.previous() s:exit() end)
+s:bind({}, "n", function() hs.spotify.next() s:exit() end)
+s:bind({}, "c", function() hs.spotify.displayCurrentTrack() s:exit() end)
+#+END_SRC
+  
+  
+* Hammerspoon CLI
+#+BEGIN_SRC lua :tangle yes
+hs.ipc.cliInstall()
+#+END_SRC
+  
+
+* Window cleaner
+#+BEGIN_SRC lua :tangle yes
+__tostring_for_arrays = function(self)
+    result = ""
+    width = 0
+    for i,v in hs.fnutils.sortByKeyValues(self) do result = result..tostring(v).."\n" end
+    return result
+end
+
+closeList  = setmetatable({}, { __tostring = __tostring_for_arrays })
+quitList   = setmetatable({}, { __tostring = __tostring_for_arrays })
+
+closeQuitWatcher = hs.application.watcher.new(function(name, event, hsapp)
+    if event == hs.application.watcher.deactivated then
+        for i,v in ipairs(closeList) do
+            if name and v == name then
+                if #hsapp:allWindows() == 1 then hsapp:allWindows()[1]:close() end
+                break
+            end
+        end
+        for i,v in ipairs(quitList) do
+            if name and v == name then
+                hsapp:kill()
+                break
+            end
+        end
+    end
+end)
+
+table.insert(quitList, "Firefox")
+table.insert(quitList, "Finder")
+table.insert(quitList, "GitX")
+
+closeQuitWatcher:start()
+#+END_SRC

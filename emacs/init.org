@@ -607,6 +607,16 @@ Uses Elm compiler. See URL
   (add-to-list 'flycheck-checkers 'elm))
 #+END_SRC
 
+** Lua
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package lua-mode
+  :defer t
+  :require flycheck
+  :init
+  (add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+  (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+#+END_SRC
+
 ** Guide-key
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package guide-key
