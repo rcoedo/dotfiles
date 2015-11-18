@@ -1,4 +1,4 @@
-# Just another dotfiles repository
+# ~/.
 
 This is just another dotfiles repository. Feel free to copy anything you want/need.
 
