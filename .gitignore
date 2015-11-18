@@ -1,2 +1,9 @@
 .cs_files
-.cask
+
+# Emacs ignored files
+.cask/
+projectile-bookmarks.eld
+projectile.cache
+auto-save-list/
+eshell/
+recentf
