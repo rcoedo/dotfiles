@@ -14,5 +14,4 @@ cp -r hammerspoon/ ~/.hammerspoon
 cd ~/.hammerspoon
 orgtangle init.org
 ```
-
 ![Hammerspoon rocks!](http://www.hammerspoon.org/images/hammerspoon.png)
