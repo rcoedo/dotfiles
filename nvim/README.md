@@ -5,7 +5,7 @@ This configuration uses [Vundle](https://github.com/VundleVim/Vundle.vim) as plu
 ```
 git clone git@github.com:rcoedo/dotfiles.git
 cd dotfiles/
-cp nvimrc ~/.nvimrc
+cp nvim/nvimrc ~/.nvimrc
 ```
 Then just open vim and write :PluginInstall.
 
