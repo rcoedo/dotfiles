@@ -1,3 +1,4 @@
+" Use Fish as shell
 if &shell =~# 'fish$'
     set shell=sh
 endif
@@ -8,11 +9,12 @@ let mapleader="\<Space>"
 set nocompatible
 filetype off
 
-" ### Plugin config ###
+" Vundle as plugin manager
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+" Plugin configuration
 Plugin 'dag/vim-fish'
 Plugin 'maxbrunsfeld/vim-emacs-bindings'
 Plugin 'mhinz/vim-sayonara'
@@ -34,6 +36,7 @@ Plugin 'fatih/vim-go'
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'jceb/vim-orgmode'
 Plugin 'tpope/vim-speeddating'
+
 Plugin 'mxw/vim-jsx'
 let g:jsx_ext_required = 0
 
@@ -57,9 +60,7 @@ let g:airline_exclude_preview = 1
 
 call vundle#end()
 
-" ### General config ###
-colorscheme badwolf
-
+" General configuration
 filetype plugin indent on
 set history=1000
 set autoread
@@ -113,22 +114,23 @@ set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
 
 " Colors
+colorscheme badwolf
 syntax enable
 set t_Co=256
 
 " Key mappings
-noremap <Leader>bd :bd<CR>
-nmap <Leader>h :noh<CR>
 nnoremap <leader>w :w<cr>
 nnoremap <leader>q :Sayonara<cr>
 nnoremap <leader>Q :Sayonara!<cr>
-nmap <tab> <c-w><c-w>
 
-nmap <Leader><Leader> <Plug>(easymotion-s)
-
+noremap <Leader>bd :bd<CR>
 noremap <Leader>ft :NERDTreeToggle<cr>
 noremap <Leader>fi :NERDTreeFind<cr>
 noremap <c-p> :CtrlSpace O<cr>
+
+nmap <Leader>sh :noh<CR>
+nmap <tab> <c-w><c-w>
+nmap <Leader><Leader> <Plug>(easymotion-s)
 
 " File config
 au FileType gitcommit set tw=72
@@ -136,13 +138,12 @@ au FileType javascript setlocal ts=2 sw=2 expandtab
 au FileType go setlocal ts=4 sw=4 expandtab
 autocmd FileType html :setlocal sw=2 ts=2 sts=2
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
+autocmd BufWrite *.py :call DeleteTrailing()
+autocmd BufWrite *.coffee :call DeleteTrailing()
+autocmd BufWrite *.java :call DeleteTrailing()
 
-autocmd BufWrite *.py :call DeleteTrailingWS()
-autocmd BufWrite *.coffee :call DeleteTrailingWS()
-autocmd BufWrite *.java :call DeleteTrailingWS()
-
-" Delete trailing whitespaces on save
-func! DeleteTrailingWS()
+" Delete trailing whitespaces
+func! DeleteTrailing()
    exe "normal mz"
    %s/\s\+$//ge
    exe "normal `z"
