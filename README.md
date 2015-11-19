@@ -9,5 +9,5 @@ Each folder contains a README with more instructions and, if you are lucky enoug
 * [(Evil) Emacs](https://github.com/rcoedo/dotfiles/tree/master/emacs)
 * [Fish shell](https://github.com/rcoedo/dotfiles/tree/master/fish)
 * [Hammerspoon](https://github.com/rcoedo/dotfiles/tree/master/hammerspoon)
-* [Vim](https://github.com/rcoedo/dotfiles/tree/master/vim)
+* [NeoVim](https://github.com/rcoedo/dotfiles/tree/master/nvim)
 * [Tmux](https://github.com/rcoedo/dotfiles/tree/master/tmux)

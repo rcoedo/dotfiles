@@ -15,5 +15,4 @@ cd ~/.emacs.d
 orgtangle init.org
 cask install
 ```
-
-![They love each other :)](http://i.imgur.com/dObnwrW.jpg)
+![They love each other :)](http://i.imgur.com/81LXpoy.png)
