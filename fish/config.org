@@ -203,7 +203,7 @@ function fish_user_key_bindings
     bind \cr ihistory
     bind \eo ips
     bind \ep ifind
-    bind \ec icd
+    bind \ec ircd
     bind \ew ighq
 end
 #+END_SRC
