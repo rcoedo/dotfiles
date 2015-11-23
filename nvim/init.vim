@@ -10,7 +10,7 @@ set nocompatible
 filetype off
 
 " Vundle as plugin manager
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.config/nvim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
