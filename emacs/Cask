@@ -30,6 +30,7 @@
 (depends-on "rainbow-mode")
 (depends-on "req-package")
 (depends-on "rust-mode")
+(depends-on "direx")
 (depends-on "smartparens")
 (depends-on "spacemacs-theme")
 (depends-on "transpose-frame")

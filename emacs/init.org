@@ -697,6 +697,28 @@ Uses Elm compiler. See URL
   (global-set-key (kbd "C-c g l c") 'magit-log-current))
 #+END_SRC
 
+** Popwin
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package popwin
+    :config
+    (popwin-mode 1))
+#+END_SRC
+
+** Direx
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package direx
+    :require popwin projectile
+    :config
+    (push '(direx:direx-mode :position left :width 40 :dedicated t :stick t)
+          popwin:special-display-config)
+    (add-hook 'direx:direx-mode-hook #'(lambda ()
+                                         (setq mode-line-format nil)
+                                         (linum-mode -1)))
+    (global-set-key (kbd "C-x C-j") #'(lambda ()
+                                      (interactive)
+                                      (direx:find-directory-other-window (projectile-project-root)))))
+#+END_SRC
+
 ** Org mode
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package org
