@@ -31,16 +31,8 @@ set -gx GIT_EDITOR "vim"
 set -gx GREP_OPTIONS "--color=auto"
 set -gx CDPATH . "$HOME/Workspace"
 
-set -x SLASH_HOME $HOME/.slash
-__add_to_path $SLASH_HOME/bin
-
 set -x JAVA_HOME (/usr/libexec/java_home)
 __add_to_path $JAVA_HOME/bin
-
-set -x M2_REPO $HOME/.m2/repository
-set -x M2_HOME $SLASH_HOME/apache-maven-3.2.3
-__add_to_path $M2_HOME/bin
-__add_to_path $M2_REPO
 
 set -x TOMCATS $HOME/Workspace/tomcats
 set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.26
