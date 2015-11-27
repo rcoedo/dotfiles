@@ -21,6 +21,7 @@
 
 ** Dependency management
 #+BEGIN_SRC emacs-lisp :tangle yes
+(setq ad-redefinition-action 'accept)
 (require 'req-package)
 #+END_SRC
    
@@ -205,6 +206,15 @@ Repeated invocations toggle between the two most recently open buffers."
         (previous-non-emacs-buffer tmp-orig))))
 #+END_SRC
 
+** Ghq
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun find-ghq-root ()
+    (car (split-string (shell-command-to-string "ghq root"))))
+
+  (defun find-ghq-projects()
+    (split-string (shell-command-to-string "ghq list --full-path")))
+#+END_SRC
+  
 * Package settings
 ** Evil
 *** Evil mode
@@ -279,21 +289,28 @@ Repeated invocations toggle between the two most recently open buffers."
 #+END_SRC
 
 ** Projectile
+projectile-project-root-files (append '("init.el") projectile-project-root-files))
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package projectile
-  :config
-  (setq projectile-enable-caching t
-        projectile-switch-project-action 'projectile-dired
-        projectile-require-project-root nil
-        projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
-        projectile-project-root-files (append '("init.el") projectile-project-root-files))
-  (projectile-global-mode))
+  (req-package projectile
+    :config
+    (setq projectile-enable-caching t
+          projectile-switch-project-action 'projectile-dired
+          projectile-require-project-root nil
+          projectile-ignored-project-function #'(lambda (project-root) 'true)
+          projectile-known-projects (find-ghq-projects)
+          projectile-completion-system 'helm
+          projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
+          projectile-project-root-files ())
+
+    (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)
+
+    (projectile-global-mode))
 #+END_SRC
 
 ** Helm
 *** Helm config
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package helm-config)
+  (req-package helm-config)
 #+END_SRC
 
 *** Helm
@@ -340,17 +357,16 @@ Repeated invocations toggle between the two most recently open buffers."
 
 *** Helm projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package helm-projectile
-  :require projectile helm grep
-  :config
-  (define-key helm-projectile-find-file-map (kbd "<C-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
+  (req-package helm-projectile
+    :require projectile helm grep
+    :config
+    (helm-projetile-on)
 
-  (define-key helm-projectile-find-file-map (kbd "<C-S-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below)))))
+    (define-key helm-projectile-find-file-map (kbd "<C-return>")
+      #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
 
-  (define-key projectile-command-map (kbd "p")   'helm-projectile-switch-project)
-  (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag))
+    (define-key helm-projectile-find-file-map (kbd "<C-S-return>")
+      #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
 #+END_SRC
 
 ** Comint
@@ -577,8 +593,7 @@ Uses Elm compiler. See URL
 
 ** Transpose-frame
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package transpose-frame
-  :defer t)
+(req-package transpose-frame)
 #+END_SRC
 
 ** Magit
