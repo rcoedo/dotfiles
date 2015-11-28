@@ -173,17 +173,3 @@ hs.ipc.cliInstall()
 #+END_SRC
   
 
-* Window cleaner
-#+BEGIN_SRC lua :tangle yes
-  quitWatcher = hs.application.watcher.new(
-     function(name, event, hsapp)
-        if event == hs.application.watcher.deactivated then
-           if #hsapp:allWindows() == 0 then
-              hsapp:kill()
-           end
-        end
-     end
-  )
-
-  quitWatcher:start()
-#+END_SRC
