@@ -35,7 +35,7 @@ set -x JAVA_HOME (/usr/libexec/java_home)
 __add_to_path $JAVA_HOME/bin
 
 set -x TOMCATS $HOME/Workspace/tomcats
-set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.26
+set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 
 set -x ANDROID_HOME $HOME/Library/Android/sdk
 __add_to_path $ANDROID_HOME/platform-tools
@@ -270,7 +270,7 @@ end
 
 ** Aliases
 #+BEGIN_SRC fish :tangle yes
-alias gg "ghq get"
+alias gg "ghq get -p"
 #+END_SRC
 
 

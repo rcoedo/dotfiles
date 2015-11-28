@@ -175,36 +175,15 @@ hs.ipc.cliInstall()
 
 * Window cleaner
 #+BEGIN_SRC lua :tangle yes
-__tostring_for_arrays = function(self)
-    result = ""
-    width = 0
-    for i,v in hs.fnutils.sortByKeyValues(self) do result = result..tostring(v).."\n" end
-    return result
-end
-
-closeList  = setmetatable({}, { __tostring = __tostring_for_arrays })
-quitList   = setmetatable({}, { __tostring = __tostring_for_arrays })
-
-closeQuitWatcher = hs.application.watcher.new(function(name, event, hsapp)
-    if event == hs.application.watcher.deactivated then
-        for i,v in ipairs(closeList) do
-            if name and v == name then
-                if #hsapp:allWindows() == 1 then hsapp:allWindows()[1]:close() end
-                break
-            end
+  quitWatcher = hs.application.watcher.new(
+     function(name, event, hsapp)
+        if event == hs.application.watcher.deactivated then
+           if #hsapp:allWindows() == 0 then
+              hsapp:kill()
+           end
         end
-        for i,v in ipairs(quitList) do
-            if name and v == name then
-                hsapp:kill()
-                break
-            end
-        end
-    end
-end)
+     end
+  )
 
-table.insert(quitList, "Firefox")
-table.insert(quitList, "Finder")
-table.insert(quitList, "GitX")
-
-closeQuitWatcher:start()
+  quitWatcher:start()
 #+END_SRC
