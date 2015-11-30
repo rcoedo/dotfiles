@@ -369,6 +369,11 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
       #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
 #+END_SRC
 
+** Ghq
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package ghq)
+#+END_SRC
+
 ** Comint
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package comint
