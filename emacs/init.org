@@ -628,7 +628,7 @@ Uses Elm compiler. See URL
     (add-hook 'direx:direx-mode-hook #'(lambda ()
                                          (setq mode-line-format nil)
                                          (linum-mode -1)))
-    (global-set-key (kbd "C-x C-j") #'(lambda ()
+    (global-set-key (kbd "C-x t") #'(lambda ()
                                       (interactive)
                                       (direx:find-directory-other-window (projectile-project-root)))))
 #+END_SRC
@@ -666,8 +666,6 @@ Uses Elm compiler. See URL
 (define-key global-map (kbd "M-p")           'previous-non-emacs-buffer)
 (define-key global-map (kbd "M-f")           'delete-other-windows)
 (define-key global-map (kbd "M-e")           'eshell-projectile)
-(define-key global-map (kbd "M-q")           'delete-window)
-(define-key global-map (kbd "<C-backspace>") 'kill-buffer-and-window)
 (define-key global-map (kbd "M-t")           'transpose-frame)
 (define-key global-map (kbd "C-;")           'other-window)
 (define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
