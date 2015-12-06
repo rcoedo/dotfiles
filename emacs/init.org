@@ -544,16 +544,25 @@ Uses Elm compiler. See URL
 #+END_SRC
 
 ** Javascript
+*** Tern
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package js2-mode
-  :defer t
-  :require flycheck
-  :init
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  :config
-  (setq-default js2-basic-offset 2)
+  (req-package tern
+    :defer t
+    :require company
+    :init
+    (add-to-list 'company-backends 'company-tern))
+#+END_SRC
 
-  (add-hook 'js2-mode-hook 'ac-js2-mode))
+*** Js2
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package js2-mode
+    :defer t
+    :require company flycheck tern
+    :init
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    :config
+    (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+    (setq-default js2-basic-offset 2))
 #+END_SRC
 
 ** Rust
@@ -570,30 +579,31 @@ Uses Elm compiler. See URL
 
 ** Web
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package web-mode
-  :defer t
-  :require flycheck
-  :init
-  (add-to-list 'auto-mode-alist '("\\.phtml\\'"     . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'"   . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'"   . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'"       . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.mustache\\'"  . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.djhtml\\'"    . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.ejs\\'"       . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'"       . web-mode))
-  :config
-  (setq-default flycheck-disabled-checkers
-                 (append flycheck-disabled-checkers '(javascript-jshint)))
+  (req-package web-mode
+    :defer t
+    :require flycheck
+    :init
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'"     . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'"   . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'"   . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'"       . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'"  . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'"    . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.ejs\\'"       . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsx\\'"       . web-mode))
+    :config
+    (setq-default flycheck-disabled-checkers
+                   (append flycheck-disabled-checkers '(javascript-jshint)))
 
-  (add-hook 'web-mode-hook
-            #'(lambda ()
-                (setq web-mode-markup-indent-offset 2)
-                (setq web-mode-css-indent-offset 2)
-                (setq web-mode-code-indent-offset 2)))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (setq web-mode-markup-indent-offset 2)
+                  (setq web-mode-css-indent-offset 2)
+                  (setq web-mode-code-indent-offset 2)
+                  (tern-mode t)))
 
-  (flycheck-add-mode 'javascript-eslint 'web-mode))
+    (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 
 ** Transpose-frame
