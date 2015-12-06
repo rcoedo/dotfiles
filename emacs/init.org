@@ -295,7 +295,6 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
     :config
     (setq projectile-enable-caching t
           projectile-switch-project-action 'projectile-dired
-          projectile-require-project-root nil
           projectile-ignored-project-function #'(lambda (project-root) 'true)
           projectile-known-projects (find-ghq-projects)
           projectile-completion-system 'helm
