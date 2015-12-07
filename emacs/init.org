@@ -219,37 +219,42 @@ Repeated invocations toggle between the two most recently open buffers."
 ** Evil
 *** Evil mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package evil
-  :config
-  (evil-mode t)
+  (req-package evil
+    :config
+    (evil-mode t)
 
-  (defvar evil-mode-list
-    '((eshell-mode         insert)
-      (comint-mode         insert)
-      (alchemist-iex-mode  insert)
-      (magit-mode          emacs)
-      (magit-status        emacs)
-      (magit-log-mode      emacs)
-      (magit-commit-mode   emacs)
-      (magit-diff-mode     emacs)
-      (magit-popup-mode    emacs)
-      (magit-merge-popup   emacs)
-      (magit-revision-mode emacs)
-      (direx:direx-mode    emacs)
-      (git-commit-mode     insert)))
+    (defvar evil-mode-list
+      '((eshell-mode         insert)
+        (comint-mode         insert)
+        (alchemist-iex-mode  insert)
+        (magit-mode          emacs)
+        (magit-status        emacs)
+        (magit-log-mode      emacs)
+        (magit-commit-mode   emacs)
+        (magit-diff-mode     emacs)
+        (magit-popup-mode    emacs)
+        (magit-merge-popup   emacs)
+        (magit-revision-mode emacs)
+        (direx:direx-mode    emacs)
+        (git-commit-mode     insert)))
 
-  (dolist (mode evil-mode-list)
-    (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
+    (dolist (mode evil-mode-list)
+      (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
 
-  (define-key evil-insert-state-map "\C-a" 'beginning-of-line)
-  (define-key evil-insert-state-map "\C-e" 'end-of-line)
-  (define-key evil-insert-state-map "\C-f" 'forward-char)
-  (define-key evil-insert-state-map "\C-b" 'backward-char)
-  (define-key evil-insert-state-map "\C-d" 'delete-char)
-  (define-key evil-insert-state-map "\C-n" 'next-line)
-  (define-key evil-insert-state-map "\C-p" 'previous-line)
-  (define-key evil-insert-state-map "\C-w" 'evil-delete)
-  (define-key evil-insert-state-map "\C-k" 'kill-line))
+    (define-key evil-insert-state-map "\C-a" 'beginning-of-line)
+    (define-key evil-insert-state-map "\C-e" 'end-of-line)
+    (define-key evil-insert-state-map "\C-f" 'forward-char)
+    (define-key evil-insert-state-map "\C-b" 'backward-char)
+    (define-key evil-insert-state-map "\C-d" 'delete-char)
+    (define-key evil-insert-state-map "\C-n" 'next-line)
+    (define-key evil-insert-state-map "\C-p" 'previous-line)
+    (define-key evil-insert-state-map "\C-w" 'evil-delete)
+    (define-key evil-insert-state-map "\C-k" 'kill-line)
+
+    (define-key evil-motion-state-map (kbd "<right>") nil)
+    (define-key evil-motion-state-map (kbd "<left>")  nil)
+    (define-key evil-motion-state-map (kbd "<down>")  nil)
+    (define-key evil-motion-state-map (kbd "<up>")    nil))
 #+END_SRC
 
 *** Evil leader
@@ -300,9 +305,6 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
           projectile-completion-system 'helm
           projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
           projectile-project-root-files ())
-
-    (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)
-
     (projectile-global-mode))
 #+END_SRC
 
@@ -359,13 +361,22 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
   (req-package helm-projectile
     :require projectile helm grep
     :config
-    (helm-projetile-on)
-
+    (helm-projectile-on)
+    (setq projectile-switch-project-action 'projectile-dired) ;; Override helm-projectile-on setting
+    (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)
     (define-key helm-projectile-find-file-map (kbd "<C-return>")
       #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
-
     (define-key helm-projectile-find-file-map (kbd "<C-S-return>")
       #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
+#+END_SRC
+
+** Winner
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package winner
+:config
+(winner-mode t)
+(define-key global-map (kbd "<right>") 'winner-redo)
+(define-key global-map (kbd "<left>")  'winner-undo))
 #+END_SRC
 
 ** Ghq
@@ -475,7 +486,7 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
 
 ** Latex
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package latex-mode
+(req-package tex-mode
   :defer t
   :init
   (add-to-list 'auto-mode-alist '("\\.tex$\\'" . latex-mode))
@@ -549,7 +560,17 @@ Uses Elm compiler. See URL
     :defer t
     :require company
     :init
-    (add-to-list 'company-backends 'company-tern))
+    (add-to-list 'company-backends 'company-tern)
+    (add-hook 'tern-mode-hook
+              #'(lambda ()
+                  (define-key tern-mode-keymap (kbd "C-c") nil)
+                  (define-key tern-mode-keymap (kbd "C-d") nil)
+                  (define-key tern-mode-keymap (kbd "C-r") nil)
+                  (evil-leader/set-key
+                    "md" 'tern-find-definition
+                    "mr" 'tern-rename-variable
+                    "mh" 'tern-get-docs
+                    "mt" 'tern-get-type))))
 #+END_SRC
 
 *** Js2
@@ -560,7 +581,15 @@ Uses Elm compiler. See URL
     :init
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
     :config
-    (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+    (add-hook 'js2-mode-hook (lambda ()
+                               (evil-leader/set-key
+                                 "moe" 'js2-mode-toggle-element
+                                 "mow" 'js2-mode-toggle-warnings-and-errors
+                                 "moc" 'js2-mode-toggle-hide-comments
+                                 "mof" 'js2-mode-toggle-hide-functions
+                                 "mof" 'js2-mode-toggle-hide-functions
+                                 "moa" 'js2-mode-show-all)
+                               (tern-mode t)))
     (setq-default js2-basic-offset 2))
 #+END_SRC
 
@@ -644,43 +673,48 @@ Uses Elm compiler. See URL
 
 ** Org mode
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package org
-  :config
-  (add-hook 'org-mode-hook #'(lambda ())))
+  (req-package org
+    :config
+    (add-hook 'org-mode-hook #'(lambda ()
+                                 (define-key org-mode-map (kbd "S-right") nil)
+                                 (define-key org-mode-map (kbd "S-left")  nil))))
 #+END_SRC
    
 * Globals
 #+BEGIN_SRC emacs-lisp :tangle yes
-(put 'dired-find-alternate-file 'disabled nil)
-(put 'erase-buffer 'disabled nil)                 ; Allow the use of erase-buffer
-(windmove-default-keybindings)                    ; Move between windows with shift + arrow keys
-(transient-mark-mode t)                           ; Show the mark as selected
-(global-auto-revert-mode t)                       ; Reload buffers when they change outside emacs
+  (put 'dired-find-alternate-file 'disabled nil)
+  (put 'erase-buffer 'disabled nil)                 ; Allow the use of erase-buffer
+  (windmove-default-keybindings)                    ; Move between windows with shift + arrow keys
+  (transient-mark-mode t)                           ; Show the mark as selected
+  (global-auto-revert-mode t)                       ; Reload buffers when they change outside emacs
 
-(setq-default c-basic-offset 4
-              truncate-lines nil
-              prefer-coding-system 'utf-8
-              indent-tabs-mode nil
-              global-auto-revert-non-file-buffers t ;; Auto-revert
-              auto-revert-verbose nil
-              tab-width 4
-              backup-inhibited t
-              auto-save-default nil)
+  (setq-default c-basic-offset 4
+                truncate-lines nil
+                prefer-coding-system 'utf-8
+                indent-tabs-mode nil
+                global-auto-revert-non-file-buffers t ;; Auto-revert
+                auto-revert-verbose nil
+                tab-width 4
+                backup-inhibited t
+                auto-save-default nil)
 
-(define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
-(define-key key-translation-map (kbd "C-.") (kbd "C-c"))
-(define-key key-translation-map "\e"        (kbd "C-g"))
+  (define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
+  (define-key key-translation-map (kbd "C-.") (kbd "C-c"))
+  (define-key key-translation-map "\e"        (kbd "C-g"))
 
-(define-key global-map (kbd "M-n")           'next-non-emacs-buffer)
-(define-key global-map (kbd "M-p")           'previous-non-emacs-buffer)
-(define-key global-map (kbd "M-f")           'delete-other-windows)
-(define-key global-map (kbd "M-e")           'eshell-projectile)
-(define-key global-map (kbd "M-t")           'transpose-frame)
-(define-key global-map (kbd "C-;")           'other-window)
-(define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
-(define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
-(define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
-(define-key global-map (kbd "\C-x3") (lambda () (interactive)(split-window-horizontally) (other-window 1)))
+
+  (define-key global-map (kbd "M-n")           'next-non-emacs-buffer)
+  (define-key global-map (kbd "M-p")           'previous-non-emacs-buffer)
+  (define-key global-map (kbd "M-f")           'delete-other-windows)
+  (define-key global-map (kbd "M-e")           'eshell-projectile)
+  (define-key global-map (kbd "M-t")           'transpose-frame)
+  (define-key global-map (kbd "C-;")           'other-window)
+  (define-key global-map (kbd "C-'")           (lambda () (interactive)(other-window -1)))
+  (define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
+  (define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
+
+  (define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
+  (define-key global-map (kbd "\C-x3") (lambda () (interactive)(split-window-horizontally) (other-window 1)))
 #+END_SRC
 
 * It's about time
