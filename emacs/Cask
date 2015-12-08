@@ -30,6 +30,7 @@
 (depends-on "magit")
 (depends-on "osx-clipboard")
 (depends-on "pallet")
+(depends-on "perspective")
 (depends-on "projectile")
 (depends-on "rainbow-mode")
 (depends-on "req-package")

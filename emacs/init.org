@@ -370,6 +370,13 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
       #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
 #+END_SRC
 
+** Perspective
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package perspective
+    :config
+    (persp-mode-set-prefix-key (kbd "C-j"))
+    (persp-mode t))
+#+END_SRC
 ** Winner
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package winner
