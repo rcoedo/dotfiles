@@ -28,7 +28,8 @@
 * Platform
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
 
 (setq mac-command-modifier 'meta
       mac-option-key-is-meta nil
@@ -573,9 +574,6 @@ Uses Elm compiler. See URL
     (add-to-list 'company-backends 'company-tern)
     (add-hook 'tern-mode-hook
               #'(lambda ()
-                  (define-key tern-mode-keymap (kbd "C-c") nil)
-                  (define-key tern-mode-keymap (kbd "C-d") nil)
-                  (define-key tern-mode-keymap (kbd "C-r") nil)
                   (evil-leader/set-key
                     "md" 'tern-find-definition
                     "mr" 'tern-rename-variable
@@ -586,11 +584,10 @@ Uses Elm compiler. See URL
 *** Js2
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package js2-mode
-    :defer t
     :require company flycheck tern
-    :init
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    :mode "\\.js\\'"
     :config
+    (setq-default js2-basic-offset 2)
     (add-hook 'js2-mode-hook (lambda ()
                                (evil-leader/set-key
                                  "moe" 'js2-mode-toggle-element
@@ -599,20 +596,43 @@ Uses Elm compiler. See URL
                                  "mof" 'js2-mode-toggle-hide-functions
                                  "mof" 'js2-mode-toggle-hide-functions
                                  "moa" 'js2-mode-show-all)
-                               (tern-mode t)))
-    (setq-default js2-basic-offset 2))
+                               (tern-mode t))))
 #+END_SRC
 
 ** Rust
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package rust-mode
-  :defer t
-  :require flycheck-rust
-  :init
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-  :config
-  (setq-default rust-basic-offset 4)
-  (add-hook 'flycheck-mode-hook 'flycheck-rust-setup))
+  (req-package rust-mode
+    :require flycheck-rust
+    :mode "\\.rs\\'"
+    :config
+    (setq-default rust-basic-offset 4)
+    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup))
+#+END_SRC
+
+** Golang
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package go-mode
+    :mode "\\.go\\'"
+    :init
+    (progn
+      (defun rcoedo/go-mode-fmt-before-save ()
+        (when (eq major-mode 'go-mode)
+          (gofmt-before-save)))
+
+      (defun rcoedo/go-mode-bindings ()
+        (evil-leader/set-key
+          "ma" 'go-import-add
+          "md" 'godef-describe
+          "mj" 'godef-jump
+          "mJ" 'godef-jump-other-window))
+
+      (add-to-list 'company-backends 'company-go)
+      (add-hook 'before-save-hook 'rcoedo/go-mode-fmt-before-save)
+      (add-hook 'go-mode-hook 'rcoedo/go-mode-bindings))
+    :config
+    (progn
+      (load-file "$GOPATH/src/golang.org/x/tools/cmd/oracle/oracle.el")
+      (setq gofmt-command "goimports")))
 #+END_SRC
 
 ** Web
@@ -651,12 +671,10 @@ Uses Elm compiler. See URL
 
 ** Magit
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package magit
-  :defer t
-  :config
-  (global-set-key (kbd "C-c g s")   'magit-status)
-  (global-set-key (kbd "C-c g l l") 'magit-log)
-  (global-set-key (kbd "C-c g l c") 'magit-log-current))
+  (req-package magit
+    :bind (("C-c g s"   . magit-status)
+           ("C-c g l l" . magit-log)
+           ("C-c g l c" . magit-log-current)))
 #+END_SRC
 
 ** Popwin
