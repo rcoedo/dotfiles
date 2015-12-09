@@ -279,10 +279,11 @@ Repeated invocations toggle between the two most recently open buffers."
 
 *** Evil surround
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package evil-surround
-  :require evil
-  :config
-  (global-evil-surround-mode t))
+  (req-package evil-surround
+    :require evil
+    :config
+    (global-evil-surround-mode t)
+    (define-key evil-visual-state-map "s" 'evil-surround-region))
 #+END_SRC
 
 *** Evil search highlight persist
@@ -490,7 +491,7 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
 
 ** Smartparens
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package smartparens
+(req-package smartparens-config
   :config
   (smartparens-global-mode))
 #+END_SRC
@@ -633,6 +634,17 @@ Uses Elm compiler. See URL
     (progn
       (load-file "$GOPATH/src/golang.org/x/tools/cmd/oracle/oracle.el")
       (setq gofmt-command "goimports")))
+#+END_SRC
+
+** Clojure
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package cider
+    :defer t
+    :init
+    (add-hook 'cider-mode-hook #'eldoc-mode))
+
+  (req-package clojure-mode
+    :mode "\\.clj\\'")
 #+END_SRC
 
 ** Web

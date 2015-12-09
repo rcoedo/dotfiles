@@ -3,6 +3,8 @@
 (source melpa)
 
 (depends-on "alchemist")
+(depends-on "cider")
+(depends-on "clojure-mode")
 (depends-on "company")
 (depends-on "company-go")
 (depends-on "company-tern")
