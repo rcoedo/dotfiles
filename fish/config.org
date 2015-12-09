@@ -59,7 +59,7 @@ __add_to_path $PYENV_ROOT/bin
 __add_to_path $PYENV_ROOT/shims
 pyenv rehash
 
-set -x GOPATH $HOME/Workspace/go
+set -x GOPATH $HOME/Workspace
 __add_to_path $GOPATH/bin
 
 set -x TEXPATH /usr/texbin
@@ -254,7 +254,7 @@ alias g "git"
 * Ghq
 ** Environment
 #+BEGIN_SRC fish :tangle yes
-set -x GHQ_ROOT "$HOME/Workspace/ghq"
+set -x GHQ_ROOT "$HOME/Workspace/src"
 #+END_SRC
 
 ** Interactive ghq
