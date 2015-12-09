@@ -380,6 +380,10 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
     (define-key persp-mode-map (kbd "C-j C-n") 'persp-next)
     (define-key persp-mode-map (kbd "C-j C-p") 'persp-prev)
     (define-key persp-mode-map (kbd "C-j C-j") 'other-window)
+    (define-key persp-mode-map (kbd "C-j h") 'windmove-left)
+    (define-key persp-mode-map (kbd "C-j j") 'windmove-down)
+    (define-key persp-mode-map (kbd "C-j k") 'windmove-up)
+    (define-key persp-mode-map (kbd "C-j l") 'windmove-right)
     (persp-mode t))
 #+END_SRC
 ** Winner
@@ -752,11 +756,6 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "C-'")           (lambda () (interactive)(other-window -1)))
   (define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
   (define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
-
-  (define-key global-map (kbd "<right>") 'windmove-right)
-  (define-key global-map (kbd "<left>")  'windmove-left)
-  (define-key global-map (kbd "<up>")    'windmove-up)
-  (define-key global-map (kbd "<down>")  'windmove-down)
 
   (define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
   (define-key global-map (kbd "\C-x3") (lambda () (interactive)(split-window-horizontally) (other-window 1)))
