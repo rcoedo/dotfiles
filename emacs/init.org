@@ -71,15 +71,21 @@
 
 ** Modeline
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq sml/theme 'dark)
-(setq sml/no-confirm-load-theme t)
-(sml/setup)
+  (req-package smart-mode-line
+    :config
+    (progn
+      (setq sml/theme nil)
+      (sml/setup)))
 #+END_SRC
 
 ** Theme
 #+BEGIN_SRC emacs-lisp :tangle yes
-(load-theme 'gruvbox t)
+  (req-package gruvbox-theme
+    :require smart-mode-line
+    :config
+    (load-theme 'gruvbox t))
 #+END_SRC
+
 ** Font
 #+BEGIN_SRC emacs-lisp :tangle yes
 (set-frame-font (font-spec :family "Monaco" :size 12))
