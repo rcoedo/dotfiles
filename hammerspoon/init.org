@@ -22,6 +22,7 @@ b:bind({}, "l", function() hs.application.launchOrFocus("Slack") b:exit() end)
 b:bind({}, "n", function() hs.application.launchOrFocus("Evernote") b:exit() end)
 b:bind({}, "e", function() hs.application.launchOrFocus("Emacs") b:exit() end)
 b:bind({}, "i", function() hs.application.launchOrFocus("IntelliJ IDEA 15") b:exit() end)
+b:bind({}, "a", function() hs.application.launchOrFocus("Atom") b:exit() end)
 #+END_SRC
 
   
@@ -161,7 +162,7 @@ s = hs.hotkey.modal.new({"alt"}, "space")
 
 s:bind({}, "escape", function() s:exit() end)
 
-s:bind({"alt"}, "space", function() hs.spotify.play() s:exit() end)
+s:bind({"alt"}, "space", function() hs.spotify.playpause() s:exit() end)
 s:bind({}, "p", function() hs.spotify.previous() s:exit() end)
 s:bind({}, "n", function() hs.spotify.next() s:exit() end)
 s:bind({}, "c", function() hs.spotify.displayCurrentTrack() s:exit() end)
