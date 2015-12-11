@@ -93,43 +93,62 @@
 (set-frame-font (font-spec :family "Monaco" :size 12))
 #+END_SRC
 
-* Functions
+* Rcoedo
 ** Buffer
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun rename-current-buffer-file ()
-  "Renames current buffer and file it is visiting."
-  (interactive)
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name)
-      (let ((new-name (read-file-name "New name: " filename)))
-        (if (get-buffer new-name)
-            (error "A buffer named '%s' already exists!" new-name)
-          (rename-file filename new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil)
-          (message "File '%s' successfully renamed to '%s'"
-                   name (file-name-nondirectory new-name)))))))
+  (defun rcoedo/buffer/rename-current-file ()
+    "Renames current buffer and file it is visiting."
+    (interactive)
+    (let ((name (buffer-name))
+          (filename (buffer-file-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (error "Buffer '%s' is not visiting a file!" name)
+        (let ((new-name (read-file-name "New name: " filename)))
+          (if (get-buffer new-name)
+              (error "A buffer named '%s' already exists!" new-name)
+            (rename-file filename new-name 1)
+            (rename-buffer new-name)
+            (set-visited-file-name new-name)
+            (set-buffer-modified-p nil)
+            (message "File '%s' successfully renamed to '%s'"
+                     name (file-name-nondirectory new-name)))))))
 
-(defun delete-current-buffer-file ()
-  "Removes file connected to current buffer and kills buffer."
-  (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (ido-kill-buffer)
-      (when (yes-or-no-p "Are you sure you want to remove this file? ")
-        (delete-file filename)
-        (kill-buffer buffer)
-        (message "File '%s' successfully removed" filename)))))
+  (defun rcoedo/buffer/delete-current-file ()
+    "Removes file connected to current buffer and kills buffer."
+    (interactive)
+    (let ((filename (buffer-file-name))
+          (buffer (current-buffer))
+          (name (buffer-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (ido-kill-buffer)
+        (when (yes-or-no-p "Are you sure you want to remove this file? ")
+          (delete-file filename)
+          (kill-buffer buffer)
+          (message "File '%s' successfully removed" filename)))))
 
-(defun call-other-window (fun position)
-  (lambda (args)
-    (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
-    (funcall fun args)))
+  (defun rcoedo/buffer/emacs-buffer-p (name)
+    "Returns true if the name matches an Emacs buffer."
+    (string-match-p "\\*.*\\*" name))
+
+  (defun rcoedo/buffer/next-non-emacs-buffer (&optional original)
+    "Similar to next-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
+    (interactive)
+    (let ((tmp-orig (or original (buffer-name))))
+      (next-buffer)
+      (if (and
+           (not (eq (buffer-name) tmp-orig))
+           (rcoedo/buffer/emacs-buffer-p (buffer-name)))
+          (rcoedo/buffer/next-non-emacs-buffer tmp-orig))))
+
+  (defun rcoedo/buffer/previous-non-emacs-buffer (&optional original)
+    "Similar to previous-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
+    (interactive)
+    (let ((tmp-orig (or original (buffer-name))))
+      (previous-buffer)
+      (if (and
+           (not (eq (buffer-name) tmp-orig))
+           (rcoedo/buffer/emacs-buffer-p (buffer-name)))
+          (rcoedo/buffer/previous-non-emacs-buffer tmp-orig))))
 #+END_SRC
 
 ** Eshell
@@ -184,35 +203,61 @@ directory to make multiple eshell windows easier."
 #+END_SRC
 ** Window
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun go-to-previous-buffer ()
-  "Switch to previously open buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
+  (defun rcoedo/window/call-other (fun position)
+    (lambda (args)
+      (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
+      (funcall fun args)))
 
-(defun emacs-buffer-p (name)
-  "Returns true if the name matches an Emacs buffer."
-  (string-match-p "\\*.*\\*" name))
+  (defun rcoedo/window/split-vertically-focus ()
+    "Splits the window vertically and then focus the new window"
+    (interactive)
+    (split-window-vertically)
+    (other-window 1))
 
-(defun next-non-emacs-buffer (&optional original)
-  "Similar to next-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
-  (interactive)
-  (let ((tmp-orig (or original (buffer-name))))
-    (next-buffer)
-    (if (and
-         (not (eq (buffer-name) tmp-orig))
-         (emacs-buffer-p (buffer-name)))
-        (next-non-emacs-buffer tmp-orig))))
+  (defun rcoedo/window/split-horizontally-focus ()
+    "Splits the window horizontally and then focus the new window"
+    (interactive)
+    (split-window-horizontally)
+    (other-window 1))
 
-(defun previous-non-emacs-buffer (&optional original)
-  "Similar to previous-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
-  (interactive)
-  (let ((tmp-orig (or original (buffer-name))))
-    (previous-buffer)
-    (if (and
-         (not (eq (buffer-name) tmp-orig))
-         (emacs-buffer-p (buffer-name)))
-        (previous-non-emacs-buffer tmp-orig))))
+  (defun rcoedo/window/split-vertically-focus-next-buffer ()
+    "Splits the window vertically, focus the new window and loads next non emacs buffer"
+    (interactive)
+    (rcoedo/window/split-vertically-focus)
+    (rcoedo/buffer/next-non-emacs-buffer))
+
+  (defun rcoedo/window/split-horizontally-focus-next-buffer ()
+    "Splits the window horizontally, focus the new window and loads next non emacs buffer"
+    (interactive)
+    (rcoedo/window/split-horizontally-focus)
+    (rcoedo/buffer/next-non-emacs-buffer))
+
+  (defun rcoedo/window/split-vertically-next-buffer ()
+    "Splits the window vertically and then focus the new window"
+    (interactive)
+    (rcoedo/window/split-vertically-focus-next-buffer)
+    (other-window -1))
+
+  (defun rcoedo/window/split-horizontally-next-buffer ()
+    "Splits the window horizontally and then focus the new window"
+    (interactive)
+    (rcoedo/window/split-horizontally-focus-next-buffer)
+    (other-window -1))
+#+END_SRC
+
+** Layout
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun rcoedo/layout/08 ()
+    (interactive)
+    (delete-other-windows)
+    (rcoedo/window/split-horizontally-focus-next-buffer)
+    (rcoedo/window/split-vertically-focus-next-buffer)
+    (other-window 1))
+
+  (defun rcoedo/layout/00 ()
+    (interactive)
+    (delete-other-windows)
+    (rcoedo/window/split-horizontally-next-buffer))
 #+END_SRC
 
 * Package settings
@@ -367,16 +412,16 @@ Repeated invocations toggle between the two most recently open buffers."
     #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (lambda (buffer) (kill-buffer buffer) (helm-mini))))))
 
   (define-key helm-buffer-map     (kbd "<C-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'switch-to-buffer 'right)))))
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'switch-to-buffer 'right)))))
 
   (define-key helm-buffer-map     (kbd "<C-S-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'switch-to-buffer 'below)))))
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'switch-to-buffer 'below)))))
 
   (define-key helm-find-files-map (kbd "<C-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'right)))))
 
   (define-key helm-find-files-map (kbd "<C-S-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
+    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'below))))))
 #+END_SRC
 
 *** Helm projectile
@@ -389,9 +434,9 @@ Repeated invocations toggle between the two most recently open buffers."
     (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)
     (define-key projectile-command-map (kbd "p") 'helm-ghq-list)
     (define-key helm-projectile-find-file-map (kbd "<C-return>")
-      #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'right)))))
+      #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'right)))))
     (define-key helm-projectile-find-file-map (kbd "<C-S-return>")
-      #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (call-other-window 'find-file 'below))))))
+      #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'below))))))
 #+END_SRC
 
 ** Perspective
@@ -801,14 +846,14 @@ Uses Elm compiler. See URL
   (define-key key-translation-map "\e"        (kbd "C-g"))
 
 
-  (define-key global-map (kbd "M-n")           'next-non-emacs-buffer)
-  (define-key global-map (kbd "M-p")           'previous-non-emacs-buffer)
+  (define-key global-map (kbd "M-n")           'rcoedo/buffer/next-non-emacs-buffer)
+  (define-key global-map (kbd "M-p")           'rcoedo/buffer/previous-non-emacs-buffer)
   (define-key global-map (kbd "M-f")           'delete-other-windows)
   (define-key global-map (kbd "M-e")           'eshell-projectile)
   (define-key global-map (kbd "M-t")           'transpose-frame)
   (define-key global-map (kbd "C-;")           'other-window)
-  (define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
-  (define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
+  (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
+  (define-key global-map (kbd "C-x C-k")       'rcoedo/buffer/delete-current-file)
   (define-key global-map (kbd "C-x k")         'kill-this-buffer)
 
   (define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
