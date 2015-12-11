@@ -725,9 +725,14 @@ Uses Elm compiler. See URL
     :defer t
     :require web-mode
     :init
-    (progn (add-hook 'less-css-mode 'emmet-mode)
-           (add-hook 'scss-mode-hook 'emmet-mode)
-           (add-hook 'web-mode-hook 'emmet-mode)))
+    (progn
+      (defun rcoedo/emmet-mode/bindings ()
+        (define-key emmet-mode-keymap (kbd "C-j") nil))
+
+      (add-hook 'less-css-mode 'emmet-mode)
+      (add-hook 'scss-mode-hook 'emmet-mode)
+      (add-hook 'web-mode-hook 'emmet-mode))
+      (add-hook 'emmet-mode-hook 'rcoedo/emmet-mode/bindings))
 #+END_SRC
 ** Transpose-frame
 #+BEGIN_SRC emacs-lisp :tangle yes
