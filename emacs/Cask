@@ -12,6 +12,7 @@
 (depends-on "direx")
 (depends-on "elixir-mode")
 (depends-on "elm-mode")
+(depends-on "emmet-mode")
 (depends-on "enh-ruby-mode")
 (depends-on "evil")
 (depends-on "evil-leader")

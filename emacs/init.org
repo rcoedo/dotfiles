@@ -259,21 +259,33 @@ Repeated invocations toggle between the two most recently open buffers."
 
 *** Evil leader
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package evil-leader
-  :require evil
-  :config
-  (global-evil-leader-mode)
-  (setq evil-leader/in-all-states t)
+  (req-package evil-leader
+    :require evil
+    :config
+    (global-evil-leader-mode)
+    (setq evil-leader/in-all-states t)
 
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key
-    "yy"    'helm-show-kill-ring
-    "cc"    'evilnc-comment-or-uncomment-lines
-    "cp"    'evilnc-copy-and-comment-lines
-    "cb"    'evilnc-comment-or-uncomment-paragraphs
-    "co"    'evilnc-comment-operator
-    "sh"    'evil-search-highlight-persist-remove-all
-    "TAB"   'transpose-frame))
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key
+      "yy"    'helm-show-kill-ring
+      "cc"    'evilnc-comment-or-uncomment-lines
+      "cp"    'evilnc-copy-and-comment-lines
+      "cb"    'evilnc-comment-or-uncomment-paragraphs
+      "co"    'evilnc-comment-operator
+      "sh"    'evil-search-highlight-persist-remove-all
+      "TAB"   'transpose-frame)
+
+    (setq rcoedo/evil-leader/mode-leader "<SPC>")
+
+    (defun rcoedo/evil-leader/prefix-mode-binding (element)
+      (cons (concat rcoedo/evil-leader/mode-leader (car element)) (cdr element)))
+
+    (defun rcoedo/evil-leader/set-mode-key (element)
+      (evil-leader/set-key (car element) (car (cdr element))))
+
+    (defun rcoedo/evil-leader/set-mode-keys (bindings)
+      (let ((prefixed-bindings (-map 'rcoedo/evil-leader/prefix-mode-binding bindings)))
+        (-map 'rcoedo/evil-leader/set-mode-key prefixed-bindings))))
 #+END_SRC
 
 *** Evil surround
@@ -586,14 +598,17 @@ Uses Elm compiler. See URL
     :defer t
     :require company
     :init
-    (add-to-list 'company-backends 'company-tern)
-    (add-hook 'tern-mode-hook
-              #'(lambda ()
-                  (evil-leader/set-key
-                    "md" 'tern-find-definition
-                    "mr" 'tern-rename-variable
-                    "mh" 'tern-get-docs
-                    "mt" 'tern-get-type))))
+    (progn
+      (add-to-list 'company-backends 'company-tern)
+
+      (defun rcoedo/tern/bindings ()
+        (rcoedo/evil-leader/set-mode-keys
+         '(("d" tern-find-definition)
+           ("r" tern-rename-variable)
+           ("h" tern-get-docs)
+           ("t" tern-get-type))))
+
+      (add-hook 'tern-mode-hook 'rcoedo/tern/bindings)))
 #+END_SRC
 
 *** Js2
@@ -604,13 +619,12 @@ Uses Elm compiler. See URL
     :config
     (setq-default js2-basic-offset 2)
     (add-hook 'js2-mode-hook (lambda ()
-                               (evil-leader/set-key
-                                 "moe" 'js2-mode-toggle-element
-                                 "mow" 'js2-mode-toggle-warnings-and-errors
-                                 "moc" 'js2-mode-toggle-hide-comments
-                                 "mof" 'js2-mode-toggle-hide-functions
-                                 "mof" 'js2-mode-toggle-hide-functions
-                                 "moa" 'js2-mode-show-all)
+                               (rcoedo/evil-leader/set-mode-keys
+                                '(("oe" js2-mode-toggle-element)
+                                  ("ow" js2-mode-toggle-warnings-and-errors)
+                                  ("oc" js2-mode-toggle-hide-comments)
+                                  ("of" js2-mode-toggle-hide-functions)
+                                  ("oa" js2-mode-show-all)))
                                (tern-mode t))))
 #+END_SRC
 
@@ -631,20 +645,21 @@ Uses Elm compiler. See URL
     :defer t
     :init
     (progn
-      (defun rcoedo/go-mode-fmt-before-save ()
+      (defun rcoedo/go-mode/fmt-before-save ()
         (when (eq major-mode 'go-mode)
           (gofmt-before-save)))
 
-      (defun rcoedo/go-mode-bindings ()
-        (evil-leader/set-key
-          "ma" 'go-import-add
-          "md" 'godef-describe
-          "mj" 'godef-jump
-          "mJ" 'godef-jump-other-window))
+      (defun rcoedo/go-mode/bindings ()
+        (rcoedo/evil-leader/set-mode-keys
+         '(("a" go-import-add)
+           ("d" godef-describe)
+           ("j" godef-jump)
+           ("J" godef-jump-other-window))))
 
       (add-to-list 'company-backends 'company-go)
-      (add-hook 'before-save-hook 'rcoedo/go-mode-fmt-before-save)
-      (add-hook 'go-mode-hook 'rcoedo/go-mode-bindings))
+      (add-hook 'before-save-hook 'rcoedo/go-mode/fmt-before-save)
+      (add-hook 'go-mode-hook 'rcoedo/go-mode/bindings))
+
     :config
     (progn
       (load-file "$GOPATH/src/golang.org/x/tools/cmd/oracle/oracle.el")
@@ -704,6 +719,16 @@ Uses Elm compiler. See URL
     (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 
+** Emmet
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package emmet-mode
+    :defer t
+    :require web-mode
+    :init
+    (progn (add-hook 'less-css-mode 'emmet-mode)
+           (add-hook 'scss-mode-hook 'emmet-mode)
+           (add-hook 'web-mode-hook 'emmet-mode)))
+#+END_SRC
 ** Transpose-frame
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package transpose-frame)
