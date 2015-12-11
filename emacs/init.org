@@ -28,7 +28,9 @@
 * Platform
 #+BEGIN_SRC emacs-lisp :tangle yes
 (when (memq window-system '(mac ns))
+  (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "RBENV_ROOT")
   (exec-path-from-shell-copy-env "GOPATH"))
 
 (setq mac-command-modifier 'meta
@@ -280,7 +282,8 @@ Repeated invocations toggle between the two most recently open buffers."
     :require evil
     :config
     (global-evil-surround-mode t)
-    (define-key evil-visual-state-map "s" 'evil-surround-region))
+    (define-key evil-visual-state-map "s" 'evil-surround-region)
+    (define-key evil-normal-state-map "s" 'evil-surround-edit))
 #+END_SRC
 
 *** Evil search highlight persist
@@ -293,19 +296,27 @@ Repeated invocations toggle between the two most recently open buffers."
 #+END_SRC
 
 ** Projectile
-projectile-project-root-files (append '("init.el") projectile-project-root-files))
+*** Projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
-    (req-package projectile
-      :require ghq
-      :config
-      (setq projectile-enable-caching t
-            projectile-switch-project-action 'projectile-dired
-            projectile-ignored-project-function #'(lambda (project-root) 'true)
-            projectile-known-projects (ghq-list-full-path)
-            projectile-completion-system 'helm
-            projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
-            projectile-project-root-files ())
-      (projectile-global-mode))
+  (req-package projectile
+    :require ghq
+    :config
+    (progn (setq projectile-enable-caching t
+                 projectile-switch-project-action 'projectile-dired
+                 projectile-ignored-project-function #'(lambda (project-root) 'true)
+                 projectile-completion-system 'helm
+                 projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
+                 projectile-project-root-files ())
+           (projectile-global-mode)))
+#+END_SRC
+
+*** Rails
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package projectile-rails
+    :require projectile
+    :init
+    (progn
+      (add-hook 'projectile-mode-hook 'projectile-rails-on)))
 #+END_SRC
 
 ** Helm
@@ -361,7 +372,7 @@ projectile-project-root-files (append '("init.el") projectile-project-root-files
   (req-package helm-projectile
     :require projectile helm grep
     :config
-    (helm-projectile-on)
+    (helm-projectile-toggle 1)
     (setq projectile-switch-project-action 'projectile-dired) ;; Override helm-projectile-on setting
     (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)
     (define-key projectile-command-map (kbd "p") 'helm-ghq-list)
@@ -617,6 +628,7 @@ Uses Elm compiler. See URL
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package go-mode
     :mode "\\.go\\'"
+    :defer t
     :init
     (progn
       (defun rcoedo/go-mode-fmt-before-save ()
@@ -648,6 +660,19 @@ Uses Elm compiler. See URL
 
   (req-package clojure-mode
     :mode "\\.clj\\'")
+#+END_SRC
+
+** Ruby
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package enh-ruby-mode
+    :mode "\\.rs\\'"
+    :init
+    (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode)))
+
+  (req-package robe
+    :init
+    (add-hook 'ruby-mode-hook 'robe-mode)
+    (push 'company-robe company-backends))
 #+END_SRC
 
 ** Web
@@ -752,9 +777,9 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "M-e")           'eshell-projectile)
   (define-key global-map (kbd "M-t")           'transpose-frame)
   (define-key global-map (kbd "C-;")           'other-window)
-  (define-key global-map (kbd "C-'")           (lambda () (interactive)(other-window -1)))
   (define-key global-map (kbd "C-x C-r")       'rename-current-buffer-file)
   (define-key global-map (kbd "C-x C-k")       'delete-current-buffer-file)
+  (define-key global-map (kbd "C-x k")         'kill-this-buffer)
 
   (define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
   (define-key global-map (kbd "\C-x3") (lambda () (interactive)(split-window-horizontally) (other-window 1)))
