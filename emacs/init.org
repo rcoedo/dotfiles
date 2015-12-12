@@ -277,6 +277,7 @@
     (delete-other-windows)
     (rcoedo/window/split-horizontally-next-buffer))
 
+  ;; Not working as intended with local variables.
   (defun rcoedo/layout/next ()
     (interactive)
     (let ((layout (pop rcoedo/layout/layout-list)))
@@ -396,7 +397,20 @@
     :require projectile
     :init
     (progn
-      (add-hook 'projectile-mode-hook 'projectile-rails-on)))
+      (add-hook 'projectile-mode-hook 'projectile-rails-on)
+
+      (defun rcoedo/rails/layout-99 ()
+        (rcoedo/layout/99)
+        (other-window 1)
+        (other-window 1)
+        (if (not (eq nil (get-buffer "*rails*"))) (switch-to-buffer "*rails*"))
+        (other-window 1)
+        (other-window 1))
+
+      (defun rcoedo/rails/hook ()
+        (setq-local rcoedo/layout/layout-list '(rcoedo/layout/00 rcoedo/layout/08 rcoedo/rails/layout-99)))
+
+      (add-hook 'projectile-rails-mode-hook 'rcoedo/rails/hook)))
 #+END_SRC
 
 ** Helm
@@ -754,24 +768,16 @@ Uses Elm compiler. See URL
       (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))))
 
   (req-package robe
+    :require company
     :init
     (progn
       (add-hook 'ruby-mode-hook 'robe-mode)
       (push 'company-robe company-backends)
 
-      (defun rcoedo/rails/layout-99 ()
-        (rcoedo/layout/99)
-        (other-window 1)
-        (other-window 1)
-        (switch-to-buffer "*rails*")
-        (other-window 1)
-        (other-window 1))
-
-      (defun rcoedo/robe-mode/hook ()
-        (setq-local rcoedo/layout/layout-list '(rcoedo/layout/00 rcoedo/layout/08 rcoedo/rails/layout-99))
+      (defun rcoedo/robe/hook ()
         (if (eq nil (get-buffer "*rails*")) (robe-start "yes")))
 
-      (add-hook 'robe-mode-hook 'rcoedo/robe-mode/hook)))
+      (add-hook 'robe-mode-hook 'rcoedo/robe/hook)))
 #+END_SRC
 
 ** Web
