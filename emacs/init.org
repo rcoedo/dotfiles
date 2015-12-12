@@ -153,53 +153,62 @@
 
 ** Eshell
 #+BEGIN_SRC emacs-lisp :tangle yes
-(defun eshell-maybe-bol ()
-      (interactive)
-      (let ((p (point)))
-        (eshell-bol)
-        (if (= p (point))
-            (beginning-of-line))))
+  (defun rcoedo/eshell/maybe-bol ()
+        (interactive)
+        (let ((p (point)))
+          (eshell-bol)
+          (if (= p (point))
+              (beginning-of-line))))
 
-(defun eshell-here ()
-  "Opens up a new shell in the directory associated with the
-current buffer's file. The eshell is renamed to match that
-directory to make multiple eshell windows easier."
-  (interactive)
-  (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name))
-                   default-directory))
-         (height (/ (window-total-height) 3))
-         (name   (car (last (split-string parent "/" t)))))
-    (split-window-vertically (- height))
-    (other-window 1)
+  (defun rcoedo/eshell/eshell-here ()
+    "Opens up a new shell in the directory associated with the
+  current buffer's file. The eshell is renamed to match that
+  directory to make multiple eshell windows easier."
+    (interactive)
+    (let* ((parent (if (buffer-file-name)
+                       (file-name-directory (buffer-file-name))
+                     default-directory))
+           (height (/ (window-total-height) 3))
+           (name   (car (last (split-string parent "/" t)))))
+      (split-window-vertically (- height))
+      (other-window 1)
+      (eshell "new")
+      (rename-buffer (concat "*eshell: " name "*"))
+
+      (insert (concat "ls"))
+      (eshell-send-input)))
+
+  (defun rcoedo/eshell/clear ()
+    "Clear the eshell buffer."
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (eshell-send-input)))
+
+  (defun rcoedo/eshell/projectile-eshell-popup ()
+    (interactive)
+    (let* ((height (/ (window-total-height) 3))
+           (name   (projectile-project-root)))
+      (split-window-vertically (- height))
+      (other-window 1)
+      (eshell "new")
+      (rename-buffer (concat "*eshell: " name "*"))
+
+      (cd (projectile-project-root)))
+    (rcoedo/eshell/clear)
+    (insert "ls")
+    (eshell-send-input))
+
+  (defun rcoedo/eshell/projectile-eshell ()
+    (interactive)
     (eshell "new")
     (rename-buffer (concat "*eshell: " name "*"))
+    (cd (projectile-project-root))
+    (rcoedo/eshell/clear)
+    (insert "ls")
+    (eshell-send-input))
 
-    (insert (concat "ls"))
-    (eshell-send-input)))
-
-(defun eshell/clear ()
-  "Clear the eshell buffer."
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
-
-(defun eshell-projectile ()
-  (interactive)
-  (let* ((height (/ (window-total-height) 3))
-         (name   (projectile-project-root)))
-    (split-window-vertically (- height))
-    (other-window 1)
-    (eshell "new")
-    (rename-buffer (concat "*eshell: " name "*"))
-
-    (cd (projectile-project-root)))
-  (eshell/clear)
-  (insert "ls")
-  (eshell-send-input))
-
-(defun eshell/x ()
-  (kill-buffer-and-window))
+  (defun rcoedo/eshell/x ()
+    (kill-buffer-and-window))
 #+END_SRC
 ** Window
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -254,10 +263,25 @@ directory to make multiple eshell windows easier."
     (rcoedo/window/split-vertically-focus-next-buffer)
     (other-window 1))
 
+  (defun rcoedo/layout/99 ()
+    (interactive)
+    (delete-other-windows)
+    (split-window-vertically (floor (* 0.80 (window-height))))
+    (other-window 1)
+    (rcoedo/window/split-horizontally-focus-next-buffer)
+    (other-window 1)
+    (rcoedo/window/split-horizontally-next-buffer))
+
   (defun rcoedo/layout/00 ()
     (interactive)
     (delete-other-windows)
     (rcoedo/window/split-horizontally-next-buffer))
+
+  (defun rcoedo/layout/next ()
+    (interactive)
+    (let ((layout (pop rcoedo/layout/layout-list)))
+      (nreverse (cons layout (nreverse rcoedo/layout/layout-list)))
+      (funcall layout)))
 #+END_SRC
 
 * Package settings
@@ -317,8 +341,7 @@ directory to make multiple eshell windows easier."
       "cp"    'evilnc-copy-and-comment-lines
       "cb"    'evilnc-comment-or-uncomment-paragraphs
       "co"    'evilnc-comment-operator
-      "sh"    'evil-search-highlight-persist-remove-all
-      "TAB"   'transpose-frame)
+      "sh"    'evil-search-highlight-persist-remove-all)
 
     (setq rcoedo/evil-leader/mode-leader "<SPC>")
 
@@ -512,7 +535,7 @@ directory to make multiple eshell windows easier."
 
     (add-hook 'eshell-mode-hook #'(lambda ()
                                     (evil-define-key 'insert eshell-mode-map
-                                      (kbd "C-a") 'eshell-maybe-bol
+                                      (kbd "C-a") 'rcoedo/eshell/maybe-bol
                                       (kbd "C-r") 'helm-eshell-history
                                       (kbd "C-p") 'eshell-previous-matching-input-from-input
                                       (kbd "C-n") 'eshell-next-matching-input-from-input)
@@ -727,12 +750,28 @@ Uses Elm compiler. See URL
   (req-package enh-ruby-mode
     :mode "\\.rs\\'"
     :init
-    (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode)))
+    (progn
+      (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))))
 
   (req-package robe
     :init
-    (add-hook 'ruby-mode-hook 'robe-mode)
-    (push 'company-robe company-backends))
+    (progn
+      (add-hook 'ruby-mode-hook 'robe-mode)
+      (push 'company-robe company-backends)
+
+      (defun rcoedo/rails/layout-99 ()
+        (rcoedo/layout/99)
+        (other-window 1)
+        (other-window 1)
+        (switch-to-buffer "*rails*")
+        (other-window 1)
+        (other-window 1))
+
+      (defun rcoedo/robe-mode/hook ()
+        (setq-local rcoedo/layout/layout-list '(rcoedo/layout/00 rcoedo/layout/08 rcoedo/rails/layout-99))
+        (if (eq nil (get-buffer "*rails*")) (robe-start "yes")))
+
+      (add-hook 'robe-mode-hook 'rcoedo/robe-mode/hook)))
 #+END_SRC
 
 ** Web
@@ -779,11 +818,6 @@ Uses Elm compiler. See URL
       (add-hook 'web-mode-hook 'emmet-mode))
       (add-hook 'emmet-mode-hook 'rcoedo/emmet-mode/bindings))
 #+END_SRC
-** Transpose-frame
-#+BEGIN_SRC emacs-lisp :tangle yes
-(req-package transpose-frame)
-#+END_SRC
-
 ** Magit
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package magit
@@ -818,9 +852,15 @@ Uses Elm compiler. See URL
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package org
     :config
-    (add-hook 'org-mode-hook #'(lambda ()
-                                 (define-key org-mode-map (kbd "S-right") nil)
-                                 (define-key org-mode-map (kbd "S-left")  nil))))
+    (progn
+      (defun rcoedo/org-mode/bindings ()
+        (rcoedo/evil-leader/set-mode-keys
+         '(("t" org-babel-tangle)))
+
+        (define-key org-mode-map (kbd "S-right") nil)
+        (define-key org-mode-map (kbd "S-left")  nil))
+
+      (add-hook 'org-mode-hook 'rcoedo/org-mode/bindings)))
 #+END_SRC
    
 * Globals
@@ -839,22 +879,23 @@ Uses Elm compiler. See URL
                 auto-revert-verbose nil
                 tab-width 4
                 backup-inhibited t
-                auto-save-default nil)
+                auto-save-default nil
+                rcoedo/layout/layout-list '(rcoedo/layout/00 rcoedo/layout/08 rcoedo/layout/99))
 
   (define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
   (define-key key-translation-map (kbd "C-.") (kbd "C-c"))
   (define-key key-translation-map "\e"        (kbd "C-g"))
 
-
   (define-key global-map (kbd "M-n")           'rcoedo/buffer/next-non-emacs-buffer)
   (define-key global-map (kbd "M-p")           'rcoedo/buffer/previous-non-emacs-buffer)
   (define-key global-map (kbd "M-f")           'delete-other-windows)
-  (define-key global-map (kbd "M-e")           'eshell-projectile)
-  (define-key global-map (kbd "M-t")           'transpose-frame)
+  (define-key global-map (kbd "M-e")           'rcoedo/eshell/projectile-eshell-popup)
+  (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
   (define-key global-map (kbd "C-;")           'other-window)
   (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
-  (define-key global-map (kbd "C-x C-k")       'rcoedo/buffer/delete-current-file)
-  (define-key global-map (kbd "C-x k")         'kill-this-buffer)
+  (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
+  (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
+  (define-key global-map (kbd "C-x k")         'kill-buffer-and-window)
 
   (define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
   (define-key global-map (kbd "\C-x3") (lambda () (interactive)(split-window-horizontally) (other-window 1)))
