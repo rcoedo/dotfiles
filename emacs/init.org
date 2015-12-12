@@ -93,7 +93,7 @@
 (set-frame-font (font-spec :family "Monaco" :size 12))
 #+END_SRC
 
-* Rcoedo
+* rcoedo
 ** Buffer
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun rcoedo/buffer/rename-current-file ()
@@ -252,32 +252,41 @@
     (interactive)
     (rcoedo/window/split-horizontally-focus-next-buffer)
     (other-window -1))
+
+  (defun rcoedo/window/split-bottom-panel ()
+    "Splits the window vertically to open a bottom panel"
+    (interactive)
+    (split-window-vertically (floor (* 0.80 (window-height)))))
 #+END_SRC
 
 ** Layout
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (defun rcoedo/layout/08 ()
+  (defun rcoedo/layout/three ()
     (interactive)
     (delete-other-windows)
     (rcoedo/window/split-horizontally-focus-next-buffer)
     (rcoedo/window/split-vertically-focus-next-buffer)
     (other-window 1))
 
-  (defun rcoedo/layout/99 ()
+  (defun rcoedo/layout/four ()
     (interactive)
     (delete-other-windows)
-    (split-window-vertically (floor (* 0.80 (window-height))))
+    (split-window-vertically)
     (other-window 1)
     (rcoedo/window/split-horizontally-focus-next-buffer)
     (other-window 1)
     (rcoedo/window/split-horizontally-next-buffer))
 
-  (defun rcoedo/layout/00 ()
+  (defun rcoedo/layout/bottom-panel ()
+    (interactive)
+    (delete-other-windows)
+    (rcoedo/window/split-bottom-panel))
+
+  (defun rcoedo/layout/side-by-side ()
     (interactive)
     (delete-other-windows)
     (rcoedo/window/split-horizontally-next-buffer))
 
-  ;; Not working as intended with local variables.
   (defun rcoedo/layout/next ()
     (interactive)
     (let ((layout (pop rcoedo/layout/layout-list)))
@@ -397,20 +406,7 @@
     :require projectile
     :init
     (progn
-      (add-hook 'projectile-mode-hook 'projectile-rails-on)
-
-      (defun rcoedo/rails/layout-99 ()
-        (rcoedo/layout/99)
-        (other-window 1)
-        (other-window 1)
-        (if (not (eq nil (get-buffer "*rails*"))) (switch-to-buffer "*rails*"))
-        (other-window 1)
-        (other-window 1))
-
-      (defun rcoedo/rails/hook ()
-        (setq-local rcoedo/layout/layout-list '(rcoedo/layout/00 rcoedo/layout/08 rcoedo/rails/layout-99)))
-
-      (add-hook 'projectile-rails-mode-hook 'rcoedo/rails/hook)))
+      (add-hook 'projectile-mode-hook 'projectile-rails-on)))
 #+END_SRC
 
 ** Helm
@@ -490,15 +486,6 @@
     (define-key persp-mode-map (kbd "C-j l") 'windmove-right)
     (persp-mode t))
 #+END_SRC
-** Winner
-#+BEGIN_SRC emacs-lisp :tangle yes
-(req-package winner
-:config
-(winner-mode t)
-(define-key global-map (kbd "M-D") 'winner-redo)
-(define-key global-map (kbd "M-d")  'winner-undo))
-#+END_SRC
-
 ** Ghq
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package ghq)
@@ -863,8 +850,9 @@ Uses Elm compiler. See URL
         (rcoedo/evil-leader/set-mode-keys
          '(("t" org-babel-tangle)))
 
-        (define-key org-mode-map (kbd "S-right") nil)
-        (define-key org-mode-map (kbd "S-left")  nil))
+        (define-key org-mode-map (kbd "<S-right>") nil)
+        (define-key org-mode-map (kbd "<S-left>")  nil)
+        (define-key org-mode-map (kbd "C-'")       nil))
 
       (add-hook 'org-mode-hook 'rcoedo/org-mode/bindings)))
 #+END_SRC
@@ -886,7 +874,7 @@ Uses Elm compiler. See URL
                 tab-width 4
                 backup-inhibited t
                 auto-save-default nil
-                rcoedo/layout/layout-list '(rcoedo/layout/00 rcoedo/layout/08 rcoedo/layout/99))
+                rcoedo/layout/layout-list '(rcoedo/layout/three rcoedo/layout/four rcoedo/layout/side-by-side rcoedo/layout/bottom-panel))
 
   (define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
   (define-key key-translation-map (kbd "C-.") (kbd "C-c"))
@@ -897,7 +885,8 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "M-f")           'delete-other-windows)
   (define-key global-map (kbd "M-e")           'rcoedo/eshell/projectile-eshell-popup)
   (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
-  (define-key global-map (kbd "C-;")           'other-window)
+  (define-key global-map (kbd "C-;")           'next-multiframe-window)
+  (define-key global-map (kbd "C-'")           'previous-multiframe-window)
   (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
   (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
   (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
