@@ -31,6 +31,7 @@
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "RBENV_ROOT")
+  (exec-path-from-shell-copy-env "GHQ_ROOT")
   (exec-path-from-shell-copy-env "GOPATH"))
 
 (setq mac-command-modifier 'meta
@@ -483,6 +484,14 @@
     (define-key persp-mode-map (kbd "C-j k") 'windmove-up)
     (define-key persp-mode-map (kbd "C-j l") 'windmove-right)
     (persp-mode t))
+#+END_SRC
+** Expand region
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package expand-region
+    :require evil
+    :config
+    (progn
+      (define-key evil-normal-state-map "-" 'er/expand-region)))
 #+END_SRC
 ** Ghq
 #+BEGIN_SRC emacs-lisp :tangle yes
