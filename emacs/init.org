@@ -358,12 +358,10 @@
     (defun rcoedo/evil-leader/prefix-mode-binding (element)
       (cons (concat rcoedo/evil-leader/mode-leader (car element)) (cdr element)))
 
-    (defun rcoedo/evil-leader/set-mode-key (element)
-      (evil-leader/set-key (car element) (car (cdr element))))
-
-    (defun rcoedo/evil-leader/set-mode-keys (bindings)
-      (let ((prefixed-bindings (-map 'rcoedo/evil-leader/prefix-mode-binding bindings)))
-        (-map 'rcoedo/evil-leader/set-mode-key prefixed-bindings))))
+    (defun rcoedo/evil-leader/set-mode-keys (mode bindings)
+      (let ((prefixed-bindings (-map 'rcoedo/evil-leader/prefix-mode-binding bindings))
+            (set-key '(lambda (binding) (evil-leader/set-key-for-mode mode (car binding) (car (cdr binding))))))
+        (-map set-key prefixed-bindings))))
 #+END_SRC
 
 *** Evil surround
@@ -671,7 +669,7 @@ Uses Elm compiler. See URL
       (add-to-list 'company-backends 'company-tern)
 
       (defun rcoedo/tern/bindings ()
-        (rcoedo/evil-leader/set-mode-keys
+        (rcoedo/evil-leader/set-mode-keys 'tern-mode
          '(("d" tern-find-definition)
            ("r" tern-rename-variable)
            ("h" tern-get-docs)
@@ -688,7 +686,7 @@ Uses Elm compiler. See URL
     :config
     (setq-default js2-basic-offset 2)
     (add-hook 'js2-mode-hook (lambda ()
-                               (rcoedo/evil-leader/set-mode-keys
+                               (rcoedo/evil-leader/set-mode-keys 'js2-mode
                                 '(("oe" js2-mode-toggle-element)
                                   ("ow" js2-mode-toggle-warnings-and-errors)
                                   ("oc" js2-mode-toggle-hide-comments)
@@ -719,7 +717,7 @@ Uses Elm compiler. See URL
           (gofmt-before-save)))
 
       (defun rcoedo/go-mode/bindings ()
-        (rcoedo/evil-leader/set-mode-keys
+        (rcoedo/evil-leader/set-mode-keys 'go-mode
          '(("a" go-import-add)
            ("d" godef-describe)
            ("j" godef-jump)
@@ -847,7 +845,7 @@ Uses Elm compiler. See URL
     :config
     (progn
       (defun rcoedo/org-mode/bindings ()
-        (rcoedo/evil-leader/set-mode-keys
+        (rcoedo/evil-leader/set-mode-keys 'org-mode
          '(("t" org-babel-tangle)))
 
         (define-key org-mode-map (kbd "<S-right>") nil)
