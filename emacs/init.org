@@ -750,7 +750,13 @@ Uses Elm compiler. See URL
     (add-hook 'cider-mode-hook #'eldoc-mode))
 
   (req-package clojure-mode
-    :mode "\\.clj\\'")
+    :mode "\\.clj\\'"
+    :config
+    (progn
+      (defun rcoedo/clojure-mode/hook ()
+        (rainbow-delimiters-mode t))
+
+      (add-hook 'clojure-mode-hook 'rcoedo/clojure-mode/hook)))
 #+END_SRC
 
 ** Ruby
@@ -864,6 +870,27 @@ Uses Elm compiler. See URL
       (add-hook 'org-mode-hook 'rcoedo/org-mode/bindings)))
 #+END_SRC
    
+** Transpose frame
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (req-package transpose-frame
+      :config
+      (define-key global-map (kbd "M-t") 'transpose-frame)
+      (define-key global-map (kbd "M-f") 'flip-frame)
+      (define-key global-map (kbd "M-F") 'flop-frame)
+      (define-key global-map (kbd "M-r") 'rotate-frame-clockwise)
+      (define-key global-map (kbd "M-R") 'rotate-frame-anticlockwise))
+#+END_SRC
+
+** Elisp mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package lisp-mode
+    :init
+    (progn
+      (defun rcoedo/lisp-mode/hook ()
+        (rainbow-delimiters-mode t))
+      (add-hook 'emacs-lisp-mode-hook 'rcoedo/lisp-mode/hook)))
+#+END_SRC
+
 * Globals
 #+BEGIN_SRC emacs-lisp :tangle yes
   (put 'dired-find-alternate-file 'disabled nil)
@@ -889,7 +916,6 @@ Uses Elm compiler. See URL
 
   (define-key global-map (kbd "M-n")           'rcoedo/buffer/next-non-emacs-buffer)
   (define-key global-map (kbd "M-p")           'rcoedo/buffer/previous-non-emacs-buffer)
-  (define-key global-map (kbd "M-f")           'delete-other-windows)
   (define-key global-map (kbd "M-e")           'rcoedo/eshell/projectile-eshell-popup)
   (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
   (define-key global-map (kbd "C-;")           'next-multiframe-window)
