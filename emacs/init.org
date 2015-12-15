@@ -747,7 +747,15 @@ Uses Elm compiler. See URL
   (req-package cider
     :defer t
     :init
-    (add-hook 'cider-mode-hook #'eldoc-mode))
+    (progn
+      (defun rcoedo/cider/bindings ()
+        (define-key cider-mode-map (kbd "M-v") 'cider-eval-defun-at-point))
+
+      (defun rcoedo/cider/hook ()
+        (eldoc-mode t)
+        (rcoedo/cider/bindings))
+
+      (add-hook 'cider-mode-hook 'rcoedo/cider/hook)))
 
   (req-package clojure-mode
     :mode "\\.clj\\'"
@@ -888,6 +896,7 @@ Uses Elm compiler. See URL
     (progn
       (defun rcoedo/lisp-mode/hook ()
         (rainbow-delimiters-mode t))
+
       (add-hook 'emacs-lisp-mode-hook 'rcoedo/lisp-mode/hook)))
 #+END_SRC
 
