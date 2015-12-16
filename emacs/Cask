@@ -16,6 +16,7 @@
 (depends-on "enh-ruby-mode")
 (depends-on "evil")
 (depends-on "evil-leader")
+(depends-on "evil-lisp-state" :git "https://github.com/rcoedo/evil-lisp-state")
 (depends-on "evil-nerd-commenter")
 (depends-on "evil-search-highlight-persist")
 (depends-on "evil-surround")

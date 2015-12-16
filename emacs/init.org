@@ -384,6 +384,21 @@
   (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00"))))))
 #+END_SRC
 
+*** Evil lisp state
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package evil-lisp-state
+    :init
+    (progn
+      (setq evil-lisp-state-global t
+            evil-lisp-state-enter-lisp-state-on-command nil))
+    :config
+    (progn
+      (add-to-list 'evil-lisp-state-major-modes 'clojure-mode)
+      (define-key evil-lisp-state-map (kbd "o") 'lisp-state-insert-sexp-after)
+      (define-key evil-lisp-state-map (kbd "O") 'lisp-state-insert-sexp-before)
+      (evil-lisp-state-leader ",")))
+#+END_SRC
+
 ** Projectile
 *** Projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -752,6 +767,7 @@ Uses Elm compiler. See URL
         (define-key cider-mode-map (kbd "M-v") 'cider-eval-defun-at-point))
 
       (defun rcoedo/cider/hook ()
+        (add-to-list 'evil-insert-state-modes 'cider-stacktrace-mode)
         (eldoc-mode t)
         (rcoedo/cider/bindings))
 
@@ -894,7 +910,11 @@ Uses Elm compiler. See URL
   (req-package lisp-mode
     :init
     (progn
+      (defun rcoedo/lisp-mode/bindings ()
+        (define-key emacs-lisp-mode-map (kbd "M-v") 'eval-defun))
+
       (defun rcoedo/lisp-mode/hook ()
+        (rcoedo/lisp-mode/bindings)
         (rainbow-delimiters-mode t))
 
       (add-hook 'emacs-lisp-mode-hook 'rcoedo/lisp-mode/hook)))
