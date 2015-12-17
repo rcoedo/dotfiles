@@ -42,6 +42,7 @@
 (depends-on "perspective")
 (depends-on "projectile")
 (depends-on "projectile-rails")
+(depends-on "pyenv-mode")
 (depends-on "rainbow-delimiters")
 (depends-on "rainbow-mode")
 (depends-on "rbenv")
