@@ -492,8 +492,13 @@
     :require helm
     :config
     (progn
-      (add-to-list 'evil-insert-state-modes 'eww-mode)
-      (define-key global-map (kbd "M-d") 'helm-dash)
+      (defun rcoedo/helm-dash/setup-docsets (hook docsets)
+        (add-hook hook `(lambda ()
+                          (setq-local helm-dash-common-docsets ',docsets)
+                          (setq helm-current-buffer (current-buffer)))))
+
+      (define-key global-map (kbd "M-d") 'helm-dash-at-point)
+      (define-key global-map (kbd "M-D") 'helm-dash)
       (setq helm-dash-browser-func 'eww
             helm-dash-docsets-path "~/.emacs.d/docsets"
             helm-dash-common-docsets (sort
@@ -785,16 +790,21 @@ Uses Elm compiler. See URL
         (define-key cider-mode-map (kbd "M-v") 'cider-eval-defun-at-point))
 
       (defun rcoedo/cider/hook ()
-        (add-to-list 'evil-insert-state-modes 'cider-stacktrace-mode)
         (eldoc-mode t)
         (rcoedo/cider/bindings))
 
-      (add-hook 'cider-mode-hook 'rcoedo/cider/hook)))
+      (add-hook 'cider-mode-hook 'rcoedo/cider/hook))
+    :config
+    (progn
+      (evil-define-key 'normal cider-stacktrace-mode
+        (kbd "q") 'cider-popup-buffer-quit-function)))
 
   (req-package clojure-mode
+    :require helm-dash
     :mode "\\.clj\\'"
     :config
     (progn
+      (rcoedo/helm-dash/setup-docsets 'clojure-mode-hook '("Clojure"))
       (defun rcoedo/clojure-mode/hook ()
         (rainbow-delimiters-mode t))
 
@@ -936,6 +946,16 @@ Uses Elm compiler. See URL
         (rainbow-delimiters-mode t))
 
       (add-hook 'emacs-lisp-mode-hook 'rcoedo/lisp-mode/hook)))
+#+END_SRC
+
+** Eww
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package eww
+    :defer t
+    :config
+    (progn
+      (evil-define-key 'normal eww-mode-map
+        (kbd "q") 'quit-window)))
 #+END_SRC
 
 * Globals
