@@ -3,9 +3,11 @@
 (source melpa)
 
 (depends-on "alchemist")
+(depends-on "anaconda-mode")
 (depends-on "cider")
 (depends-on "clojure-mode")
 (depends-on "company")
+(depends-on "company-anaconda")
 (depends-on "company-go")
 (depends-on "company-tern")
 (depends-on "dash")

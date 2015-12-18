@@ -304,19 +304,20 @@
     (evil-mode t)
 
     (defvar evil-mode-list
-      '((eshell-mode         insert)
-        (comint-mode         insert)
-        (alchemist-iex-mode  insert)
-        (magit-mode          emacs)
-        (magit-status        emacs)
-        (magit-log-mode      emacs)
-        (magit-commit-mode   emacs)
-        (magit-diff-mode     emacs)
-        (magit-popup-mode    emacs)
-        (magit-merge-popup   emacs)
-        (magit-revision-mode emacs)
-        (direx:direx-mode    emacs)
-        (git-commit-mode     insert)))
+      '((eshell-mode           insert)
+        (comint-mode           insert)
+        (alchemist-iex-mode    insert)
+        (magit-mode            emacs)
+        (magit-status          emacs)
+        (magit-log-mode        emacs)
+        (magit-commit-mode     emacs)
+        (magit-diff-mode       emacs)
+        (magit-popup-mode      emacs)
+        (magit-merge-popup     emacs)
+        (magit-revision-mode   emacs)
+        (direx:direx-mode      emacs)
+        (git-commit-mode       insert)
+        (cider-stacktrace-mode insert)))
 
     (dolist (mode evil-mode-list)
       (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
@@ -793,11 +794,7 @@ Uses Elm compiler. See URL
         (eldoc-mode t)
         (rcoedo/cider/bindings))
 
-      (add-hook 'cider-mode-hook 'rcoedo/cider/hook))
-    :config
-    (progn
-      (evil-define-key 'normal cider-stacktrace-mode
-        (kbd "q") 'cider-popup-buffer-quit-function)))
+      (add-hook 'cider-mode-hook 'rcoedo/cider/hook)))
 
   (req-package clojure-mode
     :require helm-dash
@@ -830,6 +827,22 @@ Uses Elm compiler. See URL
         (if (eq nil (get-buffer "*rails*")) (robe-start "yes")))
 
       (add-hook 'robe-mode-hook 'rcoedo/robe/hook)))
+#+END_SRC
+
+** Python
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package anaconda-mode
+    :require company
+    :init
+    (progn
+      (add-to-list 'company-backends 'company-anaconda)
+
+      (defun rcoedo/anaconda-mode/hook ()
+        (pyenv-mode t)
+        (anaconda-mode t)
+        (eldoc-mode t))
+
+      (add-hook 'python-mode-hook 'rcoedo/anaconda-mode/hook)))
 #+END_SRC
 
 ** Web
