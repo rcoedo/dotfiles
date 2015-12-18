@@ -385,6 +385,15 @@
   (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00"))))))
 #+END_SRC
 
+*** Evil matchit
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package evil-matchit
+    :require evil
+    :config
+    (progn
+      (global-evil-matchit-mode t)))
+#+END_SRC
+
 *** Evil lisp state
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package evil-lisp-state
