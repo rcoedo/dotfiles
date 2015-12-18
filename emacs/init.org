@@ -857,8 +857,6 @@ Uses Elm compiler. See URL
     :require company eval-in-repl-python
     :init
     (progn
-      (add-to-list 'company-backends 'company-anaconda)
-
       (defun rcoedo/anaconda-mode/bindings ()
         (define-key python-mode-map (kbd "M-v") 'eir-eval-in-python))
 
@@ -868,6 +866,7 @@ Uses Elm compiler. See URL
         (eldoc-mode t)
         (rcoedo/anaconda-mode/bindings))
 
+      (add-to-list 'company-backends 'company-anaconda)
       (add-hook 'python-mode-hook 'rcoedo/anaconda-mode/hook)))
 #+END_SRC
 

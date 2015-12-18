@@ -31,7 +31,7 @@
 (depends-on "flycheck-rust")
 (depends-on "ghq")
 (depends-on "go-mode")
-(depends-on "gruvbox-theme" :git "https://github.com/rcoedo/emacs-theme-gruvbox")
+(depends-on "gruvbox-theme")
 (depends-on "guide-key")
 (depends-on "helm")
 (depends-on "helm-ag")
