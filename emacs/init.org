@@ -541,6 +541,12 @@
     (progn
       (define-key evil-normal-state-map "-" 'er/expand-region)))
 #+END_SRC
+** Eval in repl
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package eval-in-repl
+    :defer t)
+#+END_SRC
+
 ** Ghq
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package ghq)
@@ -741,15 +747,22 @@ Uses Elm compiler. See URL
     :require flycheck tern
     :mode "\\.js\\'"
     :config
-    (setq-default js2-basic-offset 2)
-    (add-hook 'js2-mode-hook (lambda ()
-                               (rcoedo/evil-leader/set-mode-keys 'js2-mode
-                                '(("oe" js2-mode-toggle-element)
-                                  ("ow" js2-mode-toggle-warnings-and-errors)
-                                  ("oc" js2-mode-toggle-hide-comments)
-                                  ("of" js2-mode-toggle-hide-functions)
-                                  ("oa" js2-mode-show-all)))
-                               (tern-mode t))))
+    (progn
+      (defun rcoedo/js2-mode/bindings ()
+        (rcoedo/evil-leader/set-mode-keys
+         'js2-mode
+         '(("oe" js2-mode-toggle-element)
+           ("ow" js2-mode-toggle-warnings-and-errors)
+           ("oc" js2-mode-toggle-hide-comments)
+           ("of" js2-mode-toggle-hide-functions)
+           ("oa" js2-mode-show-all))))
+
+      (defun rcoedo/js2-mode/hook ()
+        (tern-mode t)
+        (rcoedo/js2-mode/bindings))
+
+      (setq-default js2-basic-offset 2)
+      (add-hook 'js2-mode-hook 'rcoedo/js2-mode/hook)))
 #+END_SRC
 
 ** Rust
@@ -841,15 +854,19 @@ Uses Elm compiler. See URL
 ** Python
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package anaconda-mode
-    :require company
+    :require company eval-in-repl-python
     :init
     (progn
       (add-to-list 'company-backends 'company-anaconda)
 
+      (defun rcoedo/anaconda-mode/bindings ()
+        (define-key python-mode-map (kbd "M-v") 'eir-eval-in-python))
+
       (defun rcoedo/anaconda-mode/hook ()
         (pyenv-mode t)
         (anaconda-mode t)
-        (eldoc-mode t))
+        (eldoc-mode t)
+        (rcoedo/anaconda-mode/bindings))
 
       (add-hook 'python-mode-hook 'rcoedo/anaconda-mode/hook)))
 #+END_SRC
@@ -1005,7 +1022,7 @@ Uses Elm compiler. See URL
 
   (define-key global-map (kbd "M-n")           'rcoedo/buffer/next-non-emacs-buffer)
   (define-key global-map (kbd "M-p")           'rcoedo/buffer/previous-non-emacs-buffer)
-  (define-key global-map (kbd "M-e")           'rcoedo/eshell/projectile-eshell-popup)
+  (define-key global-map (kbd "M-q")           'rcoedo/eshell/projectile-eshell-popup)
   (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
   (define-key global-map (kbd "C-;")           'next-multiframe-window)
   (define-key global-map (kbd "C-'")           'previous-multiframe-window)
