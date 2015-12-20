@@ -816,7 +816,17 @@ Uses Elm compiler. See URL
         (eldoc-mode t)
         (rcoedo/cider/bindings))
 
-      (add-hook 'cider-mode-hook 'rcoedo/cider/hook)))
+      (add-hook 'cider-mode-hook 'rcoedo/cider/hook)
+
+      (defun rcoedo/cider/figwheel-repl ()
+        (interactive)
+        (save-some-buffers)
+        (with-current-buffer (cider-current-repl-buffer)
+          (goto-char (point-max))
+          (insert "(require 'figwheel-sidecar.repl-api)
+             (figwheel-sidecar.repl-api/start-figwheel!) ; idempotent
+             (figwheel-sidecar.repl-api/cljs-repl)")
+          (cider-repl-return)))))
 
   (req-package clojure-mode
     :require helm-dash
