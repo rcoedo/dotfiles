@@ -996,6 +996,36 @@ Uses Elm compiler. See URL
       (add-hook 'emacs-lisp-mode-hook 'rcoedo/lisp-mode/hook)))
 #+END_SRC
 
+** Octave
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package octave
+    :mode ("\\.m$" . octave-mode)
+    :init
+    (progn
+      (defun rcoedo/octave-mode/bindings ()
+        (define-key octave-mode-map (kbd "M-v") 'octave-send-defun))
+
+      (defun rcoedo/octave-mode/hook ()
+        (rcoedo/octave-mode/bindings))
+
+      (add-hook 'octave-mode-hook 'rcoedo/octave-mode/hook)))
+#+END_SRC
+
+** ESS
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package ess-site
+    :mode ("\\.R$" . R-mode)
+    :init
+    (progn
+      (defun rcoedo/ess-mode/bindings ()
+        (define-key ess-mode-map (kbd "M-v") 'ess-eval-paragraph-and-step))
+
+      (defun rcoedo/ess-mode/hook ()
+        (rcoedo/ess-mode/bindings))
+
+      (add-hook 'ess-mode-hook 'rcoedo/ess-mode/hook)))
+#+END_SRC
+
 ** Eww
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package eww

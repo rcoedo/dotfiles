@@ -16,6 +16,7 @@
 (depends-on "elm-mode")
 (depends-on "emmet-mode")
 (depends-on "enh-ruby-mode")
+(depends-on "ess")
 (depends-on "eval-in-repl")
 (depends-on "evil")
 (depends-on "evil-leader")
