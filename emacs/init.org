@@ -859,8 +859,6 @@ Uses Elm compiler. See URL
              (figwheel-sidecar.repl-api/cljs-repl)")
           (cider-repl-return)))))
 
-  (req-package clj-refactor)
-
   (req-package clojure-mode
     :require helm-dash clj-refactor
     :mode "\\.clj\\'"
@@ -868,7 +866,6 @@ Uses Elm compiler. See URL
     (progn
       (rcoedo/helm-dash/setup-docsets 'clojure-mode-hook '("Clojure"))
       (defun rcoedo/clojure-mode/hook ()
-        (clj-refactor-mode t)
         (rainbow-delimiters-mode t))
 
       (add-hook 'clojure-mode-hook 'rcoedo/clojure-mode/hook)))

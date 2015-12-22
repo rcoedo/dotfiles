@@ -5,7 +5,6 @@
 (depends-on "alchemist")
 (depends-on "anaconda-mode")
 (depends-on "cider")
-(depends-on "clj-refactor")
 (depends-on "clojure-mode")
 (depends-on "company")
 (depends-on "company-anaconda")
