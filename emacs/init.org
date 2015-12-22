@@ -860,7 +860,7 @@ Uses Elm compiler. See URL
           (cider-repl-return)))))
 
   (req-package clojure-mode
-    :require helm-dash clj-refactor
+    :require helm-dash
     :mode "\\.clj\\'"
     :config
     (progn
