@@ -805,6 +805,19 @@ Uses Elm compiler. See URL
 
 ** Clojure
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package cider-repl
+    :defer t
+    :init
+    (progn
+      (defun rcoedo/cider-repl/bindings ()
+        (define-key cider-repl-mode-map (kbd "M-p") nil)
+        (define-key cider-repl-mode-map (kbd "M-n") nil))
+
+      (defun rcoedo/cider-repl/hook ()
+        (rcoedo/cider-repl/bindings))
+
+      (add-hook 'cider-repl-mode-hook 'rcoedo/cider-repl/hook)))
+
   (req-package cider
     :defer t
     :init
@@ -1014,6 +1027,7 @@ Uses Elm compiler. See URL
 ** ESS
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package ess-site
+    :disabled t
     :mode ("\\.R$" . R-mode)
     :init
     (progn
@@ -1060,7 +1074,9 @@ Uses Elm compiler. See URL
   (define-key key-translation-map "\e"        (kbd "C-g"))
 
   (define-key global-map (kbd "M-n")           'rcoedo/buffer/next-non-emacs-buffer)
+  (define-key global-map (kbd "M-N")           'next-buffer)
   (define-key global-map (kbd "M-p")           'rcoedo/buffer/previous-non-emacs-buffer)
+  (define-key global-map (kbd "M-P")           'previous-buffer)
   (define-key global-map (kbd "M-q")           'rcoedo/eshell/projectile-eshell-popup)
   (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
   (define-key global-map (kbd "C-;")           'next-multiframe-window)
