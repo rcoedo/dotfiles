@@ -59,3 +59,4 @@
 (depends-on "tern")
 (depends-on "transpose-frame")
 (depends-on "web-mode")
+(depends-on "yasnippet")
