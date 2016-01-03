@@ -131,6 +131,18 @@ hs.hotkey.bind(cmd, "l", function() hs.window.focusedWindow():focusWindowEast() 
 hs.hotkey.bind(cmd, "k", function() hs.window.focusedWindow():focusWindowNorth() end)
 hs.hotkey.bind(cmd, "j", function() hs.window.focusedWindow():focusWindowSouth() end)
 
+function launchOrSwitch(name, realName)
+    if (hs.window.focusedWindow():application() == hs.appfinder.appFromName(name)) then
+        hs.eventtap.keyStroke(cmd, "`")
+    else
+        hs.application.launchOrFocus(realName or name)
+    end
+end
+
+hs.hotkey.bind(cmd, "h", function() launchOrSwitch("Google Chrome") end)
+hs.hotkey.bind(cmd, "j", function() launchOrSwitch("iTerm2", "iTerm") end)
+hs.hotkey.bind(cmd, "k", function() hs.application.launchOrFocus("Emacs") end)
+
 hs.hotkey.bind(cmdalt, "f", function() hs.window.focusedWindow():toggleFullScreen() end)
 
 hs.hotkey.bind(cmdalt, "h", hs.grid.pushWindowLeft)
