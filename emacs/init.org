@@ -322,6 +322,8 @@
     (dolist (mode evil-mode-list)
       (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
 
+    (define-key evil-normal-state-map "\C-p" nil)
+
     (define-key evil-insert-state-map "\C-a" 'beginning-of-line)
     (define-key evil-insert-state-map "\C-e" 'end-of-line)
     (define-key evil-insert-state-map "\C-f" 'forward-char)
@@ -1153,8 +1155,9 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "M-P")           'previous-buffer)
   (define-key global-map (kbd "M-q")           'rcoedo/eshell/projectile-eshell-popup)
   (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
-  (define-key global-map (kbd "C-;")           'next-multiframe-window)
-  (define-key global-map (kbd "C-'")           'previous-multiframe-window)
+  (define-key global-map (kbd "C-;")           'helm-projectile-find-file)
+  (define-key global-map (kbd "C-'")           'helm-ghq-list)
+  (define-key global-map (kbd "C-p")           'helm-projectile-find-file)
   (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
   (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
   (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
