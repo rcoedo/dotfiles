@@ -1148,6 +1148,8 @@ Uses Elm compiler. See URL
                 auto-save-default nil
                 rcoedo/layout/layout-list '(rcoedo/layout/three rcoedo/layout/four rcoedo/layout/side-by-side rcoedo/layout/bottom-panel))
 
+  (eval-after-load 'undo-tree '(progn (define-key undo-tree-map (kbd "C-/") nil)))
+
   (define-key key-translation-map (kbd "C-,") (kbd "C-x")) ;; These bring sanity to my fingers
   (define-key key-translation-map (kbd "C-.") (kbd "C-c"))
   (define-key key-translation-map "\e"        (kbd "C-g"))
@@ -1165,6 +1167,7 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
   (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
   (define-key global-map (kbd "C-x k")         'kill-buffer-and-window)
+  (define-key global-map (kbd "C-/")           'evilnc-comment-or-uncomment-lines)
 
   (define-key global-map (kbd "H-1") 'windmove-left)
   (define-key global-map (kbd "H-2") 'windmove-down)
