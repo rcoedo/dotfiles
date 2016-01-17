@@ -519,6 +519,17 @@
                                           (setq value (cons (file-name-sans-extension element) value))))
                                       'string-lessp))))
 #+END_SRC
+
+*** Helm css scss
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package helm-css-scss
+    :require helm
+    :mode "\\.scss\\'"
+    :config
+    (progn
+      (setq helm-css-scss-split-with-multiple-windows t)))
+#+END_SRC
+
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package yasnippet
@@ -959,6 +970,32 @@ Uses Elm compiler. See URL
     (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 
+** SCSS
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package scss-mode
+    :mode "\\.scss\\'"
+    :init
+    (progn
+      (defun rcoedo/scss-mode/bindings ()
+        (rcoedo/evil-leader/set-mode-keys 'scss-mode
+                                          '(("f" helm-css-scss))))
+
+      (add-hook 'scss-mode-hook 'rcoedo/scss-mode/bindings)))
+#+END_SRC
+
+** Rainbow mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package rainbow
+    :defer t
+    :init
+    (progn
+      (setq rainbow-html-colors-major-mode-list '(css-mode
+                                                  html-mode
+                                                  scss-mode
+                                                  web-mode))
+      (dolist (mode rainbow-html-colors-major-mode-list)
+        (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode))))
+#+END_SRC
 ** Emmet
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package emmet-mode
