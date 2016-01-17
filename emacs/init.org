@@ -27,20 +27,23 @@
    
 * Platform
 #+BEGIN_SRC emacs-lisp :tangle yes
-(when (memq window-system '(mac ns))
-  (setq exec-path-from-shell-check-startup-files nil)
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "RBENV_ROOT")
-  (exec-path-from-shell-copy-env "GHQ_ROOT")
-  (exec-path-from-shell-copy-env "GOPATH"))
+  (when (memq window-system '(mac ns))
+    (setq exec-path-from-shell-check-startup-files nil)
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "RBENV_ROOT")
+    (exec-path-from-shell-copy-env "GHQ_ROOT")
+    (exec-path-from-shell-copy-env "GOPATH")
 
-(setq mac-command-modifier 'meta
-      mac-option-key-is-meta nil
-      mac-option-modifier 'none
-      system-uses-terminfo nil
-      osx-clipboard-mode t)
+    (setq mac-command-modifier 'meta
+          mac-option-key-is-meta nil
+          mac-option-modifier 'none
+          system-uses-terminfo nil
+          osx-clipboard-mode t)
 
-(provide 'darwin-platform)
+    (define-key key-translation-map (kbd "˙") (kbd "H-1"))
+    (define-key key-translation-map (kbd "∆") (kbd "H-2"))
+    (define-key key-translation-map (kbd "˚") (kbd "H-3"))
+    (define-key key-translation-map (kbd "¬") (kbd "H-4")))
 #+END_SRC
 
 * Interface
@@ -1162,6 +1165,11 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
   (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
   (define-key global-map (kbd "C-x k")         'kill-buffer-and-window)
+
+  (define-key global-map (kbd "H-1") 'windmove-left)
+  (define-key global-map (kbd "H-2") 'windmove-down)
+  (define-key global-map (kbd "H-3") 'windmove-up)
+  (define-key global-map (kbd "H-4") 'windmove-right)
 
   (define-key global-map (kbd "\C-x2") (lambda () (interactive)(split-window-vertically) (other-window 1)))
   (define-key global-map (kbd "\C-x3") (lambda () (interactive)(split-window-horizontally) (other-window 1)))
