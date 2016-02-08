@@ -463,6 +463,7 @@
   (helm-mode t)
 
   (define-key global-map (kbd "C-x C-f")    'helm-find-files)
+  (define-key global-map (kbd "M-x")        'helm-M-x)
   (define-key global-map (kbd "C-SPC")      'helm-mini)
   (define-key helm-map   (kbd "<tab>")      'helm-execute-persistent-action)
   (define-key helm-map   (kbd "C-i")        'helm-execute-persistent-action)
@@ -782,6 +783,7 @@ Uses Elm compiler. See URL
     :config
     (progn
       (defun rcoedo/js2-mode/bindings ()
+        (define-key js2-mode-map (kbd "M-v") 'babel-repl-send-paragraph)
         (rcoedo/evil-leader/set-mode-keys
          'js2-mode
          '(("oe" js2-mode-toggle-element)
@@ -796,6 +798,19 @@ Uses Elm compiler. See URL
 
       (setq-default js2-basic-offset 2)
       (add-hook 'js2-mode-hook 'rcoedo/js2-mode/hook)))
+#+END_SRC
+
+*** Babel repl
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package babel-repl
+    :require comint
+    :config
+    (progn
+      (add-to-list 'comint-preoutput-filter-functions
+                   (lambda (output)
+                     (replace-regexp-in-string "'use strict'" ""
+                                               (replace-regexp-in-string
+                                                "\033\\[[0-9]+[A-Z]" "" output))))))
 #+END_SRC
 
 ** Rust
