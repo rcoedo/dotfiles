@@ -142,6 +142,7 @@ end
 hs.hotkey.bind(cmd, "h", function() launchOrSwitch("Google Chrome") end)
 hs.hotkey.bind(cmd, "j", function() launchOrSwitch("iTerm2", "iTerm") end)
 hs.hotkey.bind(cmd, "k", function() hs.application.launchOrFocus("Emacs") end)
+hs.hotkey.bind(cmd, "l", function() launchOrSwitch("IntelliJ IDEA 15") end)
 
 hs.hotkey.bind(cmdalt, "f", function() hs.window.focusedWindow():toggleFullScreen() end)
 
