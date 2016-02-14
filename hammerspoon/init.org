@@ -95,7 +95,7 @@ hs.alert("Config loaded")
 
   function launchOrSwitch(name, realName)
       if (hs.window.frontmostWindow() ~= null and hs.window.frontmostWindow():application() == hs.appfinder.appFromName(name)) then
-          hs.eventtap.keyStroke(cmd, "`")
+          hs.eventtap.keyStroke({"cmd"}, "`")
       else
           hs.application.launchOrFocus(realName or name)
       end
