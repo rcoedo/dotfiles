@@ -298,6 +298,22 @@
       (funcall layout)))
 #+END_SRC
 
+** Java
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun rcoedo/java/java-eval-nofocus ()
+    "run current program (that requires no input)"
+    (interactive)
+    (let* ((source (file-name-nondirectory buffer-file-name))
+           (out    (file-name-sans-extension source))
+           (class  (concat out ".class")))
+      (save-buffer)
+      (shell-command (format "rm -f %s" class))
+      (shell-command (format "javac %s" source))
+      (if (file-exists-p class)
+          (shell-command (format "java %s" out) "*scratch*")
+          (shell-command (format "javac %s" source) "*scratch*"))))
+#+END_SRC
+
 * Package settings
 ** Evil
 *** Evil mode
@@ -399,6 +415,14 @@
       (global-evil-matchit-mode t)))
 #+END_SRC
 
+*** Evil multiple cursors
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package evil-mc
+    :config
+    (progn
+      (global-evil-mc-mode 1)))
+#+END_SRC
+
 *** Evil lisp state
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package evil-lisp-state
@@ -411,7 +435,7 @@
       (add-to-list 'evil-lisp-state-major-modes 'clojure-mode)
       (define-key evil-lisp-state-map (kbd "o") 'lisp-state-insert-sexp-after)
       (define-key evil-lisp-state-map (kbd "O") 'lisp-state-insert-sexp-before)
-      (evil-lisp-state-leader ",")))
+      (evil-lisp-state-leader "L")))
 #+END_SRC
 
 ** Projectile
@@ -1016,6 +1040,19 @@ Uses Elm compiler. See URL
       (dolist (mode rainbow-html-colors-major-mode-list)
         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode))))
 #+END_SRC
+
+** Cc mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package cc-mode
+    :defer t
+    :init
+    (progn
+      (defun rcoedo/java-mode/bindings ()
+        (define-key java-mode-map (kbd "M-v") 'rcoedo/java/java-eval-nofocus))
+
+      (add-hook 'java-mode-hook 'rcoedo/java-mode/bindings)))
+#+END_SRC
+
 ** Emmet
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package emmet-mode
