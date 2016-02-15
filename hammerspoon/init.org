@@ -149,9 +149,9 @@ hs.alert("Config loaded")
 
   s:bind({}, "escape", function() s:exit() end)
 
-  s:bind({}, "p", function() s:exit() hs.spotify.playpause()  end)
-  s:bind({}, "h", function() s:exit() hs.spotify.previous() end)
-  s:bind({}, "l", function() s:exit() hs.spotify.next() end)
+  s:bind({}, "space", function() s:exit() hs.spotify.playpause()  end)
+  s:bind({}, "p", function() hs.spotify.previous() hs.spotify.displayCurrentTrack() end)
+  s:bind({}, "n", function() hs.spotify.next() hs.spotify.displayCurrentTrack() end)
   s:bind({}, "i", function() s:exit() hs.spotify.displayCurrentTrack() end)
   s:bind({}, "s", function() s:exit() hs.application.launchOrFocus("Spotify") end)
 
