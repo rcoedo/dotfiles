@@ -985,6 +985,17 @@ Uses Elm compiler. See URL
       (add-hook 'python-mode-hook 'rcoedo/anaconda-mode/hook)))
 #+END_SRC
 
+** Haskell
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package
+    :mode "\\.hs\\'"
+    :commands haskell-mode
+    :config
+    (progn
+      (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+      (add-hook 'haskell-mode-hook 'interactive-haskell-mode)))
+#+END_SRC
+
 ** Web
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package web-mode
