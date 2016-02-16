@@ -122,27 +122,15 @@ hs.alert("Config loaded")
   local alt = {"alt"}
   local cmdalt = {"cmd", "alt"}
 
-  hs.hotkey.bind(cmd, "s", function() hs.hints.windowHints() end)
+  -- hs.hotkey.bind(cmd, "s", function() hs.hints.windowHints() end)
 
-  hs.hotkey.bind(cmd, "h", function() launchOrSwitch("Google Chrome") end)
-  hs.hotkey.bind(cmd, "j", function() launchOrSwitch("iTerm2", "iTerm") end)
-  hs.hotkey.bind(cmd, "k", function() hs.application.launchOrFocus("Emacs") end)
-  hs.hotkey.bind(cmd, "l", function() launchOrSwitch("IntelliJ IDEA 15") end)
+  -- hs.hotkey.bind(cmd, "h", function() launchOrSwitch("Google Chrome") end)
+  -- hs.hotkey.bind(cmd, "j", function() launchOrSwitch("iTerm2", "iTerm") end)
+  -- hs.hotkey.bind(cmd, "k", function() hs.application.launchOrFocus("Emacs") end)
+  -- hs.hotkey.bind(cmd, "l", function() launchOrSwitch("IntelliJ IDEA 15") end)
 
   hs.hotkey.bind(cmd, "delete", function() hs.window.frontmostWindow():close() end)
   hs.hotkey.bind(cmdalt, "delete", function() hs.window.frontmostWindow():application():kill() end)
-
-  -- Launcher bindings
-  l = hs.hotkey.modal.new({}, nil, "Launcher mode")
-
-  l:bind({}, "escape", function() l:exit() end)
-
-  l:bind({}, "i", function() l:exit() hs.application.launchOrFocus("IntelliJ IDEA 15") end)
-  l:bind({}, "e", function() l:exit() hs.application.launchOrFocus("Emacs") end)
-  l:bind({}, "t", function() l:exit() hs.application.launchOrFocus("iTerm2") end)
-  l:bind({}, "s", function() l:exit() hs.application.launchOrFocus("Spotify") end)
-  l:bind({}, "l", function() l:exit() hs.application.launchOrFocus("Slack") end)
-  l:bind({}, "c", function() l:exit() hs.application.launchOrFocus("Google Chrome") end)
 
   -- Spotify bindings
   s = hs.hotkey.modal.new({}, nil, "Spotify mode")
@@ -156,13 +144,9 @@ hs.alert("Config loaded")
   s:bind({}, "s", function() s:exit() hs.application.launchOrFocus("Spotify") end)
 
   -- Window bindings
-  w = hs.hotkey.modal.new(cmd, "return")
+  w = hs.hotkey.modal.new(nil, nil, "Window mode")
 
-  w:bind(alt, "space", function() end)
   w:bind({}, "escape", function() w:exit() end)
-
-  w:bind(cmd, "return", function() w:exit() l:enter() end)
-  w:bind({}, "s", function() w:exit() s:enter() end)
 
   w:bind({}, "h", hs.grid.pushWindowLeft)
   w:bind({}, "j", hs.grid.pushWindowDown)
@@ -180,6 +164,21 @@ hs.alert("Config loaded")
   w:bind({}, "n", function() w:exit() pushToNextScreen() end)
   w:bind({}, "m", function() w:exit() hs.grid.maximizeWindow() end)
   w:bind({}, "f", function() w:exit() hs.window.frontmostWindow():toggleFullScreen() end)
+
+  -- Launcher bindings
+  l = hs.hotkey.modal.new(cmd, "return")
+
+  w:bind(cmd, "return", function() end)
+  l:bind({}, "escape", function() l:exit() end)
+
+  l:bind({}, "i", function() l:exit() hs.application.launchOrFocus("IntelliJ IDEA 15") end)
+  l:bind({}, "e", function() l:exit() hs.application.launchOrFocus("Emacs") end)
+  l:bind({}, "t", function() l:exit() hs.application.launchOrFocus("iTerm") end)
+  l:bind({}, "l", function() l:exit() hs.application.launchOrFocus("Slack") end)
+  l:bind({}, "c", function() l:exit() hs.application.launchOrFocus("Google Chrome") end)
+
+  l:bind({}, "s", function() l:exit() s:enter() end)
+  l:bind({}, "w", function() l:exit() w:enter() end)
 #+END_SRC
   
 * Hammerspoon CLI

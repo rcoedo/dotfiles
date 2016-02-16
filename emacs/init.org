@@ -438,6 +438,14 @@
       (evil-lisp-state-leader "L")))
 #+END_SRC
 
+*** Evil org
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package evil-org
+    :init
+    (progn
+      (add-hook 'org-mode-hook 'evil-org-mode)))
+#+END_SRC
+
 ** Projectile
 *** Projectile
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -992,8 +1000,10 @@ Uses Elm compiler. See URL
     :commands haskell-mode
     :config
     (progn
-      (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-      (add-hook 'haskell-mode-hook 'interactive-haskell-mode)))
+      (defun rcoedo/haskell/hook ()
+        (interactive-haskell-mode 1)
+        (hindent-mode 1))
+      (add-hook 'haskell-mode-hook 'rcoedo/haskell/hook)))
 #+END_SRC
 
 ** Web
