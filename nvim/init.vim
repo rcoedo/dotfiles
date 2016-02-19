@@ -10,55 +10,56 @@ set nocompatible
 filetype off
 
 " Vundle as plugin manager
-set rtp+=~/.config/nvim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'gmarik/Vundle.vim'
+" set rtp+=~/.config/nvim/bundle/Vundle.vim
+" Plugin 'gmarik/Vundle.vim'
+
+call plug#begin('~/.config/nvim/plugged')
 
 " Plugin configuration
-Plugin 'dag/vim-fish'
-Plugin 'maxbrunsfeld/vim-emacs-bindings'
-Plugin 'mhinz/vim-sayonara'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'terryma/vim-expand-region'
-Plugin 'wesQ3/vim-windowswap'
-Plugin 'tmux-plugins/vim-tmux'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-vinegar'
-Plugin 'tpope/vim-ragtag'
-Plugin 'sjl/badwolf'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'pangloss/vim-javascript'
-Plugin 'fatih/vim-go'
-Plugin 'elixir-lang/vim-elixir'
-Plugin 'jceb/vim-orgmode'
-Plugin 'tpope/vim-speeddating'
+Plug 'dag/vim-fish'
+Plug 'maxbrunsfeld/vim-emacs-bindings'
+Plug 'mhinz/vim-sayonara'
+Plug 'airblade/vim-gitgutter'
+Plug 'terryma/vim-expand-region'
+Plug 'wesQ3/vim-windowswap'
+Plug 'tmux-plugins/vim-tmux'
+Plug 'vim-ruby/vim-ruby'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-ragtag'
+Plug 'sjl/badwolf'
+Plug 'kchmck/vim-coffee-script'
+Plug 'pangloss/vim-javascript'
+Plug 'fatih/vim-go'
+Plug 'elixir-lang/vim-elixir'
+Plug 'jceb/vim-orgmode'
+Plug 'tpope/vim-speeddating'
 
-Plugin 'mxw/vim-jsx'
+Plug 'mxw/vim-jsx'
 let g:jsx_ext_required = 0
 
-Plugin 'takac/vim-hardtime'
+Plug 'takac/vim-hardtime'
 "let g:hardtime_default_on = 1
 let g:hardtime_ignore_buffer_patterns = [ "NERD.*" ]
 let g:hardtime_allow_different_key = 1
 
-Plugin 'szw/vim-ctrlspace'
+Plug 'szw/vim-ctrlspace'
 if executable("pt") 
   let g:ctrlspace_glob_command = 'pt -l --nocolor --nogroup --ignore .git --ignore .DS_Store --ignore node_modules --ignore bower_components -g .'
 endif
 set hidden
 
-Plugin 'Lokaltog/vim-easymotion'
+Plug 'Lokaltog/vim-easymotion'
 let g:EasyMotion_smartcase=1
 
-Plugin 'bling/vim-airline'
+Plug 'bling/vim-airline'
 let g:airline_powerline_fonts = 1
 let g:airline_exclude_preview = 1
 
-call vundle#end()
+call plug#end()
 
 " General configuration
 filetype plugin indent on

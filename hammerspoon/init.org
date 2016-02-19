@@ -122,26 +122,16 @@ hs.alert("Config loaded")
   local alt = {"alt"}
   local cmdalt = {"cmd", "alt"}
 
-  -- hs.hotkey.bind(cmd, "s", function() hs.hints.windowHints() end)
-
-  -- hs.hotkey.bind(cmd, "h", function() launchOrSwitch("Google Chrome") end)
-  -- hs.hotkey.bind(cmd, "j", function() launchOrSwitch("iTerm2", "iTerm") end)
-  -- hs.hotkey.bind(cmd, "k", function() hs.application.launchOrFocus("Emacs") end)
-  -- hs.hotkey.bind(cmd, "l", function() launchOrSwitch("IntelliJ IDEA 15") end)
-
-  hs.hotkey.bind(cmd, "delete", function() hs.window.frontmostWindow():close() end)
-  hs.hotkey.bind(cmdalt, "delete", function() hs.window.frontmostWindow():application():kill() end)
-
   -- Spotify bindings
   s = hs.hotkey.modal.new({}, nil, "Spotify mode")
 
   s:bind({}, "escape", function() s:exit() end)
 
-  s:bind({}, "space", function() s:exit() hs.spotify.playpause()  end)
   s:bind({}, "p", function() hs.spotify.previous() hs.spotify.displayCurrentTrack() end)
   s:bind({}, "n", function() hs.spotify.next() hs.spotify.displayCurrentTrack() end)
   s:bind({}, "i", function() s:exit() hs.spotify.displayCurrentTrack() end)
   s:bind({}, "s", function() s:exit() hs.application.launchOrFocus("Spotify") end)
+  s:bind({}, "space", function() s:exit() hs.spotify.playpause()  end)
 
   -- Window bindings
   w = hs.hotkey.modal.new(nil, nil, "Window mode")
@@ -161,9 +151,12 @@ hs.alert("Config loaded")
   w:bind({}, "[", decreaseGrid)
   w:bind({}, "]", increaseGrid)
 
-  w:bind({}, "n", function() w:exit() pushToNextScreen() end)
-  w:bind({}, "m", function() w:exit() hs.grid.maximizeWindow() end)
-  w:bind({}, "f", function() w:exit() hs.window.frontmostWindow():toggleFullScreen() end)
+  w:bind({}, "n", function() pushToNextScreen() end)
+  w:bind({}, "m", function() hs.grid.maximizeWindow() end)
+  w:bind({}, "f", function() hs.window.frontmostWindow():toggleFullScreen() end)
+
+  w:bind({}, "delete", function() w:exit() hs.window.frontmostWindow():close() end)
+  w:bind(cmd, "delete", function() w:exit() hs.window.frontmostWindow():application():kill() end)
 
   -- Launcher bindings
   l = hs.hotkey.modal.new(cmd, "return")
@@ -181,6 +174,102 @@ hs.alert("Config loaded")
   l:bind({}, "w", function() l:exit() w:enter() end)
 #+END_SRC
   
+* Mouse mode
+#+BEGIN_SRC lua :tangle yes
+  -- Mouse mode
+
+  local mouseMovingUp = false
+  local mouseMovingBottom = false
+  local mouseMovingRight = false
+  local mouseMovingLeft = false
+  local mouseIsDragging = false
+
+  mouseMode = hs.hotkey.modal.new(alt, "space")
+
+  function mouseMode:entered()
+      hs.alert.show("Mouse mode")
+
+      local speedX = 0
+      local speedY = 0
+      local acceleration = 0.5
+
+      mouseTimer = hs.timer.doEvery(0.01, function()
+          if mouseMovingRight then
+              speedX = speedX + acceleration
+          elseif mouseMovingLeft then
+              speedX = speedX - acceleration
+          else
+              speedX = 0
+          end
+
+          if mouseMovingTop then
+              speedY = speedY - acceleration
+          elseif mouseMovingBottom then
+              speedY = speedY + acceleration
+          else
+              speedY = 0
+          end
+
+          local position = hs.mouse.getAbsolutePosition()
+          position.x = position.x + speedX
+          position.y = position.y + speedY
+          hs.mouse.setAbsolutePosition(position)
+
+          if mouseIsDragging then
+              hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftmousedragged, position):post()
+          end
+      end)
+  end
+
+  function stopMouseMode()
+      hs.alert.show("Normal mode")
+      mouseTimer:stop()
+      mouseMode:exit()
+  end
+
+  mouseMode:bind({}, 'escape', stopMouseMode)
+  mouseMode:bind(hyper, 'M', stopMouseMode)
+
+  mouseMode:bind({}, 'H', function()
+      mouseMovingLeft = true
+  end, function()
+      mouseMovingLeft = false
+  end)
+
+  mouseMode:bind({}, 'L', function()
+      mouseMovingRight = true
+  end, function()
+      mouseMovingRight = false
+  end)
+
+  mouseMode:bind({}, 'K', function()
+      mouseMovingTop = true
+  end, function()
+      mouseMovingTop = false
+  end)
+
+  mouseMode:bind({}, 'J', function()
+      mouseMovingBottom = true
+  end, function()
+      mouseMovingBottom = false
+  end)
+
+  mouseMode:bind({}, 'F', function()
+      local position = hs.mouse.getAbsolutePosition()
+      hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftmousedown, position):post()
+
+      mouseIsDragging = true
+  end, function()
+      local position = hs.mouse.getAbsolutePosition()
+      hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftmouseup, position):post()
+
+      mouseIsDragging = false
+  end)
+
+  mouseMode:bind({"shift"}, 'F', function()
+      hs.eventtap.rightClick(hs.mouse.getAbsolutePosition())
+  end)
+#+END_SRC
 * Hammerspoon CLI
 #+BEGIN_SRC lua :tangle yes
 hs.ipc.cliInstall()
