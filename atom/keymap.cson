@@ -1,0 +1,16 @@
+'atom-workspace':
+  'cmd-o'         : 'fuzzy-finder:toggle-file-finder'
+  'alt-cmd-o'     : 'symbols-view:toggle-file-symbols'
+  'cmd-t'         : 'fuzzy-finder:toggle-buffer-finder'
+  'cmd-x'         : 'command-palette:toggle'
+  'cmd-p'         : 'douglas:toggle'
+  'cmd-1'         : 'tree-view:toggle'
+
+'atom-text-editor.vim-mode-plus.normal-mode':
+  'y s'           : 'vim-mode-plus:surround'
+  'y s w'         : 'vim-mode-plus:surround-word'
+  'd s'           : 'vim-mode-plus:delete-surround'
+  'c s'           : 'vim-mode-plus:change-surround'
+  'd s'           : 'vim-mode-plus:delete-surround-any-pair'
+  'c s'           : 'vim-mode-plus:change-surround-any-pair'
+  'y m s'         : 'vim-mode-plus:map-surround'
