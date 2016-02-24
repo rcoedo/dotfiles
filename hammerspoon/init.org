@@ -155,8 +155,8 @@ hs.alert("Config loaded")
   w:bind({}, "m", function() hs.grid.maximizeWindow() end)
   w:bind({}, "f", function() hs.window.frontmostWindow():toggleFullScreen() end)
 
-  w:bind({}, "delete", function() w:exit() hs.window.frontmostWindow():close() end)
-  w:bind(cmd, "delete", function() w:exit() hs.window.frontmostWindow():application():kill() end)
+  w:bind({}, "delete", function() hs.window.frontmostWindow():close() end)
+  w:bind(cmd, "delete", function() hs.window.frontmostWindow():application():kill() end)
 
   -- Launcher bindings
   l = hs.hotkey.modal.new(cmd, "return")
