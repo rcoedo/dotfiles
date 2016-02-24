@@ -94,7 +94,7 @@
 
 ** Font
 #+BEGIN_SRC emacs-lisp :tangle yes
-(set-frame-font (font-spec :family "Monaco" :size 12))
+(set-frame-font (font-spec :family "Fantasque Sans Mono" :size 16))
 #+END_SRC
 
 * rcoedo
