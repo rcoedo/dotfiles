@@ -4,9 +4,9 @@
   'cmd-t'         : 'fuzzy-finder:toggle-buffer-finder'
   'cmd-x'         : 'command-palette:toggle'
   'cmd-p'         : 'douglas:toggle'
-  'cmd-1'         : 'tree-view:toggle'
 
 'atom-text-editor.vim-mode-plus.normal-mode':
+  'tab'           : 'window:focus-next-pane'
   'y s'           : 'vim-mode-plus:surround'
   'y s w'         : 'vim-mode-plus:surround-word'
   'd s'           : 'vim-mode-plus:delete-surround'
