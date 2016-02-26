@@ -4,24 +4,29 @@
 * Global settings
 ** Helpers
 #+BEGIN_SRC fish :tangle yes
-function __add_to_path
-    if test (count $argv) = 1
-        set -gx PATH $argv[1] $PATH
-    else
-        echo "Usage: __add_to_path <path>"
-    end
-end
+  function __add_to_path
+      if test (count $argv) = 1
+          set -gx PATH $argv[1] $PATH
+      else
+          echo "Usage: __add_to_path <path>"
+      end
+  end
 
-function __reload_config
-    source ~/.config/fish/config.fish
-end
+  function __reload_config
+      source ~/.config/fish/config.fish
+  end
 
-function __make_completion --argument alias command
-  complete -c $alias -xa "(
-    set -l cmd (commandline -pc | sed -e 's/^ *\S\+ *//' );
-    complete -C\"$command \$cmd\";
-  )"
-end
+  function __fuzzy_find
+      fzf -x -m --ansi --reverse --inline-info $argv
+      #peco $argv
+  end
+
+  function __make_completion --argument alias command
+    complete -c $alias -xa "(
+      set -l cmd (commandline -pc | sed -e 's/^ *\S\+ *//' );
+      complete -C\"$command \$cmd\";
+    )"
+  end
 #+END_SRC
 
 ** Environment
@@ -30,6 +35,7 @@ set -gx EDITOR "vim"
 set -gx GIT_EDITOR "vim"
 set -gx GREP_OPTIONS "--color=auto"
 set -gx CDPATH . "$HOME/Workspace"
+set -gx BREW_CELLAR "/usr/local/Cellar"
 
 set -x JAVA_HOME (/usr/libexec/java_home)
 __add_to_path $JAVA_HOME/bin
@@ -76,70 +82,49 @@ set fish_color_command "green"
 
 ** Prompt
 #+BEGIN_SRC fish :tangle yes
-function __user_host
-  set -l content 
-  echo -n (set_color --bold yellow)
-  echo -n $USER@(hostname|cut -d . -f 1) (set color normal)
-end
-
-function __prompt_pwd
-  echo -n ' '(set_color green)(pwd)(set_color normal)
-end
-
-function __rb_prompt
-  echo -n (set_color red)''(rbenv version | awk '{print $1}')(set_color normal)
-end
-
-function __nd_prompt
-  echo -n (set_color green)''(ndenv version | awk '{print $1}')(set_color normal)
-end
-
-function __ex_prompt
-  echo -n (set_color blue)''(exenv version | awk '{print $1}')(set_color normal)
-end
-
-set __fish_git_prompt_color 'magenta'
-set __fish_git_prompt_show_informative_status 'yes'
-set __fish_git_prompt_showdirtystate 'yes'
-set __fish_git_prompt_char_stateseparator ' '
-
-set __fish_git_prompt_char_stagedstate '+'
-set __fish_git_prompt_color_stagedstate 'green'
-
-set __fish_git_prompt_char_dirtystate '*'
-set __fish_git_prompt_color_dirtystate 'red'
-
-set __fish_git_prompt_color_cleanstate 'green'
-
-function fish_prompt
-  echo -e ''
-  __user_host
-  __prompt_pwd
-  __fish_git_prompt " "
-  echo -e ''
-  echo (set_color white)"> "(set_color normal)
-end
-
-function fish_right_prompt
-  __nd_prompt
-  echo "|"
-  __rb_prompt
-  echo "|"
-  __ex_prompt
-  set -l st $status
-  if [ $st != 0 ];
-    echo (set_color red) ↵ $st(set_color normal)
+  function __user_host
+    set -l content
+    echo -n (set_color --bold yellow)
+    echo -n $USER@(hostname|cut -d . -f 1) (set color normal)
   end
-end
+
+  function __prompt_pwd
+    echo -n ' '(set_color green)(echo $PWD | sed -e "s|^$GHQ_ROOT\/github\.com|gh|" | sed -e "s|^$GHQ_ROOT\/bitbucket\.org|bb|" | sed -e "s|^$HOME|~|")(set_color normal)
+  end
+
+  function __prompt_char
+    set_color white
+    printf '\n> '
+    set_color normal
+  end
+
+  function __rb_prompt
+    echo -n (set_color red)''(rbenv version | awk '{print $1}')(set_color normal)
+  end
+
+  function fish_prompt
+      set -l last_status $status
+
+    __user_host
+    __prompt_pwd
+    __fish_git_prompt " "
+
+    if test $last_status -ne 0
+      set_color red
+      printf '[%d]' $last_status
+      set_color normal
+    end
+
+    __prompt_char
+  end
 #+END_SRC
 
 ** Interactive functions
 #+BEGIN_SRC fish :tangle yes
 function icd
-    tree --noreport -d -i -L 1 $CDPATH | grep -v '\(Users\|\.\)' | peco | read tempvar
+    tree --noreport -d -i -L 1 $CDPATH | grep -v '\(Users\|\.\)' | __fuzzy_find | read tempvar
     if [ $tempvar ]
         cd $tempvar
-        commandline -f repaint
     end
 end
 
@@ -148,28 +133,28 @@ function ifind
     if test (count $argv) -gt 2 -o (count $argv) -lt 1
         set dir (pwd)
     end
-    find $dir | peco | tr "\n" " " | read tempvar
+    find $dir | __fuzzy_find | tr "\n" " " | read tempvar
     if [ $tempvar ]
         commandline -i $tempvar
     end
 end
 
 function ihistory
-    history | peco | read tempvar
+    history | __fuzzy_find | read tempvar
     if [ $tempvar ]
         commandline $tempvar
     end
 end
 
 function ik
-    ps -fea | awk '{$1=$3=$4=$5=$6=$7=""; print $0}' | peco | awk '{print $1}' | tr "\n" " " | read -l tempvar
+    ps -fea | awk '{$1=$3=$4=$5=$6=$7=""; print $0}' | __fuzzy_find | awk '{print $1}' | tr "\n" " " | read -l tempvar
     if test (count $tempvar) -gt 0
         kill $tempvar
     end
 end
 
 function ips
-    ps -fea | awk '{$1=$3=$4=$5=$6=$7=""; print $0}' | peco | awk '{print $1}' | tr "\n" " " | read tempvar
+    ps -fea | awk '{$1=$3=$4=$5=$6=$7=""; print $0}' | __fuzzy_find | awk '{print $1}' | tr "\n" " " | read tempvar
     if [ $tempvar ]
         commandline -i $tempvar
     end
@@ -180,11 +165,10 @@ function ircd
     if test (count $argv) -gt 2 -o (count $argv) -lt 1
         set dir (pwd)
     end
-    #find $dir -type d | peco | read tempvar
-    find $dir -type d -not -path "*/.*/*" -not -name ".*" | peco | tr -d "\n" | read tempvar
+    #find $dir -type d | __fuzzy_find | read tempvar
+    find $dir -type d -not -path "*/.*/*" -not -name ".*" | __fuzzy_find | tr -d "\n" | read tempvar
     if [ $tempvar ]
         cd $tempvar
-        commandline -f repaint
     end
 end
 #+END_SRC
@@ -192,11 +176,11 @@ end
 ** Bindings
 #+BEGIN_SRC fish :tangle yes
 function fish_user_key_bindings
-    bind \cr ihistory
-    bind \eo ips
-    bind \ep ifind
-    bind \ec ircd
-    bind \ew ighq
+    bind \cr 'ihistory; commandline -f repaint'
+    bind \eo 'ips; commandline -f repaint'
+    bind \ep 'ifind; commandline -f repaint'
+    bind \ec 'ircd; commandline -f repaint'
+    bind \ew 'ighq; commandline -f repaint'
 end
 #+END_SRC
 
@@ -204,9 +188,8 @@ end
 #+BEGIN_SRC fish :tangle yes
 alias vim   "nvim"
 alias vlc   "/opt/homebrew-cask/Caskroom/vlc/2.2.1/VLC.app/Contents/MacOS/VLC"
+alias wtr   "curl -4 wttr.in"
 #+END_SRC
-    
-  
 * Ranger
 ** Ranger-cd
 #+BEGIN_SRC fish :tangle yes
@@ -227,20 +210,18 @@ end
 alias r     "ranger"
 alias rr    "ranger-cd"
 #+END_SRC
-
-   
 * Git
 ** Interactive git branch
 #+BEGIN_SRC fish :tangle yes
 function igitbranch
-    git branch | peco | xargs git checkout
+    git branch | __fuzzy_find | xargs git checkout
 end
 #+END_SRC
 
 ** Interactive git file
 #+BEGIN_SRC fish :tangle yes
 function igitbranch
-    git branch | peco | xargs git checkout
+    git branch | __fuzzy_find | xargs git checkout
 end
 #+END_SRC
 
@@ -248,8 +229,6 @@ end
 #+BEGIN_SRC fish :tangle yes
 alias g "git"
 #+END_SRC
-
-
 
 * Ghq
 ** Environment
@@ -260,10 +239,9 @@ set -x GHQ_ROOT "$HOME/Workspace/src"
 ** Interactive ghq
 #+BEGIN_SRC fish :tangle yes
 function ighq
-    ghq list | peco | read tempvar
+    ghq list | __fuzzy_find | read tempvar
     if test (count $tempvar) -gt 0
         cd (ghq root)/$tempvar
-        commandline -f repaint
     end
 end
 #+END_SRC
@@ -315,5 +293,12 @@ end
 #+BEGIN_SRC fish :tangle yes
 alias dm "docker-machine"
 alias dc "docker-compose"
+alias d  "docker"
 #+END_SRC
 
+* Travel
+#+BEGIN_SRC fish :tangle yes
+set -gx TRABE_ROOT $HOME/.trabe/trabe
+__add_to_path $TRABE_ROOT/bin
+status --is-interactive; and trabe init - | source
+#+END_SRC
