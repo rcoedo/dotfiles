@@ -15,5 +15,6 @@
     showInvisibles: true
   "exception-reporting":
     userId: "42e59b8d-76fd-7981-9c2a-b77916f4c752"
+  latex: {}
   welcome:
     showOnStartup: false
