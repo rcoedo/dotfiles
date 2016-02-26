@@ -1,4 +1,7 @@
 "*":
+  "advanced-open-file":
+    fuzzyMatch: true
+    helmDirSwitch: true
   core:
     themes: [
       "atom-dark-ui"

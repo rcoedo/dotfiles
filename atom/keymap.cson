@@ -1,6 +1,6 @@
 'atom-workspace':
   'cmd-o'         : 'fuzzy-finder:toggle-file-finder'
-  'alt-cmd-o'     : 'symbols-view:toggle-file-symbols'
+  'shift-cmd-o'     : 'symbols-view:toggle-file-symbols'
   'cmd-t'         : 'fuzzy-finder:toggle-buffer-finder'
   'cmd-x'         : 'command-palette:toggle'
   'cmd-p'         : 'douglas:toggle'

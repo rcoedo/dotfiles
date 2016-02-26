@@ -1,4 +1,5 @@
 0-env@1.0.1
+advanced-open-file@0.14.2
 atom-ternjs@0.13.2
 douglas@0.1.3
 gruvbox@1.0.5
