@@ -4,8 +4,9 @@ let mapleader = " "
 map <leader>vc :source ~/.ideavimrc<CR>
 map <leader><leader>r :action Run<CR>
 map <leader><leader>d :action Debug<CR>
-map <leader>wv :action MoveTabRight<CR>
-map <leader>wh :action MoveTabDown<CR>
+map <leader>d :action ToggleLineBreakpoint<CR>
+map <c-w>v :action MoveTabRight<CR>
+map <c-w>s :action MoveTabDown<CR>
 map <leader>wc :action RestoreDefaultLayout<CR>
 map <leader>wn :action MoveEditorToOppositeTabGroup<CR>
 
