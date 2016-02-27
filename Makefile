@@ -1,8 +1,18 @@
+IDEAVIM_SOURCE=ideavim/ideavimrc
+IDEAVIM_TARGET=~/.config/nvim/init.vim
+
 NVIM_SOURCE=nvim/init.vim
 NVIM_TARGET=~/.config/nvim/init.vim
 
 ATOM_SOURCE_DIR=atom
 ATOM_TARGET_DIR=~/.atom
+
+install-nvim:
+	cp $(NVIM_TARGET) $(NVIM_TARGET).backup
+	cp $(NVIM_SOURCE) $(NVIM_TARGET)
+
+get-ideavim:
+	cp $(NVIM_SOURCE) $(NVIM_TARGET)
 
 install-nvim:
 	cp $(NVIM_TARGET) $(NVIM_TARGET).backup
