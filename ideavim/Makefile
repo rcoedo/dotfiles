@@ -1,0 +1,9 @@
+IDEAVIM_SOURCE=./ideavimrc
+IDEAVIM_TARGET=~/.ideavimrc
+
+install:
+	cp $(IDEAVIM_TARGET) $(IDEAVIM_TARGET).backup
+	cp $(IDEAVIM_SOURCE) $(IDEAVIM_TARGET)
+
+get:
+	cp $(IDEAVIM_TARGET) $(IDEAVIM_SOURCE)
