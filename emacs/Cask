@@ -23,7 +23,6 @@
 (depends-on "evil-leader")
 (depends-on "evil-lisp-state" :git "https://github.com/rcoedo/evil-lisp-state")
 (depends-on "evil-matchit")
-(depends-on "evil-mc")
 (depends-on "evil-nerd-commenter")
 (depends-on "evil-org")
 (depends-on "evil-search-highlight-persist")

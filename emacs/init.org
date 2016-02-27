@@ -263,41 +263,6 @@
     (split-window-vertically (floor (* 0.80 (window-height)))))
 #+END_SRC
 
-** Layout
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun rcoedo/layout/three ()
-    (interactive)
-    (delete-other-windows)
-    (rcoedo/window/split-horizontally-focus-next-buffer)
-    (rcoedo/window/split-vertically-focus-next-buffer)
-    (other-window 1))
-
-  (defun rcoedo/layout/four ()
-    (interactive)
-    (delete-other-windows)
-    (split-window-vertically)
-    (other-window 1)
-    (rcoedo/window/split-horizontally-focus-next-buffer)
-    (other-window 1)
-    (rcoedo/window/split-horizontally-next-buffer))
-
-  (defun rcoedo/layout/bottom-panel ()
-    (interactive)
-    (delete-other-windows)
-    (rcoedo/window/split-bottom-panel))
-
-  (defun rcoedo/layout/side-by-side ()
-    (interactive)
-    (delete-other-windows)
-    (rcoedo/window/split-horizontally-next-buffer))
-
-  (defun rcoedo/layout/next ()
-    (interactive)
-    (let ((layout (pop rcoedo/layout/layout-list)))
-      (nreverse (cons layout (nreverse rcoedo/layout/layout-list)))
-      (funcall layout)))
-#+END_SRC
-
 ** Java
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun rcoedo/java/java-eval-nofocus ()
@@ -414,14 +379,6 @@
     :config
     (progn
       (global-evil-matchit-mode t)))
-#+END_SRC
-
-*** Evil multiple cursors
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package evil-mc
-    :config
-    (progn
-      (global-evil-mc-mode 1)))
 #+END_SRC
 
 *** Evil lisp state
@@ -1253,10 +1210,8 @@ Uses Elm compiler. See URL
   (define-key global-map (kbd "M-]")           'rcoedo/buffer/next-non-emacs-buffer)
   (define-key global-map (kbd "M-[")           'rcoedo/buffer/previous-non-emacs-buffer)
   (define-key global-map (kbd "M-q")           'rcoedo/eshell/projectile-eshell-popup)
-  (define-key global-map (kbd "C-l")           'rcoedo/layout/next)
-  (define-key global-map (kbd "C-;")           'helm-projectile-find-file)
-  (define-key global-map (kbd "C-'")           'helm-ghq-list)
-  (define-key global-map (kbd "C-p")           'helm-projectile-find-file)
+  (define-key global-map (kbd "M-t")           'helm-projectile-find-file)
+  (define-key global-map (kbd "M-p")           'helm-ghq-list)
   (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
   (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
   (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
