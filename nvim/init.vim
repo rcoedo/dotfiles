@@ -18,10 +18,8 @@ call plug#begin('~/.config/nvim/plugged')
 " Plugin configuration
 Plug 'dag/vim-fish'
 Plug 'maxbrunsfeld/vim-emacs-bindings'
-Plug 'mhinz/vim-sayonara'
 Plug 'airblade/vim-gitgutter'
 Plug 'terryma/vim-expand-region'
-Plug 'vim-ruby/vim-ruby'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
@@ -29,10 +27,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-ragtag'
 Plug 'morhetz/gruvbox'
-Plug 'kchmck/vim-coffee-script'
 Plug 'pangloss/vim-javascript'
-Plug 'fatih/vim-go'
-Plug 'elixir-lang/vim-elixir'
 Plug 'tpope/vim-speeddating'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -109,12 +104,7 @@ set laststatus=2
 set ttyfast
 set mouse=a
 set clipboard=unnamed
-
-" Remove stuff from gvim
-set guioptions-=m  "remove menu bar
-set guioptions-=T  "remove toolbar
-set guioptions-=r  "remove right-hand scroll bar
-set guioptions-=L  "remove left-hand scroll bar
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 " Colors
 colorscheme gruvbox
@@ -123,16 +113,18 @@ syntax enable
 set t_Co=256
 
 " Key mappings
-nnoremap <leader>w :w<cr>
-nnoremap <leader>q :Sayonara<cr>
-nnoremap <leader>Q :Sayonara!<cr>
+nnoremap <leader>ev :tabedit $MYVIMRC<cr>
+nnoremap <leader>vc :source $MYVIMRC<cr>
 
-noremap <Leader>bd :bd<CR>
-noremap <Leader>ft :NERDTreeToggle<cr>
-noremap <Leader>fi :NERDTreeFind<cr>
+noremap <leader>bd :bd<cr>
+noremap <leader>ft :NERDTreeToggle<cr>
+noremap <leader>fi :NERDTreeFind<cr>
 
-nmap <Leader>sh :noh<CR>
+nmap <leader>sh :noh<cr>
 nmap <tab> <c-w><c-w>
+
+nmap <c-p> :Files<cr>
+nmap <c-b> :Buffers<cr>
 
 " File config
 au FileType gitcommit set tw=72
