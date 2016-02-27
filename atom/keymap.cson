@@ -1,7 +1,9 @@
 'atom-workspace':
   'cmd-o'         : 'advanced-open-file:toggle'
-  'cmd-x'         : 'command-palette:toggle'
+  'ctrl-j'        : 'command-palette:toggle'
   'cmd-p'         : 'douglas:toggle'
+  'ctrl-, r'      : 'tree-view:rename'
+  'ctrl-, d'      : 'tree-view:remove'
 
 'atom-text-editor.vim-mode-plus.normal-mode':
   ':'             : 'command-palette:toggle'
@@ -19,6 +21,12 @@
   'ctrl-i'        : 'cursor-history:next'
   'ctrl-o'        : 'cursor-history:prev'
 
+'atom-text-editor.vim-mode-plus.visual-mode':
+  's'             : 'vim-mode-plus:surround'
+
 '.fuzzy-finder atom-text-editor[mini]':
   'ctrl-enter'      : 'pane:split-right'
   'ctrl-shift-enter': 'pane:split-down'
+
+'.tree-view':
+  'tab': 'tree-view:toggle-focus'
