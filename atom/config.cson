@@ -2,19 +2,32 @@
   "advanced-open-file":
     fuzzyMatch: true
     helmDirSwitch: true
+  autosave: {}
   core:
+    disabledPackages: [
+      "tabs"
+    ]
     themes: [
       "atom-dark-ui"
       "gruvbox"
     ]
   editor:
     fontFamily: "Fantasque Sans Mono"
-    fontSize: 16
+    fontSize: 15
     invisibles: {}
     preferredLineLength: 120
     showInvisibles: true
   "exception-reporting":
     userId: "42e59b8d-76fd-7981-9c2a-b77916f4c752"
+  "fuzzy-finder": {}
   latex: {}
+  tabs: {}
+  "vim-mode":
+    useClipboardAsDefaultRegister: true
+  "vim-mode-plus":
+    highlightSearch: true
+    incrementalSearch: true
+    useClipboardAsDefaultRegister: true
+  "vim-surround": {}
   welcome:
     showOnStartup: false

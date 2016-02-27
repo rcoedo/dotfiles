@@ -17,6 +17,7 @@ install-atom:
 	cd $(ATOM_TARGET_DIR) && make install-packages
 
 get-atom:
+	cd $(ATOM_TARGET_DIR) && make generate-package-list
 	cp $(ATOM_TARGET_DIR)/config.cson   $(ATOM_SOURCE_DIR)/
 	cp $(ATOM_TARGET_DIR)/init.coffee   $(ATOM_SOURCE_DIR)/
 	cp $(ATOM_TARGET_DIR)/keymap.cson   $(ATOM_SOURCE_DIR)/

@@ -1,9 +1,15 @@
 0-env@1.0.1
+Parinfer@1.14.0
 advanced-open-file@0.14.2
 atom-ternjs@0.13.2
+color-picker@2.1.1
+cursor-history@0.5.9
 douglas@0.1.3
 gruvbox@1.0.5
 language-latex@0.6.1
 latex@0.29.0
+pigments@0.24.1
+symbol-gen@1.0.0
+tabs@0.90.2
 vim-mode-plus@0.21.3
 
