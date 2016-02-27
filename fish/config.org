@@ -102,19 +102,29 @@ set fish_color_command "green"
     echo -n (set_color red)''(rbenv version | awk '{print $1}')(set_color normal)
   end
 
+  set __fish_git_prompt_color 'magenta'
+  set __fish_git_prompt_show_informative_status 'yes'
+  set __fish_git_prompt_showdirtystate 'yes'
+  set __fish_git_prompt_char_stateseparator ' '
+  set __fish_git_prompt_char_stagedstate '+'
+  set __fish_git_prompt_color_stagedstate 'green'
+  set __fish_git_prompt_char_dirtystate '*'
+  set __fish_git_prompt_color_dirtystate 'red'
+  set __fish_git_prompt_color_cleanstate 'green'
+
   function fish_prompt
       set -l last_status $status
 
     __user_host
     __prompt_pwd
-    __fish_git_prompt " "
 
     if test $last_status -ne 0
       set_color red
-      printf '[%d]' $last_status
+      printf ' [%d]' $last_status
       set_color normal
     end
 
+    __fish_git_prompt " "
     __prompt_char
   end
 #+END_SRC
@@ -298,7 +308,7 @@ alias d  "docker"
 
 * Travel
 #+BEGIN_SRC fish :tangle yes
-set -gx TRABE_ROOT $HOME/.trabe/trabe
-__add_to_path $TRABE_ROOT/bin
-status --is-interactive; and trabe init - | source
+  set -gx TRABE_ROOT $HOME/.trabe/trabe
+  __add_to_path $TRABE_ROOT/bin
+  status --is-interactive; and trabe init - | source
 #+END_SRC
