@@ -9,10 +9,6 @@ let mapleader="\<Space>"
 set nocompatible
 filetype off
 
-" Vundle as plugin manager
-" set rtp+=~/.config/nvim/bundle/Vundle.vim
-" Plugin 'gmarik/Vundle.vim'
-
 call plug#begin('~/.config/nvim/plugged')
 
 " Plugin configuration
@@ -86,7 +82,6 @@ set t_vb=
 set tm=500
 set list
 set listchars=tab:⋅›,trail:⋅,nbsp:⋅
-set encoding=utf8
 set ffs=unix,dos,mac
 set nobackup
 set nowb
