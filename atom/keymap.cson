@@ -6,7 +6,6 @@
   'ctrl-, d'      : 'tree-view:remove'
 
 'atom-text-editor.vim-mode-plus.normal-mode':
-  ':'             : 'command-palette:toggle'
   'tab'           : 'window:focus-next-pane'
   's'             : 'vim-mode-plus:surround'
   's w'           : 'vim-mode-plus:surround-word'

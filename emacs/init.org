@@ -1119,7 +1119,6 @@ Uses Elm compiler. See URL
 #+BEGIN_SRC emacs-lisp :tangle yes
     (req-package transpose-frame
       :config
-      (define-key global-map (kbd "M-t") 'transpose-frame)
       (define-key global-map (kbd "M-f") 'flip-frame)
       (define-key global-map (kbd "M-F") 'flop-frame)
       (define-key global-map (kbd "M-r") 'rotate-frame-clockwise)
