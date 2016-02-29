@@ -94,7 +94,11 @@ set fish_color_command "green"
 
   function __prompt_char
     set_color white
-    printf '\n> '
+    if [ $TMUX ]
+      printf '\n'\u2318' '
+    else
+      printf '\n> '
+    end
     set_color normal
   end
 
@@ -108,8 +112,9 @@ set fish_color_command "green"
   set __fish_git_prompt_char_stateseparator ' '
   set __fish_git_prompt_char_stagedstate '+'
   set __fish_git_prompt_color_stagedstate 'green'
-  set __fish_git_prompt_char_dirtystate '*'
+  set __fish_git_prompt_char_dirtystate 'x'
   set __fish_git_prompt_color_dirtystate 'red'
+  set __fish_git_prompt_char_cleanstate \u2713
   set __fish_git_prompt_color_cleanstate 'green'
 
   function fish_prompt
