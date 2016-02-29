@@ -1,11 +1,13 @@
-'atom-workspace':
-  'cmd-o'         : 'advanced-open-file:toggle'
-  'ctrl-j'        : 'command-palette:toggle'
-  'cmd-p'         : 'douglas:toggle'
-  'ctrl-, r'      : 'tree-view:rename'
-  'ctrl-, d'      : 'tree-view:remove'
+'.platform-darwin':
+  'cmd-x'        : 'command-palette:toggle'
 
-'atom-text-editor.vim-mode-plus.normal-mode':
+'.platform-darwin atom-workspace':
+  'cmd-o'         : 'advanced-open-file:toggle'
+  'cmd-p'         : 'douglas:toggle'
+  'ctrl-, ctrl-r' : 'tree-view:rename'
+  'ctrl-, ctrl-d' : 'tree-view:remove'
+
+'.platform-darwin atom-text-editor.vim-mode-plus.normal-mode':
   'tab'           : 'window:focus-next-pane'
   's'             : 'vim-mode-plus:surround'
   's w'           : 'vim-mode-plus:surround-word'
@@ -20,12 +22,13 @@
   'ctrl-i'        : 'cursor-history:next'
   'ctrl-o'        : 'cursor-history:prev'
 
-'atom-text-editor.vim-mode-plus.visual-mode':
+'.platform-darwin atom-text-editor.vim-mode-plus.visual-mode':
   's'             : 'vim-mode-plus:surround'
 
-'.fuzzy-finder atom-text-editor[mini]':
+'.platform-darwin .fuzzy-finder atom-text-editor[mini]':
   'ctrl-enter'      : 'pane:split-right'
   'ctrl-shift-enter': 'pane:split-down'
 
-'.tree-view':
+'.platform-darwin .tree-view':
   'tab': 'tree-view:toggle-focus'
+  'cmd-x': 'unset!'

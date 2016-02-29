@@ -22,6 +22,96 @@
   "fuzzy-finder": {}
   latex: {}
   tabs: {}
+  "terminal-plus":
+    ansiColors:
+      normal:
+        black:
+          red: 40
+          green: 40
+          blue: 40
+          alpha: 1
+        blue:
+          red: 76
+          green: 133
+          blue: 135
+          alpha: 1
+        cyan:
+          red: 110
+          green: 155
+          blue: 106
+          alpha: 1
+        green:
+          red: 152
+          green: 148
+          blue: 32
+          alpha: 1
+        magenta:
+          red: 173
+          green: 101
+          blue: 134
+          alpha: 1
+        red:
+          red: 197
+          green: 40
+          blue: 36
+          alpha: 1
+        white:
+          red: 167
+          green: 152
+          blue: 133
+          alpha: 1
+        yellow:
+          red: 211
+          green: 150
+          blue: 43
+          alpha: 1
+      zBright:
+        brightBlack:
+          red: 145
+          green: 131
+          blue: 116
+          alpha: 1
+        brightBlue:
+          red: 134
+          green: 165
+          blue: 151
+          alpha: 1
+        brightCyan:
+          red: 147
+          green: 189
+          blue: 125
+          alpha: 1
+        brightGreen:
+          red: 183
+          green: 183
+          blue: 45
+          alpha: 1
+        brightMagenta:
+          red: 207
+          green: 136
+          blue: 156
+          alpha: 1
+        brightRed:
+          red: 242
+          green: 74
+          blue: 59
+          alpha: 1
+        brightWhite:
+          red: 234
+          green: 218
+          blue: 179
+          alpha: 1
+        brightYellow:
+          red: 246
+          green: 185
+          blue: 56
+          alpha: 1
+    core: {}
+    style:
+      animationSpeed: 0
+      defaultPanelHeight: "400"
+    toggles:
+      autoClose: true
   "vim-mode":
     useClipboardAsDefaultRegister: true
   "vim-mode-plus":

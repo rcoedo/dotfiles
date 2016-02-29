@@ -14,5 +14,6 @@ open-on-bitbucket@0.4.0
 pigments@0.24.2
 react@0.14.1
 symbol-gen@1.0.0
-vim-mode-plus@0.21.3
+terminal-plus@0.14.5
+vim-mode-plus@0.22.1
 
