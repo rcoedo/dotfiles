@@ -9,7 +9,8 @@ emmet@2.4.1
 gruvbox@1.0.5
 language-docker@1.1.6
 language-latex@0.6.1
-latex@0.29.0
+language-lua@0.9.4
+latex@0.30.0
 nucleus-dark-ui@0.7.10
 open-on-bitbucket@0.4.0
 pigments@0.24.2
