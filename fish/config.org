@@ -95,9 +95,9 @@ set fish_color_command "green"
   function __prompt_char
     set_color white
     if [ $TMUX ]
-      printf '\n'\u2318' '
-    else
       printf '\n> '
+    else
+      printf '\n~ '
     end
     set_color normal
   end
@@ -120,6 +120,7 @@ set fish_color_command "green"
   function fish_prompt
       set -l last_status $status
 
+    echo -ne (tput el)
     __user_host
     __prompt_pwd
 
@@ -204,6 +205,7 @@ end
 alias vim   "nvim"
 alias vlc   "/opt/homebrew-cask/Caskroom/vlc/2.2.1/VLC.app/Contents/MacOS/VLC"
 alias wtr   "curl -4 wttr.in"
+alias atmux "tmux -L atom"
 #+END_SRC
 * Ranger
 ** Ranger-cd
