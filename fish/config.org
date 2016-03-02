@@ -135,7 +135,7 @@ set fish_color_command "green"
   end
 #+END_SRC
 
-** Interactive functions
+** Functions
 #+BEGIN_SRC fish :tangle yes
 function icd
     tree --noreport -d -i -L 1 $CDPATH | grep -v '\(Users\|\.\)' | __fuzzy_find | read tempvar
@@ -206,6 +206,8 @@ alias vim   "nvim"
 alias vlc   "/opt/homebrew-cask/Caskroom/vlc/2.2.1/VLC.app/Contents/MacOS/VLC"
 alias wtr   "curl -4 wttr.in"
 alias atmux "tmux -L atom"
+alias bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
+alias gh "cd $GHQ_ROOT/github.com/rcoedo"
 #+END_SRC
 * Ranger
 ** Ranger-cd
