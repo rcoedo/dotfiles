@@ -4,16 +4,13 @@
     helmDirSwitch: true
   autosave: {}
   core:
-    disabledPackages: [
-      "tabs"
-    ]
     themes: [
-      "atom-dark-ui"
+      "nucleus-dark-ui"
       "gruvbox"
     ]
   editor:
     fontFamily: "Fantasque Sans Mono"
-    fontSize: 15
+    fontSize: 16
     invisibles: {}
     preferredLineLength: 120
     showInvisibles: true
@@ -106,7 +103,8 @@
           green: 185
           blue: 56
           alpha: 1
-    core: {}
+    core:
+      shellArguments: "-i -c atmux"
     style:
       animationSpeed: 0
       defaultPanelHeight: "400"

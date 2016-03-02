@@ -1,5 +1,7 @@
 '.platform-darwin':
   'cmd-x'        : 'command-palette:toggle'
+  'alt-j'        : 'pane:show-previous-item'
+  'alt-k'        : 'pane:show-next-item'
 
 '.platform-darwin atom-workspace':
   'cmd-o'         : 'advanced-open-file:toggle'
