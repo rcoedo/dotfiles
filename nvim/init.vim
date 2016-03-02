@@ -115,6 +115,7 @@ noremap <leader>bd :bd<cr>
 noremap <leader>ft :NERDTreeToggle<cr>
 noremap <leader>fi :NERDTreeFind<cr>
 
+nmap <backspace> :noh<cr>
 nmap <leader>sh :noh<cr>
 nmap <tab> <c-w><c-w>
 
