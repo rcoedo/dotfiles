@@ -108,46 +108,33 @@ local cmd = {"cmd"}
 local alt = {"alt"}
 local cmdalt = {"cmd", "alt"}
 
+function text(message)
+  return hs.styledtext.ansi(message, {font={name="Fantasque Sans Mono",size=36}, backgroundColor={alpha=1}})
+end
+
+function clearModeTooltip()
+  if modeStatus then
+    modeStatus:delete()
+  end
+end
+
+function drawModeTooltip(message)
+  clearModeTooltip()
+  modeStatus = hs.drawing.text(hs.geometry.rect(100,100,1000,1000), text(message))
+  modeStatus:show()
+end
+
 function modal(mod, key, message)
   local modal = hs.hotkey.modal.new(mod, key)
-  modal:bind({}, "escape", function() modal:quit("Exit " .. message) end)
-  modal.entered = function(self) hs.alert(message) end
+  modal:bind({}, "escape", function() modal:exit() end)
+  modal.exited = function(self) clearModeTooltip() end
+  modal.entered = function(self) drawModeTooltip(message) end
   return modal
 end
 
-
--- local hotkey   = require "hs.hotkey"
--- local alert    = require "hs.alert"
--- local draw    = require "hs.drawing"
--- local timer   = require "hs.timer"
--- local geom    = require "hs.geometry"
--- local rectify = geom.rect
---
--- alert.show("Hammerspoon config load attempt", .5)
---
--- local my_ls_spot = rectify(100,100,1000,1000)
---
---
--- function run_my_ls()
---   return hs.styledtext.ansi(hs.execute("ls"), {font={name="Monaco",size=10},backgroundColor={alpha=1}} )
--- end
---
--- function refresh_my_ls()
---   if my_ls then
---     my_ls:delete()
---   end
---   my_ls = hs.drawing.text(my_ls_spot, run_my_ls())
---   -- my_ls:sendToBack()
---   my_ls:show()
--- end
--- my_ls = nil
--- refresh_my_ls()
---
---
 function hs.hotkey.modal:quit(message)
   self:exit()
-  hs.alert.closeAll()
-  hs.alert.show(message, 1)
+  hs.alert(message, 1)
 end
 
 function spotifyInfo()
@@ -160,7 +147,7 @@ s:bind({}, "p", function() hs.spotify.previous() spotifyInfo() end)
 s:bind({}, "n", function() hs.spotify.next() spotifyInfo() end)
 s:bind({}, "i", function() s:quit("Current track") spotifyInfo() end)
 s:bind({}, "s", function() s:quit("Spotify") hs.application.launchOrFocus("Spotify") end)
-s:bind({}, "space", function() s:quit("Pause Spotify") hs.spotify.playpause()  end)
+s:bind({}, "space", function() s:quit("Pause/Unpause Spotify") hs.spotify.playpause()  end)
 
 w = modal(nil, nil, "Window mode")
 w:bind({}, "h", hs.grid.pushWindowLeft)
