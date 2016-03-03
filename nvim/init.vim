@@ -115,19 +115,22 @@ noremap <leader>bd :bd<cr>
 noremap <leader>ft :NERDTreeToggle<cr>
 noremap <leader>fi :NERDTreeFind<cr>
 
-nmap <backspace> :noh<cr>
 nmap <leader>sh :noh<cr>
 nmap <tab> <c-w><c-w>
 
 nmap <c-p> :Files<cr>
 nmap <c-b> :Buffers<cr>
 
+tnoremap <esc> <C-\><C-n>
+
 " File config
 au FileType gitcommit set tw=72
 au FileType javascript setlocal ts=2 sw=2 expandtab
 au FileType go setlocal ts=4 sw=4 expandtab
+au FileType lua setlocal ts=2 sw=2 expandtab
 autocmd FileType html :setlocal sw=2 ts=2 sts=2
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
+autocmd BufWrite *.lua :call DeleteTrailing()
 autocmd BufWrite *.py :call DeleteTrailing()
 autocmd BufWrite *.coffee :call DeleteTrailing()
 autocmd BufWrite *.java :call DeleteTrailing()
