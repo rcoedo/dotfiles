@@ -1,9 +1,10 @@
-HAMMERSPOON_SOURCE=./init.lua
-HAMMERSPOON_TARGET=~/.hammerspoon/init.lua
+HS_SOURCE_DIR=.
+HS_TARGET_DIR=~/.hammerspoon
 
 install:
-	cp $(HAMMERSPOON_TARGET) $(HAMMERSPOON_TARGET).backup
-	cp $(HAMMERSPOON_SOURCE) $(HAMMERSPOON_TARGET)
+	rm -rf $(HS_TARGET_DIR).backup
+	cp -rf $(HS_TARGET_DIR) $(HS_TARGET_DIR).backup
+	rsync -av --exclude=Makefile $(HS_SOURCE_DIR) $(HS_TARGET_DIR)
 
 get:
-	cp $(HAMMERSPOON_TARGET) $(HAMMERSPOON_SOURCE)
+	rsync -av $(HS_TARGET_DIR)/ $(HS_SOURCE_DIR)/
