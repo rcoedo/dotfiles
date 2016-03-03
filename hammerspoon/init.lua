@@ -39,14 +39,14 @@ w:bind(cmd, "delete", function() window.kill() w:quit("Kill window") end)
 
 -- Launcher mode
 l = modal.new(cmd, "return", "Launcher mode")
-l:bind({}, "i", function() l:quit("Focus IntelliJ") hs.application.launchOrFocus("IntelliJ IDEA 15") end)
-l:bind({}, "a", function() l:quit("Focus Emacs") hs.application.launchOrFocus("Emacs") end)
-l:bind({}, "e", function() l:quit("Focus Atom") hs.application.launchOrFocus("Atom") end)
-l:bind({}, "t", function() l:quit("Focus Terminal") hs.application.launchOrFocus("iTerm") end)
-l:bind({}, "l", function() l:quit("Focus Slack") hs.application.launchOrFocus("Slack") end)
-l:bind({}, "c", function() l:quit("Focus Chrome") hs.application.launchOrFocus("Google Chrome") end)
-l:bind({}, "s", function() l:exit() hs.alert.closeAll() s:enter() end)
-l:bind({}, "w", function() l:exit() hs.alert.closeAll() w:enter() end)
+l:bind({}, "i", function() l:quit("Focus IntelliJ") window.launchOrFocus("IntelliJ IDEA 15") end)
+l:bind({}, "a", function() l:quit("Focus Emacs") window.launchOrFocus("Emacs") end)
+l:bind({}, "e", function() l:quit("Focus Atom") window.launchOrFocus("Atom") end)
+l:bind({}, "t", function() l:quit("Focus Terminal") window.launchOrFocus("iTerm") end)
+l:bind({}, "l", function() l:quit("Focus Slack") window.launchOrFocus("Slack") end)
+l:bind({}, "c", function() l:quit("Focus Chrome") window.launchOrFocus("Google Chrome") end)
+l:bind({}, "s", function() l:exit() s:enter() end)
+l:bind({}, "w", function() l:exit() w:enter() end)
 
 -- Install CLI
 hs.ipc.cliInstall()

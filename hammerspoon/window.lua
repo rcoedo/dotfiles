@@ -127,6 +127,7 @@ return {
   increaseGrid = increaseGrid,
   decreaseGrid = decreaseGrid,
   launchOrSwitch = launchOrSwitch,
+  launchOrFocus = application.launchOrFocus,
   pushToNextScreen = pushToNextScreen,
   pushWindowUp = grid.pushWindowUp,
   pushWindowDown = grid.pushWindowDown,
