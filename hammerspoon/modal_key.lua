@@ -23,20 +23,21 @@ local function drawModeTooltip(message)
 end
 
 local function buildModString(mod)
-  mods = fn.reduce(mod, function(acc, curr)
-    return acc == nil and curr or acc .. "+" .. curr
-  end)
-  return mods == nil and "" or mods .. "+"
+  -- mods = fn.reduce(mod, function(acc, curr)
+  --   return acc == nil and curr or acc .. "+" .. curr
+  -- end)
+  -- return mods == nil and "" or mods .. "+"
+  return ""
 end
 
-local function bindToNode(node, mod, key, message, f)
-  node.modal:bind(mod, key, function() f() node.modal:exit() end)
-  node.tags[buildModString(mod) .. key] = message
+local function bindToNode(node, shortcut, message, f)
+  node.modal:bind(shortcut[1], shortcut[2], function() f() node.modal:exit() end)
+  node.children[shortcut] = {shortcut = buildModString(shortcut[1]), key = shortcut[2]}
 end
 
 local function createNode(mod, key)
-  local node = {modal = hotkey.modal.new(mod, key), children = {}, tags = {}}
-  bindToNode(node, {}, "escape", "exit", function() end)
+  local node = {modal = hotkey.modal.new(mod, key), children = {}}
+  bindToNode(node, {nil, "escape"}, "exit", function() end)
   node.modal.exited = function(self) clearModeTooltip() end
   node.modal.entered = function(self) drawModeTooltip(i(node.tags)) end
   return node
@@ -45,12 +46,13 @@ end
 local function registerSequence(tree, sequence, f)
     local shortcut = table.remove(sequence, 1)
     if not sequence[1] then
-      tree.modal:bind(shortcut[1], shortcut[2], function() f() tree.modal:exit() end)
+      bindToNode(tree, shortcut, "", f)
     else
       local childNode = tree.children[shortcut]
       if not childNode then
         newNode = createNode()
-        tree.modal:bind(shortcut[1], shortcut[2], function() tree.modal:exit() newNode.modal:enter() end)
+        bindToNode(tree, shortcut, "", function() newNode.modal:enter() end)
+        -- this is overriding the shorcut. sometimes we store a modal, sometimes a tag. that's wrong.
         tree.children[shortcut] = newNode
       end
       registerSequence(tree.children[shortcut], sequence, f)
