@@ -1,8 +1,14 @@
 local ModalKey = {}
 
-function ModalKey.new()
+local function parseKey(key)
+  return key
+end
+
+function ModalKey.new(key)
   local mode = nil
   local modeTooltip = nil
+
+  parseKey(key)
 
   local function text()
     return hs.styledtext.ansi(mode, {font={name="Fantasque Sans Mono",size=36}, backgroundColor={alpha=1}})
@@ -21,12 +27,17 @@ function ModalKey.new()
   end
 
   local self = {}
+
   function self.show()
     showModeTooltip()
   end
+
   function self.hide()
     hideModeTooltip()
   end
+
+  self.parseKey = parseKey
+
   return self
 end
 

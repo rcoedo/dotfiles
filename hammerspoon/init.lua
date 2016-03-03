@@ -1,6 +1,7 @@
 local window = require "window"
 local spotify = require "spotify"
 local modal = require "modal"
+local modalkey = require "modal_key"
 
 -- Reload configuration
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()

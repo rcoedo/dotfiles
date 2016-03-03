@@ -60,6 +60,10 @@ __add_to_path $EXENV_ROOT/bin
 __add_to_path $EXENV_ROOT/shims
 exenv rehash
 
+set -x LUAENV_ROOT $HOME/.luaenv
+__add_to_path $LUAENV_ROOT/bin
+status --is-interactive; and . (luaenv init -|psub)
+
 set -x PYENV_ROOT $HOME/.pyenv
 __add_to_path $PYENV_ROOT/bin
 __add_to_path $PYENV_ROOT/shims
