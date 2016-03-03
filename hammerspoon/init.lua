@@ -1,7 +1,7 @@
 local window = require "window"
 local spotify = require "spotify"
 local modal = require "modal"
-local modalkey = require "modal_key"
+local Modal = require "modal_key"
 
 -- Reload configuration
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()
@@ -48,6 +48,12 @@ l:bind({}, "l", function() l:quit("Focus Slack") window.launchOrFocus("Slack") e
 l:bind({}, "c", function() l:quit("Focus Chrome") window.launchOrFocus("Google Chrome") end)
 l:bind({}, "s", function() l:exit() s:enter() end)
 l:bind({}, "w", function() l:exit() w:enter() end)
+
+local key = Modal.new({"cmd", "alt"}, "return")
+key.register({{nil, "d"}}, function() hs.alert("yay!") end)
+key.register({{nil, "a"}, {nil, "b"}}, function() hs.alert("yay 2!") end)
+key.register({{nil, "a"}, {nil, "c"}}, function() hs.alert("yay 2!") end)
+-- key.register({{nil, "a"}, {{"cmd"}, "b"}}, function() hs.alert("yay 3!") end)
 
 -- Install CLI
 hs.ipc.cliInstall()
