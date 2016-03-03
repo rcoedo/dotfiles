@@ -1,14 +1,14 @@
 require "busted"
 local modalKey = require "modal_key"
 
-
-
-
 describe("Test ModalKey", function()
   local m = modalKey.new("CMD-k")
 
   it("should parse shit", function()
-    assert.are.equal("CMD-k", m.parseKey("CMD-k"))
+    print(m.parseKey("CMD-K w h")[1])
+    print(m.parseKey("CMD-K w h")[2])
+    print(m.parseKey("CMD-K w h")[3])
+    --assert.are.equal("CMD-k", m.parseKey("CMD-k"))
   end)
 
   --it("should have lots of features", function()

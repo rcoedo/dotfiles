@@ -1,14 +1,14 @@
+local utils = require("utils")
+
 local ModalKey = {}
 
 local function parseKey(key)
-  return key
+  return utils.split(key, " ")
 end
 
 function ModalKey.new(key)
   local mode = nil
   local modeTooltip = nil
-
-  parseKey(key)
 
   local function text()
     return hs.styledtext.ansi(mode, {font={name="Fantasque Sans Mono",size=36}, backgroundColor={alpha=1}})
