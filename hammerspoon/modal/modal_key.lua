@@ -29,69 +29,153 @@ local function strToKey(str)
   return {mods, key}
 end
 
+local function subsequenceEvent(subsequence)
+  return {"subsequenceEvent", subsequence}
+end
+
+local function sequence(sequence)
+  return {"sequence", sequence}
+end
+
 local Node = {}
-function Node.new(parent)
-  local children = {}
-  local parent = parent
-  local modal = hotkey.modal.new(nil, nil)
+function Node.new(parent, key)
+  local _key = key
+  local _sequence = parent == nil and "" or parent.getSequence() .. " " .. key
+  local _children = {}
+  local _listeners = {["sequence"] = {}}
+  local _parent = parent
+  local _modal = hotkey.modal.new(nil, nil)
 
   local self = {}
 
-  function self.enter()
-    modal:enter()
+  --
+  -- Private functions
+  --
+  local function bindKey(key, f)
+    local keyTable = strToKey(key)
+    _modal:bind(keyTable[1], keyTable[2], f)
   end
 
-  function self.exit()
-    modal:exit()
+  -- Bind a sequence to this key
+  local function bindSequence(key)
+    bindKey(key, function()
+      self.dispatch(sequence(self.getSequence() .. " " .. key)) self.exit()
+    end)
+    _children[key] = key
   end
 
-  function self.propagate(event)
-    if parent then
-      parent.handle(event)
-    end
+  -- Bind a new branch under this key
+  local function bindBranch(key)
+    local newNode = Node.new(self, key)
+    bindKey(key, function() self.exit() newNode.enter() end)
+    _children[key] = newNode
+  end
+
+  --
+  -- Public functions
+  --
+  function self.getKey()
+    return _key
+  end
+
+  function self.getSequence()
+    return _sequence
   end
 
   function self.handle(event)
-    hs.alert(event)
+    fn.map(_listeners[event[1]], function(listener) listener(event) end)
     self.propagate(event)
   end
 
-  function self.bind(key, f)
-    local keyTable = strToKey(key)
-    modal:bind(keyTable[1], keyTable[2], f)
-    children[key] = key
+  function self.propagate(event)
+    if _parent then
+      _parent.handle(event)
+    end
   end
 
-  function self.register(sequence, f)
+  function self.dispatch(event)
+    self.handle(event)
+  end
+
+  function self.listen(id, action, f)
+    local sequence = type(id) == "string" and fn.split(id, " ")  or id
+    if sequence[1] then
+      local key = table.remove(sequence, 1)
+      if type(_children[key]) == "table" then
+        _children[key].listen(sequence, action, f)
+      end
+    else
+      table.insert(_listeners[action], f)
+    end
+  end
+
+  function self.enter()
+    log.d("transitioning")
+    _modal:enter()
+  end
+
+  function self.exit()
+    log.d("exiting")
+    _modal:exit()
+  end
+
+  -- Register a new sequence under this node
+  function self.register(seq)
+    local sequence = type(seq) == "string" and fn.split(seq, " ") or seq
     if sequence[1] then
       local key = table.remove(sequence, 1)
       if not sequence[1] then
-        self.bind(key, function() f() self.exit() end)
+        bindSequence(key)
       else
-        local childNode = children[key]
-        if not childNode then
-          local newNode = Node.new(self)
-          self.bind(key, function() self.exit() newNode.enter() end)
-          children[key] = newNode
+        if not _children[key] then
+          bindBranch(key)
         end
-        children[key].register(sequence, f)
+        _children[key].register(sequence, f)
       end
     end
   end
 
-  self.bind("escape", function() self.exit() end)
+  if (parent) then
+    bindKey("escape", function() self.exit() end)
+  else
+    self.listen({}, "sequence", function() self.enter() end)
+  end
 
   return self
 end
 
+function onSequence(sequence, f)
+  return function(event)
+    log.d(i(event) .. " " .. sequence)
+    f()
+  end
+end
+
+local function last(sequence)
+  return table.remove(fn.split(sequence, " "))
+end
+
+local function init(sequence)
+  local otherSeq = fn.split(sequence, " ")
+  table.remove(otherSeq)
+  return otherSeq
+end
+
 local Modal = {}
-function Modal.new()
-  local root = Node.new()
+function Modal.new(prefix)
+  local _prefix = prefix == nil and "" or prefix
+  local _root = Node.new()
 
   local self = {}
   function self.register(sequence, f)
-    root.register(fn.split(sequence, " "), f)
-    return root
+    local prefixedSequence = prefix .. " " .. sequence
+    _root.register(prefixedSequence)
+    _root.listen(init(prefixedSequence), "sequence", function(e)
+      if last(prefixedSequence) == last(e[2]) then
+        f()
+      end
+    end)
+    _root.enter()
   end
 
   return self

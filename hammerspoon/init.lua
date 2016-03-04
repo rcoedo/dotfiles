@@ -2,7 +2,6 @@ local window = require "window"
 local spotify = require "spotify"
 local modal = require "modal"
 local Modal = require "modal/modal_key"
-local utils = require "modal/utils"
 
 -- Reload configuration
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()
@@ -50,16 +49,11 @@ l:bind({}, "c", function() l:quit("Focus Chrome") window.launchOrFocus("Google C
 l:bind({}, "s", function() l:exit() s:enter() end)
 l:bind({}, "w", function() l:exit() w:enter() end)
 
-local log = hs.logger.new('mymodule','debug')
-local i = hs.inspect.inspect
-
-local key = Modal.new({"cmd", "alt"}, "return")
-tree = key.register("alt-space d", function() hs.alert("alt-space d") end)
+local key = Modal.new("alt-space")
 key.register("d", function() hs.alert("d!") end)
 key.register("a b", function() hs.alert("a b!") end)
 key.register("a c", function() hs.alert("a c!") end)
-tree.enter()
--- log.d(i(tree.children))
+key.register("a s d f", function() hs.alert("a c!") end)
 
 -- Install CLI
 hs.ipc.cliInstall()
