@@ -58,7 +58,7 @@ tree = key.register("alt-space d", function() hs.alert("alt-space d") end)
 key.register("d", function() hs.alert("d!") end)
 key.register("a b", function() hs.alert("a b!") end)
 key.register("a c", function() hs.alert("a c!") end)
-tree.modal:enter()
+tree.enter()
 -- log.d(i(tree.children))
 
 -- Install CLI

@@ -29,58 +29,69 @@ local function strToKey(str)
   return {mods, key}
 end
 
--- local Node = {}
--- function Node.new(parent)
---   local node = {
---     modal = hotkey.modal.new(nil, nil),
---     children = {},
---     parent = parent,
---     bind
---   }
---   bindToNode(node, "escape", function() node.modal:exit() end)
---   return node
--- end
+local Node = {}
+function Node.new(parent)
+  local children = {}
+  local parent = parent
+  local modal = hotkey.modal.new(nil, nil)
 
-local function bindToNode(node, key, f)
-  local keyTable = strToKey(key)
-  node.modal:bind(keyTable[1], keyTable[2], f)
-  node.children[key] = key
-end
+  local self = {}
 
-local function createNode(parent)
-  local node = {modal = hotkey.modal.new(nil, nil), children = {}, parent = parent}
-  bindToNode(node, "escape", function() node.modal:exit() end)
-  -- node.modal.exited = function(self) clearModeTooltip() end
-  -- node.modal.entered = function(self) drawModeTooltip(i(node.tags)) end
-  return node
-end
+  function self.enter()
+    modal:enter()
+  end
 
-local function registerSequence(tree, sequence, f)
-  if sequence[1] then
-    local key = table.remove(sequence, 1)
-    if not sequence[1] then
-      bindToNode(tree, key, function() f() tree.modal:exit() end)
-    else
-      local childNode = tree.children[key]
-      if not childNode then
-        local newNode = createNode(tree)
-        bindToNode(tree, key, function() tree.modal:exit() newNode.modal:enter() end)
-        -- this is overriding the shorcut. sometimes we store a modal, sometimes a tag. that's wrong.
-        tree.children[key] = newNode
-      end
-      registerSequence(tree.children[key], sequence, f)
+  function self.exit()
+    modal:exit()
+  end
+
+  function self.propagate(event)
+    if parent then
+      parent.handle(event)
     end
   end
+
+  function self.handle(event)
+    hs.alert(event)
+    self.propagate(event)
+  end
+
+  function self.bind(key, f)
+    local keyTable = strToKey(key)
+    modal:bind(keyTable[1], keyTable[2], f)
+    children[key] = key
+  end
+
+  function self.register(sequence, f)
+    if sequence[1] then
+      local key = table.remove(sequence, 1)
+      if not sequence[1] then
+        self.bind(key, function() f() self.exit() end)
+      else
+        local childNode = children[key]
+        if not childNode then
+          local newNode = Node.new(self)
+          self.bind(key, function() self.exit() newNode.enter() end)
+          children[key] = newNode
+        end
+        children[key].register(sequence, f)
+      end
+    end
+  end
+
+  self.bind("escape", function() self.exit() end)
+
+  return self
 end
 
 local Modal = {}
 function Modal.new()
-  local tree = createNode()
+  local root = Node.new()
 
   local self = {}
   function self.register(sequence, f)
-    registerSequence(tree, fn.split(sequence, " "), f)
-    return tree
+    root.register(fn.split(sequence, " "), f)
+    return root
   end
 
   return self
