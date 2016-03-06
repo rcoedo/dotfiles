@@ -575,7 +575,11 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package ghq)
 #+END_SRC
-
+** Markdown
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package markdown-mode
+    :mode "\\.md\\'")
+#+END_SRC
 ** Comint
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package comint

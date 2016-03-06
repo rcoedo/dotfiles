@@ -47,6 +47,7 @@
 (depends-on "js2-mode")
 (depends-on "lua-mode")
 (depends-on "magit")
+(depends-on "markdown-mode")
 (depends-on "osx-clipboard")
 (depends-on "pallet")
 (depends-on "perspective")
