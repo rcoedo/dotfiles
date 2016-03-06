@@ -63,7 +63,6 @@ function Leaf.new(parent, key)
   function self.run()
     self.dispatch(e.sequence(self.getSequence()))
     self.dispatch(e.exit())
-    _parent.exit()
   end
 
   return self

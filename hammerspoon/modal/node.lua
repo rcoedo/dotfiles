@@ -29,6 +29,7 @@ function Node.new(parent, key)
   local function bindSequence(key)
     local leaf = Leaf.new(self, key)
     bindKey(key, function() leaf.run() end)
+    self.listen("exit", function() _modal:exit() end)
     _children[key] = leaf
   end
 

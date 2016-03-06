@@ -36,11 +36,19 @@ function Spacebar.new()
   _root.listen("exit", function() clearModeTooltip() end)
 
   local self = {}
-  function self.register(sequence, f, tag)
+  function self.register(sequence, f, meta)
+    meta = meta == nil and {} or meta
     _root.register(sequence)
-    _root.findNode(sequence)
-      .listen("sequence", f)
-      .addMetadata("tag", tag)
+
+    local node = _root.findNode(sequence)
+
+    node.listen("sequence", function() f() end)
+        .addMetadata("tag", meta["tag"])
+    --
+    -- if meta["modal"] == "stay" then
+    --
+    -- end
+
     _root.enter()
   end
 
