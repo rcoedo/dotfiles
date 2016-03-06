@@ -6,6 +6,7 @@ function Leaf.new(parent, key)
   local _key = key
   local _sequence = parent == nil and "" or parent.getSequence() .. " " .. key
   local _listeners = {}
+  local _metadata = {}
   local _parent = parent
 
   local self = {}
@@ -25,6 +26,15 @@ function Leaf.new(parent, key)
     self.propagate(event)
   end
 
+  function self.getMetadata()
+    return _metadata
+  end
+
+  function self.addMetadata(key, value)
+    _metadata[key] = value
+    return self
+  end
+
   function self.propagate(event)
     if _parent then
       _parent.handle(event)
@@ -35,13 +45,19 @@ function Leaf.new(parent, key)
     self.handle(event)
   end
 
-  function self.listen(id, action, f)
-    if not id[1] then
-      if not _listeners[action] then
-        _listeners[action] = {}
-      end
-      table.insert(_listeners[action], f)
+  function self.findNode(id)
+    local sequence = type(id) == "string" and fn.split(id, " ")  or id
+    if not sequence[1] then
+      return self
     end
+  end
+
+  function self.listen(action, f)
+    if not _listeners[action] then
+      _listeners[action] = {}
+    end
+    table.insert(_listeners[action], f)
+    return self
   end
 
   function self.run()

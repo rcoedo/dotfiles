@@ -12,6 +12,7 @@ function Node.new(parent, key)
   local _children = {}
   local _listeners = {}
   local _parent = parent
+  local _metadata = {}
   local _modal = hotkey.modal.new(nil, nil)
 
   local self = {}
@@ -34,7 +35,7 @@ function Node.new(parent, key)
   -- Bind a new branch under this key
   local function bindBranch(key)
     local newNode = Node.new(self, key)
-    bindKey(key, function() self.transition(key) end)
+    bindKey(key, function() self.transition(newNode) end)
     _children[key] = newNode
   end
 
@@ -51,7 +52,7 @@ function Node.new(parent, key)
 
   function self.handle(event)
     if _listeners[event[1]] then
-      fn.map(_listeners[event[1]], function(listener) listener(event) end)
+      fn.map(_listeners[event[1]], function(listener) listener(event[2]) end)
     end
     self.propagate(event)
   end
@@ -66,19 +67,33 @@ function Node.new(parent, key)
     self.handle(event)
   end
 
-  function self.listen(id, action, f)
+  function self.findNode(id)
     local sequence = type(id) == "string" and fn.split(id, " ")  or id
     if sequence[1] then
       local key = table.remove(sequence, 1)
       if _children[key] then
-        _children[key].listen(sequence, action, f)
+        return _children[key].findNode(sequence)
       end
     else
-      if not _listeners[action] then
-        _listeners[action] = {}
-      end
-      table.insert(_listeners[action], f)
+      return self
     end
+  end
+
+  function self.listen(action, f)
+    if not _listeners[action] then
+      _listeners[action] = {}
+    end
+    table.insert(_listeners[action], f)
+    return self
+  end
+
+  function self.getMetadata()
+    return _metadata
+  end
+
+  function self.addMetadata(key, value)
+    _metadata[key] = value
+    return self
   end
 
   function self.enter()
@@ -92,10 +107,10 @@ function Node.new(parent, key)
   end
 
   -- Dispatches a transition event, exits this modal and enters next one
-  function self.transition(child)
+  function self.transition(newNode)
     _modal:exit()
-    _children[child].enter()
-    self.dispatch(e.transition())
+    newNode.enter()
+    self.dispatch(e.transition(newNode))
   end
 
   -- Register a new sequence under this node
@@ -118,7 +133,7 @@ function Node.new(parent, key)
   if (parent) then
     bindKey("escape", function() self.exit() end)
   else
-    self.listen({}, "exit", function() self.enter() end)
+    self.listen("exit", function() self.enter() end)
   end
 
   return self

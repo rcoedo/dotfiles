@@ -1,60 +1,58 @@
 local window = require "window"
 local spotify = require "spotify"
-local modal = require "modal"
 local Spacebar = require "modal/spacebar"
 
 -- Reload configuration
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()
 hs.alert("Config loaded")
 
--- Bindings
-local cmd = {"cmd"}
-local alt = {"alt"}
-local cmdalt = {"cmd", "alt"}
+local key = Spacebar.new()
+local function spotifyMode(prefix)
+  key.register(prefix .. " p", spotify.previous)
+  key.register(prefix .. " n", spotify.next)
+  key.register(prefix .. " i", spotify.info)
+  key.register(prefix .. " s", spotify.focus)
+  key.register(prefix .. " space", spotify.playpause)
+  key.addTag(prefix, "Spotify mode")
+end
 
--- Spotify mode
-s = modal.new(nil, nil, "Spotify mode")
-s:bind({}, "p", spotify.previous)
-s:bind({}, "n", spotify.next)
-s:bind({}, "i", function() s:quit("Current track") spotify.info() end)
-s:bind({}, "s", function() s:quit("Spotify") spotify.focus() end)
-s:bind({}, "space", function() s:quit("Pause/Unpause Spotify") spotify.playpause()  end)
+local function windowMode(prefix)
+  key.register(prefix .. " h", window.pushWindowLeft)
+  key.register(prefix .. " j", window.pushWindowDown)
+  key.register(prefix .. " k", window.pushWindowUp)
+  key.register(prefix .. " l", window.pushWindowRight)
+  key.register(prefix .. " u", window.smartResizeWindowDown)
+  key.register(prefix .. " i", window.smartResizeWindowUp)
+  key.register(prefix .. " o", window.smartResizeWindowRight)
+  key.register(prefix .. " y", window.smartResizeWindowLeft)
+  key.register(prefix .. " [", window.decreaseGrid)
+  key.register(prefix .. " ]", window.increaseGrid)
+  key.register(prefix .. " n", window.pushToNextScreen)
+  key.register(prefix .. " m", window.maximizeWindow)
+  key.register(prefix .. " f", window.fullscreen)
+  key.register(prefix .. " delete", window.close)
+  key.register(prefix .. " cmd-delete", window.kill)
+  key.addTag(prefix, "Window mode")
+end
 
--- Window mode
-w = modal.new(nil, nil, "Window mode")
-w:bind({}, "h", window.pushWindowLeft)
-w:bind({}, "j", window.pushWindowDown)
-w:bind({}, "k", window.pushWindowUp)
-w:bind({}, "l", window.pushWindowRight)
-w:bind({}, "u", window.smartResizeWindowDown)
-w:bind({}, "i", window.smartResizeWindowUp)
-w:bind({}, "o", window.smartResizeWindowRight)
-w:bind({}, "y", window.smartResizeWindowLeft)
-w:bind({}, "[", window.decreaseGrid)
-w:bind({}, "]", window.increaseGrid)
-w:bind({}, "n", window.pushToNextScreen)
-w:bind({}, "m", window.maximizeWindow)
-w:bind({}, "f", window.fullscreen)
-w:bind({}, "delete", function() window.close() w:quit("Close window") end)
-w:bind(cmd, "delete", function() window.kill() w:quit("Kill window") end)
+local function launcherMode(prefix)
+  key.register(prefix .. " i", function() window.launchOrFocus("IntelliJ IDEA 15") end)
+  key.register(prefix .. " a", function() window.launchOrFocus("Emacs") end)
+  key.register(prefix .. " e", function() window.launchOrFocus("Atom") end)
+  key.register(prefix .. " t", function() window.launchOrFocus("iTerm") end)
+  key.register(prefix .. " l", function() window.launchOrFocus("Slack") end)
+  key.register(prefix .. " c", function() window.launchOrFocus("Google Chrome") end)
+  key.addTag(prefix, "Launcher mode")
 
--- Launcher mode
-l = modal.new(cmd, "return", "Launcher mode")
-l:bind({}, "i", function() l:quit("Focus IntelliJ") window.launchOrFocus("IntelliJ IDEA 15") end)
-l:bind({}, "a", function() l:quit("Focus Emacs") window.launchOrFocus("Emacs") end)
-l:bind({}, "e", function() l:quit("Focus Atom") window.launchOrFocus("Atom") end)
-l:bind({}, "t", function() l:quit("Focus Terminal") window.launchOrFocus("iTerm") end)
-l:bind({}, "l", function() l:quit("Focus Slack") window.launchOrFocus("Slack") end)
-l:bind({}, "c", function() l:quit("Focus Chrome") window.launchOrFocus("Google Chrome") end)
-l:bind({}, "s", function() l:exit() s:enter() end)
-l:bind({}, "w", function() l:exit() w:enter() end)
+  windowMode(prefix .. " w")
+  spotifyMode(prefix .. " s")
+end
 
--- local key = Spacebar.new("alt-space")
--- key.register("d", function() hs.alert("d!") end)
--- key.register("a b", function() hs.alert("a b!") end)
--- key.register("a c", function() hs.alert("a c!") end)
--- key.register("a s d f", function() hs.alert("a s d f!") end)
+local key = Spacebar.new()
+launcherMode("cmd-return")
 
+-- TODO: Merge Leaf and Node.
+-- TODO: Add a nice syntax to define a tree with tags
 -- Spacebar.new {
 --   prefix = "alt-space",
 --   bindings = {
@@ -65,6 +63,7 @@ l:bind({}, "w", function() l:exit() w:enter() end)
 --     }
 --   }
 -- }
+-- TODO: Draw a pretty tooltip to navigate hotkeys
 
 -- Install CLI
 hs.ipc.cliInstall()
