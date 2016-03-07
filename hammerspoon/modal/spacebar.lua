@@ -32,7 +32,7 @@ local Spacebar = {}
 function Spacebar.new()
   local _root = Node.new()
 
-  _root.listen("transition", function(node) drawModeTooltip(getTag(node)) end)
+  _root.listen("transition", function(event) drawModeTooltip(getTag(event.getData()) .. "\n yep") end)
   _root.listen("exit", function() clearModeTooltip() end)
 
   local self = {}
@@ -44,10 +44,10 @@ function Spacebar.new()
 
     node.listen("sequence", function() f() end)
         .addMetadata("tag", meta["tag"])
-    --
-    -- if meta["modal"] == "stay" then
-    --
-    -- end
+
+    if meta["modal"] == "stay" then
+       node.listen("exit", function(e) e.stopPropagation() end)
+    end
 
     _root.enter()
   end

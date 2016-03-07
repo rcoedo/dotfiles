@@ -52,10 +52,12 @@ function Node.new(parent, key)
   end
 
   function self.handle(event)
-    if _listeners[event[1]] then
-      fn.map(_listeners[event[1]], function(listener) listener(event[2]) end)
-    end
-    self.propagate(event)
+     if _listeners[event.getKey()] then
+        fn.map(_listeners[event.getKey()], function(listener) listener(event) end)
+     end
+     if event.propagate() then
+        self.propagate(event)
+     end
   end
 
   function self.propagate(event)
