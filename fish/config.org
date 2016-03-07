@@ -300,7 +300,7 @@ end
 
 ** Functions
 #+BEGIN_SRC fish :tangle yes
-function dm-load
+function dml
     if test (count $argv) = 1
         docker-machine env $argv[1] | source
         set -gx DOCKER_TLS_VERIFY $DOCKER_TLS_VERIFY
@@ -308,7 +308,15 @@ function dm-load
         set -gx DOCKER_HOST $DOCKER_HOST
         __update_docker_host
     else
-        echo "Usage: docker-machine-load <machine name>"
+        echo "Usage: dml <machine name>"
+    end
+end
+
+function dr
+    if test (count $argv) = 2
+        docker run --rm -t -i -v (bash -c "echo \$(cd $argv[2] && pwd)"):/volume -w /volume $argv[1] /bin/bash
+    else
+        echo "Usage: dr <image> <directory>"
     end
 end
 #+END_SRC
