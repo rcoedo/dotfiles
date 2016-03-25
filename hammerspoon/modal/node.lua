@@ -1,7 +1,6 @@
 local hotkey = require "hs.hotkey"
 local fn = require "hs.fnutils"
 
-local Leaf = require "modal/leaf"
 local utils = require "modal/utils"
 local e = require "modal/events"
 
@@ -27,7 +26,7 @@ function Node.new(parent, key)
 
   -- Bind a sequence to this key
   local function bindSequence(key)
-    local leaf = Leaf.new(self, key)
+    local leaf = Node.new(self, key)
     bindKey(key, function() leaf.run() end)
     self.listen("exit", function() _modal:exit() end)
     _children[key] = leaf
@@ -60,6 +59,15 @@ function Node.new(parent, key)
      end
   end
 
+  function self.getMetadata()
+    return _metadata
+  end
+
+  function self.addMetadata(key, value)
+    _metadata[key] = value
+    return self
+  end
+
   function self.propagate(event)
     if _parent then
       _parent.handle(event)
@@ -90,15 +98,6 @@ function Node.new(parent, key)
     return self
   end
 
-  function self.getMetadata()
-    return _metadata
-  end
-
-  function self.addMetadata(key, value)
-    _metadata[key] = value
-    return self
-  end
-
   function self.enter()
     _modal:enter()
   end
@@ -106,6 +105,11 @@ function Node.new(parent, key)
   -- Dispatches an exit event and quits the modal
   function self.exit()
     _modal:exit()
+    self.dispatch(e.exit())
+  end
+
+  function self.run()
+    self.dispatch(e.sequence(self.getSequence()))
     self.dispatch(e.exit())
   end
 

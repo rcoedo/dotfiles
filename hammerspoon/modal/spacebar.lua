@@ -3,6 +3,8 @@ local Node = require "modal/node"
 local log = hs.logger.new("debug", "debug")
 local i = hs.inspect.inspect
 
+local fn = require "hs.fnutils"
+
 local styledtext = require "hs.styledtext"
 local drawing = require "hs.drawing"
 local geometry = require "hs.geometry"
@@ -17,22 +19,25 @@ local function clearModeTooltip()
   end
 end
 
-local function drawModeTooltip(message)
+local function drawModeTooltip(labels)
   clearModeTooltip()
-  modeStatus = drawing.text(geometry.rect(100,100,1000,1000), ansiMessage(message))
+  local message = ""
+  for k,v in pairs(labels) do
+     message = message .. k .. ": " .. v .. "\n"
+  end
+  modeStatus = drawing.text(geometry.rect(0,0,1000,1000), ansiMessage(message))
   modeStatus:show()
 end
 
-local function getTag(node)
-  local tag = node.getMetadata()["tag"]
-  return tag == nil and "" or tag
+local function getLabels(node)
+  local labels = node.getMetadata()["labels"]
+  return labels == nil and {} or labels
 end
 
 local Spacebar = {}
-function Spacebar.new()
+function Spacebar.new(config)
   local _root = Node.new()
-
-  _root.listen("transition", function(event) drawModeTooltip(getTag(event.getData()) .. "\n yep") end)
+  _root.listen("transition", function(event) drawModeTooltip(getLabels(event.getData())) end)
   _root.listen("exit", function() clearModeTooltip() end)
 
   local self = {}
@@ -43,7 +48,6 @@ function Spacebar.new()
     local node = _root.findNode(sequence)
 
     node.listen("sequence", function() f() end)
-        .addMetadata("tag", meta["tag"])
 
     if meta["modal"] == "stay" then
        node.listen("exit", function(e) e.stopPropagation() end)
@@ -52,9 +56,33 @@ function Spacebar.new()
     _root.enter()
   end
 
-  function self.addTag(sequence, tag)
-    _root.findNode(sequence)
-      .addMetadata("tag", tag)
+  function self.addLabel(sequence, key, tag)
+     local node = _root.findNode(sequence)
+     if node.getMetadata()["labels"] == nil then
+        node.addMetadata("labels", {})
+     end
+     node.getMetadata()["labels"][key] = tag
+  end
+
+  local function init(config)
+    local prefix = config.prefix
+    fn.map(config.bindings, function(binding)
+      local key = binding[1]
+      local tag = binding[2]
+      local f = binding[3]
+      local options = binding[4]
+      local sequence = prefix .. " " .. key
+      if type(f) == "table" then
+         init({prefix = sequence, bindings = f})
+      else
+         self.register(sequence, f, options)
+      end
+      self.addLabel(prefix, key, tag)
+    end)
+  end
+
+  if config ~= nil then
+    init(config)
   end
 
   return self

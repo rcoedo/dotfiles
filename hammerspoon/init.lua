@@ -6,63 +6,41 @@ local Spacebar = require "modal/spacebar"
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()
 hs.alert("Config loaded")
 
-local key = Spacebar.new()
-local function spotifyMode(prefix)
-  key.register(prefix .. " p", spotify.previous, {modal = "stay"})
-  key.register(prefix .. " n", spotify.next, {modal = "stay"})
-  key.register(prefix .. " i", spotify.info)
-  key.register(prefix .. " s", spotify.focus)
-  key.register(prefix .. " space", spotify.playpause)
-  key.addTag(prefix, "Spotify mode")
-end
-
-local function windowMode(prefix)
-  key.register(prefix .. " h", window.pushWindowLeft, {modal = "stay"})
-  key.register(prefix .. " j", window.pushWindowDown, {modal = "stay"})
-  key.register(prefix .. " k", window.pushWindowUp, {modal = "stay"})
-  key.register(prefix .. " l", window.pushWindowRight, {modal = "stay"})
-  key.register(prefix .. " u", window.smartResizeWindowDown, {modal = "stay"})
-  key.register(prefix .. " i", window.smartResizeWindowUp, {modal = "stay"})
-  key.register(prefix .. " o", window.smartResizeWindowRight, {modal = "stay"})
-  key.register(prefix .. " y", window.smartResizeWindowLeft, {modal = "stay"})
-  key.register(prefix .. " [", window.decreaseGrid, {modal = "stay"})
-  key.register(prefix .. " ]", window.increaseGrid, {modal = "stay"})
-  key.register(prefix .. " n", window.pushToNextScreen, {modal = "stay"})
-  key.register(prefix .. " m", window.maximizeWindow)
-  key.register(prefix .. " f", window.fullscreen)
-  key.register(prefix .. " delete", window.close)
-  key.register(prefix .. " cmd-delete", window.kill)
-  key.addTag(prefix, "Window mode")
-end
-
-local function launcherMode(prefix)
-  key.register(prefix .. " i", function() window.launchOrFocus("IntelliJ IDEA 15") end)
-  key.register(prefix .. " a", function() window.launchOrFocus("Atom") end)
-  key.register(prefix .. " e", function() window.launchOrFocus("Emacs") end)
-  key.register(prefix .. " t", function() window.launchOrFocus("iTerm") end)
-  key.register(prefix .. " l", function() window.launchOrFocus("Slack") end)
-  key.register(prefix .. " c", function() window.launchOrFocus("Google Chrome") end)
-  key.addTag(prefix, "Launcher mode")
-
-  windowMode(prefix .. " w")
-  spotifyMode(prefix .. " s")
-end
-
-local key = Spacebar.new()
-launcherMode("cmd-return")
-
--- TODO: Merge Leaf and Node.
--- TODO: Add a nice syntax to define a tree with tags
--- Spacebar.new {
---   prefix = "alt-space",
---   bindings = {
---     {"d", "dAlert"} = function() hs.alert("d!") end,
---     {"a", "moreAlerts"} = {
---       {"b", "bAlert"} = function() hs.alert("b!") end,
---       "c" = function() hs.alert("c!") end
---     }
---   }
--- }
+local key = Spacebar.new {
+   prefix = "cmd-return",
+   bindings = {
+      {"i", "intellij", function() window.launchOrFocus("IntelliJ IDEA 15") end},
+      {"a", "atom", function() window.launchOrFocus("Atom") end},
+      {"e", "emacs", function() window.launchOrFocus("Emacs") end},
+      {"t", "terminal", function() window.launchOrFocus("iTerm") end},
+      {"l", "slack", function() window.launchOrFocus("Slack") end},
+      {"c", "chrome", function() window.launchOrFocus("Google Chrome") end},
+      {"s", "spotify mode", {
+          {"p", "previous", spotify.previous, {modal = "stay"}},
+          {"n", "next", spotify.next, {modal = "stay"}},
+          {"i", "info", spotify.info},
+          {"s", "open", spotify.focus},
+          {"space", "play/pause", spotify.playpause}
+      }},
+      {"w", "window mode", {
+          {"h", "push left", window.pushWindowLeft, {modal = "stay"}},
+          {"j", "push down", window.pushWindowDown, {modal = "stay"}},
+          {"k", "push up", window.pushWindowUp, {modal = "stay"}},
+          {"l", "push right", window.pushWindowRight, {modal = "stay"}},
+          {"u", "resize down", window.smartResizeWindowDown, {modal = "stay"}},
+          {"i", "resize up", window.smartResizeWindowUp, {modal = "stay"}},
+          {"o", "resize right", window.smartResizeWindowRight, {modal = "stay"}},
+          {"y", "resize left", window.smartResizeWindowLeft, {modal = "stay"}},
+          {"[", "decrease grid", window.decreaseGrid, {modal = "stay"}},
+          {"]", "increase grid", window.increaseGrid, {modal = "stay"}},
+          {"n", "next screen", window.pushToNextScreen, {modal = "stay"}},
+          {"m", "maximize", window.maximizeWindow},
+          {"f", "fullscreen", window.fullscreen},
+          {"delete", "close", window.close},
+          {"cmd-delete", "kill", window.kill}
+      }}
+   }
+}
 -- TODO: Draw a pretty tooltip to navigate hotkeys
 
 -- Install CLI
