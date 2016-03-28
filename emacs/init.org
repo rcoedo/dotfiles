@@ -95,6 +95,7 @@
 ** Font
 #+BEGIN_SRC emacs-lisp :tangle yes
 (set-frame-font (font-spec :family "Fantasque Sans Mono" :size 16))
+(setq-default line-spacing 4)
 #+END_SRC
 
 * rcoedo
