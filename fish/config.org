@@ -204,6 +204,8 @@ set fish_color_command "green"
 ** Bindings
 #+BEGIN_SRC fish :tangle yes
 function fish_user_key_bindings
+    bind \eb 'prevd; commandline -f repaint'
+    bind \eu 'cd ..; commandline -f repaint'
     bind \cr 'ihistory; commandline -f repaint'
     bind \eo 'ips; commandline -f repaint'
     bind \ep 'ifind; commandline -f repaint'
