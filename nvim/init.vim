@@ -1,13 +1,17 @@
+" Use Fish as shell
 if &shell =~# 'fish$'
     set shell=sh
 endif
 
+" Space is my leader
 let mapleader="\<Space>"
 
 set nocompatible
 filetype off
 
 call plug#begin('~/.config/nvim/plugged')
+
+" Plugin configuration
 Plug 'dag/vim-fish'
 Plug 'maxbrunsfeld/vim-emacs-bindings'
 Plug 'airblade/vim-gitgutter'
@@ -24,8 +28,29 @@ Plug 'tpope/vim-speeddating'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'mxw/vim-jsx'
+Plug 'elixir-lang/vim-elixir'
+
 Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo', 'percent' ],
+      \             [ 'filetype' ] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"⭤":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ }
+      \ }
+
 call plug#end()
 
 " General configuration
@@ -80,26 +105,7 @@ colorscheme gruvbox
 set background=dark
 syntax enable
 set t_Co=256
-
-" Status bar
-let g:lightline = {
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo', 'percent' ],
-      \             [ 'filetype' ] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"⭤":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-      \ }
-      \ }
+highlight Comment cterm=italic
 
 " Key mappings
 nnoremap <leader>ev :tabedit $MYVIMRC<cr>
@@ -115,12 +121,9 @@ nmap <tab> <c-w><c-w>
 nmap <c-p> :Files<cr>
 nmap <c-b> :Buffers<cr>
 
-tnoremap <esc> <C-\><C-n>
-
 " File config
 au FileType gitcommit set tw=72
 au FileType javascript setlocal ts=2 sw=2 expandtab
-let g:jsx_ext_required = 0
 au FileType go setlocal ts=4 sw=4 expandtab
 au FileType lua setlocal ts=2 sw=2 expandtab
 autocmd FileType html :setlocal sw=2 ts=2 sts=2
