@@ -27,6 +27,10 @@
    
 * Platform
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (menu-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (tool-bar-mode -1)
+
   (when (memq window-system '(mac ns))
     (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize)
@@ -62,6 +66,7 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package linum
     :init
+    (hl-line-mode t)
     (global-linum-mode t)
     :config
     (setq linum-format 'dynamic)
@@ -73,6 +78,10 @@
                          (count-lines (point-min) (point-max)))))
              (linum-format (concat " %" (number-to-string w) "d ")))
         ad-do-it)))
+
+  (req-package hlinum
+    :config
+    (hlinum-activate))
 #+END_SRC
 
 ** Modeline
@@ -94,8 +103,8 @@
 
 ** Font
 #+BEGIN_SRC emacs-lisp :tangle yes
-(set-frame-font (font-spec :family "Fantasque Sans Mono" :size 16))
-(setq-default line-spacing 4)
+(set-frame-font (font-spec :family "Operator Mono" :size 15))
+(setq-default line-spacing 3)
 #+END_SRC
 
 * rcoedo
@@ -998,7 +1007,6 @@ Uses Elm compiler. See URL
     :require flycheck
     :init
     (add-to-list 'auto-mode-alist '("\\.phtml\\'"     . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.json\\'"      . web-mode))
     (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'"   . web-mode))
     (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'"   . web-mode))
