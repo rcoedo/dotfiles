@@ -42,6 +42,7 @@ local key = Spacebar.new {
    }
 }
 -- TODO: Draw a pretty tooltip to navigate hotkeys
+-- Export the tree to json?
 
 -- Install CLI
 hs.ipc.cliInstall()

@@ -29,6 +29,17 @@ local function drawModeTooltip(labels)
   modeStatus:show()
 end
 
+local function drawModeTooltip2(labels)
+  clearModeTooltip()
+  local message = ""
+  for k,v in pairs(labels) do
+     message = message .. k .. ": " .. v .. "\n"
+  end
+  modeStatus = hs.webview.new(geometry.rect(0,0,1000,1000)):url("http://www.google.es/"):asHSDrawing()
+  modeStatus:show()
+
+end
+
 local function getLabels(node)
   local labels = node.getMetadata()["labels"]
   return labels == nil and {} or labels
