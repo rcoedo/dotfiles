@@ -10,11 +10,13 @@ local key = Spacebar.new {
    prefix = "cmd-return",
    bindings = {
       {"i", "intellij", function() window.launchOrFocus("IntelliJ IDEA") end},
-      {"a", "atom", function() window.launchOrFocus("Atom") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
-      {"l", "slack", function() window.launchOrFocus("Slack") end},
       {"c", "chrome", function() window.launchOrFocus("Google Chrome") end},
+      {"m", "messaging", {
+          {"w", "whatsapp", function() window.launchOrFocus("WhatsApp") end},
+          {"l", "slack", function() window.launchOrFocus("Slack") end}
+      }},
       {"s", "spotify mode", {
           {"p", "previous", spotify.previous, {modal = "stay"}},
           {"n", "next", spotify.next, {modal = "stay"}},
