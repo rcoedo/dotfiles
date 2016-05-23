@@ -29,6 +29,7 @@ Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'mxw/vim-jsx'
 Plug 'elixir-lang/vim-elixir'
+Plug 'stephpy/vim-yaml'
 
 Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
