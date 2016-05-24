@@ -15,6 +15,7 @@ local key = Spacebar.new {
       {"c", "chrome", function() window.launchOrFocus("Google Chrome") end},
       {"m", "messaging", {
           {"w", "whatsapp", function() window.launchOrFocus("WhatsApp") end},
+          {"t", "telegram", function() window.launchOrFocus("Telegram") end},
           {"l", "slack", function() window.launchOrFocus("Slack") end}
       }},
       {"s", "spotify mode", {
