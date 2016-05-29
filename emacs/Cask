@@ -44,7 +44,6 @@
 (depends-on "helm-dash")
 (depends-on "helm-projectile")
 (depends-on "hindent")
-(depends-on "hlinum")
 (depends-on "js2-mode")
 (depends-on "lua-mode")
 (depends-on "magit")
