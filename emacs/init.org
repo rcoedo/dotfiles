@@ -99,8 +99,9 @@
 
 ** Font
 #+BEGIN_SRC emacs-lisp :tangle yes
-(set-frame-font (font-spec :family "Operator Mono" :size 15))
-(setq-default line-spacing 3)
+  (set-frame-font (font-spec :family "Operator Mono" :size 16))
+  (set-face-italic 'font-lock-comment-face t)
+  (setq-default line-spacing 3)
 #+END_SRC
 
 * rcoedo
@@ -756,25 +757,6 @@ Uses Elm compiler. See URL
 #+END_SRC
 
 ** Javascript
-*** Tern
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package tern
-    :defer t
-    :require company
-    :init
-    (progn
-      (add-to-list 'company-backends 'company-tern)
-
-      (defun rcoedo/tern/bindings ()
-        (rcoedo/evil-leader/set-mode-keys 'tern-mode
-         '(("d" tern-find-definition)
-           ("r" tern-rename-variable)
-           ("h" tern-get-docs)
-           ("t" tern-get-type))))
-
-      (add-hook 'tern-mode-hook 'rcoedo/tern/bindings)))
-#+END_SRC
-
 *** Js2
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package js2-mode
@@ -793,7 +775,6 @@ Uses Elm compiler. See URL
            ("oa" js2-mode-show-all))))
 
       (defun rcoedo/js2-mode/hook ()
-        (tern-mode t)
         (rcoedo/js2-mode/bindings))
 
       (setq-default js2-basic-offset 2)
@@ -811,44 +792,6 @@ Uses Elm compiler. See URL
                      (replace-regexp-in-string "'use strict'" ""
                                                (replace-regexp-in-string
                                                 "\033\\[[0-9]+[A-Z]" "" output))))))
-#+END_SRC
-
-** Rust
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package rust-mode
-    :require flycheck-rust
-    :mode "\\.rs\\'"
-    :config
-    (setq-default rust-basic-offset 4)
-    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup))
-#+END_SRC
-
-** Golang
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package go-mode
-    :mode "\\.go\\'"
-    :defer t
-    :init
-    (progn
-      (defun rcoedo/go-mode/fmt-before-save ()
-        (when (eq major-mode 'go-mode)
-          (gofmt-before-save)))
-
-      (defun rcoedo/go-mode/bindings ()
-        (rcoedo/evil-leader/set-mode-keys 'go-mode
-         '(("a" go-import-add)
-           ("d" godef-describe)
-           ("j" godef-jump)
-           ("J" godef-jump-other-window))))
-
-      (add-to-list 'company-backends 'company-go)
-      (add-hook 'before-save-hook 'rcoedo/go-mode/fmt-before-save)
-      (add-hook 'go-mode-hook 'rcoedo/go-mode/bindings))
-
-    :config
-    (progn
-      (load-file "$GOPATH/src/golang.org/x/tools/cmd/oracle/oracle.el")
-      (setq gofmt-command "goimports")))
 #+END_SRC
 
 ** Clojure
@@ -1019,8 +962,7 @@ Uses Elm compiler. See URL
               #'(lambda ()
                   (setq web-mode-markup-indent-offset 2)
                   (setq web-mode-css-indent-offset 2)
-                  (setq web-mode-code-indent-offset 2)
-                  (tern-mode t)))
+                  (setq web-mode-code-indent-offset 2)))
 
     (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
