@@ -61,6 +61,7 @@
 (depends-on "scss-mode")
 (depends-on "smart-mode-line")
 (depends-on "smartparens")
+(depends-on "tern")
 (depends-on "transpose-frame")
 (depends-on "web-mode")
 (depends-on "yasnippet")

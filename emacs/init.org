@@ -94,14 +94,10 @@
   (req-package gruvbox-theme
     :require smart-mode-line
     :config
-    (load-theme 'gruvbox t))
-#+END_SRC
-
-** Font
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (set-frame-font (font-spec :family "Operator Mono" :size 16))
-  (set-face-italic 'font-lock-comment-face t)
-  (setq-default line-spacing 3)
+    (load-theme 'gruvbox t)
+    (set-frame-font (font-spec :family "Operator Mono" :size 16))
+    (set-face-italic 'font-lock-comment-face t)
+    (setq-default line-spacing 3))
 #+END_SRC
 
 * rcoedo
@@ -760,7 +756,7 @@ Uses Elm compiler. See URL
 *** Js2
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package js2-mode
-    :require flycheck tern
+    :require flycheck
     :mode "\\.js\\'"
     :config
     (progn
@@ -918,8 +914,7 @@ Uses Elm compiler. See URL
                                           (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
                                           (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
                                           (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
-                                          (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
-                                          (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
+                                          (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)))
         (eval-after-load 'haskell-cabal '(progn
                                            (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
                                            (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
