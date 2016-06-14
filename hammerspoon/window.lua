@@ -2,7 +2,7 @@ local window = require "hs.window"
 local grid = require "hs.grid"
 local eventtap = require "hs.eventtap"
 local application = require "hs.application"
-local appFinder = require "hs.appFinder"
+local appfinder = require "hs.appfinder"
 
 window.animationDuration = 0
 grid.MARGINX = 0
@@ -97,7 +97,12 @@ local function launchOrSwitch(name, realName)
     if (window.frontmostWindow() ~= null and window.frontmostWindow():application() == appfinder.appFromName(name)) then
         eventtap.keyStroke({"cmd"}, "`")
     else
-        application.launchOrFocus(realName or name)
+        local app = appfinder.appFromName(realName or name)
+        if (app == null) then
+          application.launchOrFocus(realName or name)
+        else
+          app:activate()
+        end
     end
 end
 

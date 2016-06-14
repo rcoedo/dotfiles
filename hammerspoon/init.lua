@@ -13,9 +13,9 @@ local key = Spacebar.new {
       {"a", "atom", function() window.launchOrFocus("Atom") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
-      {"c", "chrome", function() window.launchOrFocus("Google Chrome") end},
+      {"c", "chrome", function() window.launchOrSwitch("Google Chrome") end},
       {"m", "messaging", {
-          {"w", "whatsapp", function() window.launchOrFocus("WhatsApp") end},
+          {"w", "whatsapp", function() window.launchOrSwitch("WhatsApp") end},
           {"t", "telegram", function() window.launchOrFocus("Telegram") end},
           {"l", "slack", function() window.launchOrFocus("Slack") end}
       }},
