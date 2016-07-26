@@ -224,6 +224,7 @@ alias atmux "tmux -L atom"
 alias tx "tmuxinator"
 alias bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
 alias gh "cd $GHQ_ROOT/github.com/rcoedo"
+alias miex "iex -S mix"
 #+END_SRC
 * Ranger
 ** Ranger-cd
