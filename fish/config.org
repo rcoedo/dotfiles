@@ -37,7 +37,6 @@ set -gx GREP_OPTIONS "--color=auto"
 set -gx CDPATH . "$HOME/Workspace"
 set -gx HOMEBREW_NO_ANALYTICS 1
 set -gx BREW_CELLAR "/usr/local/Cellar"
-set -gx FZF_DEFAULT_COMMAND 'ag -g ""'
 
 set -x JAVA_HOME (/usr/libexec/java_home)
 __add_to_path $JAVA_HOME/bin
