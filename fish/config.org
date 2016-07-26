@@ -44,11 +44,11 @@ __add_to_path $JAVA_HOME/bin
 set -x TOMCATS $HOME/Workspace/tomcats
 set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 
-set -x ANDROID_HOME $HOME/Library/Android/sdk
-__add_to_path $ANDROID_HOME/platform-tools
+#set -x ANDROID_HOME $HOME/Library/Android/sdk
+#__add_to_path $ANDROID_HOME/platform-tools
 
 set -gx RBENV_ROOT /usr/local/var/rbenv
-__add_to_path $HOME/.rbenv/bin
+#__add_to_path $HOME/.rbenv/bin
 status --is-interactive; and . (rbenv init -|psub)
 
 set -x NDENV_ROOT $HOME/.ndenv
@@ -73,8 +73,8 @@ pyenv rehash
 set -x GOPATH $HOME/Workspace
 __add_to_path $GOPATH/bin
 
-set -x TEXPATH /usr/texbin
-__add_to_path $TEXPATH
+#set -x TEXPATH /usr/texbin
+#__add_to_path $TEXPATH
 
 eval (direnv hook fish)
 #+END_SRC
