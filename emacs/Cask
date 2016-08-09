@@ -37,7 +37,6 @@
 (depends-on "helm")
 (depends-on "helm-ag")
 (depends-on "helm-company")
-(depends-on "helm-css-scss")
 (depends-on "helm-dash")
 (depends-on "helm-projectile")
 (depends-on "hindent")

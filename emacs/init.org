@@ -520,16 +520,6 @@
                                       'string-lessp))))
 #+END_SRC
 
-*** Helm css scss
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package helm-css-scss
-    :require helm
-    :mode "\\.scss\\'"
-    :config
-    (progn
-      (setq helm-css-scss-split-with-multiple-windows t)))
-#+END_SRC
-
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package yasnippet
