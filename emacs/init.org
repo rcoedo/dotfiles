@@ -944,6 +944,7 @@
         (rcoedo/evil-leader/set-mode-keys 'scss-mode
                                           '(("f" helm-css-scss))))
 
+      (setq scss-compile-at-save nil)
       (add-hook 'scss-mode-hook 'rcoedo/scss-mode/bindings)))
 #+END_SRC
 
