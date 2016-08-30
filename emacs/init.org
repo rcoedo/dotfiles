@@ -40,6 +40,7 @@
 
     (setq mac-command-modifier 'meta
           mac-option-key-is-meta nil
+          ns-use-native-fullscreen nil
           mac-option-modifier 'none
           system-uses-terminfo nil
           osx-clipboard-mode t)
