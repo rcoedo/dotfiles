@@ -31,6 +31,9 @@
 
 ** Environment
 #+BEGIN_SRC fish :tangle yes
+
+set -gx LC_ALL "en_US.UTF-8"
+set -gx LANG "en_US.UTF-8"
 set -gx EDITOR "vim"
 set -gx GIT_EDITOR "vim"
 set -gx GREP_OPTIONS "--color=auto"
