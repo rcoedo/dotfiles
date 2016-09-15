@@ -344,6 +344,7 @@ end
 #+BEGIN_SRC fish :tangle yes
 alias dm "docker-machine"
 alias dc "docker-compose"
+alias kb "kubectl"
 alias d  "docker"
 #+END_SRC
 
