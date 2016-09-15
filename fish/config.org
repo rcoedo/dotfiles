@@ -50,6 +50,10 @@ set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 #set -x ANDROID_HOME $HOME/Library/Android/sdk
 #__add_to_path $ANDROID_HOME/platform-tools
 
+# Google cloud
+set fish_user_paths /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin
+set -x MANPATH /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/help/man /usr/local/share/man /usr/share/man /opt/x11/sha
+
 set -gx RBENV_ROOT /usr/local/var/rbenv
 #__add_to_path $HOME/.rbenv/bin
 status --is-interactive; and . (rbenv init -|psub)
