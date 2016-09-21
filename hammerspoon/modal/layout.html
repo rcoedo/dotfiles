@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <style>
+      .container { color: #fbf1c7; font-size: 22px; font-family: "Monaco"; }
+      .line {}
+      .key { color: #fe8019; }
+      .separator { color: #83a598; }
+      .value {}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      {% for k, v in pairs(labels) do %}
+      <div class="line">
+        <span class="key">{{k}}</span><span class="separator">: </span><span class="value">{{v}}</span>
+      </div>
+      {% end %}
+    </div>
+  </body>
+</html>

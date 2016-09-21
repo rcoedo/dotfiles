@@ -8,25 +8,30 @@ local fn = require "hs.fnutils"
 local styledtext = require "hs.styledtext"
 local drawing = require "hs.drawing"
 local geometry = require "hs.geometry"
+local screen = require "hs.screen"
+local template = require "resty.template"
 
-local function ansiMessage(message)
-  return styledtext.ansi(message, {font={name="Fantasque Sans Mono",size=36}, backgroundColor={alpha=1}})
+local function buildStyledText(labels)
+  local view = template.compile("modal/layout.html")
+  return styledtext.getStyledTextFromData(view{labels = labels})
 end
 
-local function clearModeTooltip()
-  if modeStatus then
-    modeStatus:delete()
-  end
+local function buildTextDrawing(labels)
+  local styledText = buildStyledText(labels)
+  local frame = screen.primaryScreen():frame()
+  return drawing.text({ x = 15, y = 10, w = frame.w, h = frame.h }, styledText)
 end
 
-local function drawModeTooltip(labels)
-  clearModeTooltip()
-  local message = ""
-  for k,v in pairs(labels) do
-     message = message .. k .. ": " .. v .. "\n"
-  end
-  modeStatus = drawing.text(geometry.rect(0,0,1000,1000), ansiMessage(message))
-  modeStatus:show()
+local function buildTooltip(labels)
+  local text = buildTextDrawing(labels)
+  local size = drawing.getTextDrawingSize(text:getStyledText())
+  local frame = screen.primaryScreen():frame()
+  local background = drawing.rectangle({ x = -2, y = 0, w = frame.w + 4, h = size.h })
+  background:setFillColor({red = 0, green = 0, blue = 0, alpha=0.80})
+  return {
+    text = text,
+    background = background
+  }
 end
 
 local function getLabels(node)
@@ -36,9 +41,8 @@ end
 
 local Spacebar = {}
 function Spacebar.new(config)
+  local _tooltip = nil
   local _root = Node.new()
-  _root.listen("transition", function(event) drawModeTooltip(getLabels(event.getData())) end)
-  _root.listen("exit", function() clearModeTooltip() end)
 
   local self = {}
   function self.register(sequence, f, meta)
@@ -64,6 +68,19 @@ function Spacebar.new(config)
      node.getMetadata()["labels"][key] = tag
   end
 
+  function self.clearModeTooltip()
+    if _tooltip then
+      _tooltip.background:delete()
+      _tooltip.text:delete()
+    end
+  end
+
+  function self.drawModeTooltip(labels)
+    _tooltip = buildTooltip(labels)
+    _tooltip.background:show()
+    _tooltip.text:show()
+  end
+
   local function init(config)
     local prefix = config.prefix
     fn.map(config.bindings, function(binding)
@@ -80,6 +97,13 @@ function Spacebar.new(config)
       self.addLabel(prefix, key, tag)
     end)
   end
+
+  _root.listen("transition", function(event)
+    self.clearModeTooltip()
+    self.drawModeTooltip(getLabels(event.getData()))
+  end)
+
+  _root.listen("exit", function() self.clearModeTooltip() end)
 
   if config ~= nil then
     init(config)
