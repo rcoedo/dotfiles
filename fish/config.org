@@ -343,6 +343,7 @@ alias dm "docker-machine"
 alias dc "docker-compose"
 alias kb "kubectl"
 alias d  "docker"
+alias mk "mkdir -p"
 #+END_SRC
 
 * Travel
