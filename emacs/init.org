@@ -1102,7 +1102,7 @@
         (kbd "q") 'quit-window)))
 #+END_SRC
 
-* Globals
+* TODO Globals
 #+BEGIN_SRC emacs-lisp :tangle yes
   (put 'dired-find-alternate-file 'disabled nil)
   (put 'erase-buffer 'disabled nil)                 ; Allow the use of erase-buffer
@@ -1130,6 +1130,7 @@
   (define-key global-map (kbd "M-]")           'rcoedo/buffer/next-non-emacs-buffer)
   (define-key global-map (kbd "M-[")           'rcoedo/buffer/previous-non-emacs-buffer)
   (define-key global-map (kbd "M-q")           'rcoedo/eshell/projectile-eshell-popup)
+  (define-key global-map (kbd "M-s")           'helm-projectile-ag)
   (define-key global-map (kbd "M-t")           'helm-projectile-find-file)
   (define-key global-map (kbd "M-p")           'helm-ghq-list)
   (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
@@ -1137,7 +1138,6 @@
   (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
   (define-key global-map (kbd "C-x k")         'kill-buffer-and-window)
   (define-key global-map (kbd "M-/")           'evilnc-comment-or-uncomment-lines)
-  (define-key global-map (kbd "M-s")           'save-buffer)
 
   (define-key global-map (kbd "H-1") 'windmove-left)
   (define-key global-map (kbd "H-2") 'windmove-down)
