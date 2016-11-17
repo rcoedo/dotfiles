@@ -728,26 +728,45 @@
 ** Javascript
 *** Js2
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package js2-mode
-    :require flycheck
-    :mode "\\.js\\'"
-    :config
-    (progn
-      (defun rcoedo/js2-mode/bindings ()
-        (define-key js2-mode-map (kbd "M-v") 'babel-repl-send-paragraph)
-        (rcoedo/evil-leader/set-mode-keys
-         'js2-mode
-         '(("oe" js2-mode-toggle-element)
-           ("ow" js2-mode-toggle-warnings-and-errors)
-           ("oc" js2-mode-toggle-hide-comments)
-           ("of" js2-mode-toggle-hide-functions)
-           ("oa" js2-mode-show-all))))
+;;  (req-package js2-mode :require flycheck
+;;    :mode "\\.js\\'"
+;;    :config
+;;    (progn
+;;      (defun rcoedo/js2-mode/bindings ()
+;;        (define-key js2-mode-map (kbd "M-v") 'babel-repl-send-paragraph)
+;;        (rcoedo/evil-leader/set-mode-keys
+;;         'js2-mode
+;;         '(("oe" js2-mode-toggle-element)
+;;           ("ow" js2-mode-toggle-warnings-and-errors)
+;;           ("oc" js2-mode-toggle-hide-comments)
+;;           ("of" js2-mode-toggle-hide-functions)
+;;           ("oa" js2-mode-show-all))))
+;;
+;;      (defun rcoedo/js2-mode/hook ()
+;;        (rcoedo/js2-mode/bindings))
+;;
+;;      (setq-default js2-basic-offset 2)
+;;      (add-hook 'js2-mode-hook 'rcoedo/js2-mode/hook)))
+#+END_SRC
 
-      (defun rcoedo/js2-mode/hook ()
-        (rcoedo/js2-mode/bindings))
-
-      (setq-default js2-basic-offset 2)
-      (add-hook 'js2-mode-hook 'rcoedo/js2-mode/hook)))
+*** Rjsx
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;  (req-package rjsx-mode :require flycheck
+;;    :mode "\\.jsx?\\'"
+;;    :require flycheck
+;;    :config
+;;    (progn
+;;      (defun rcoedo/rjsx-mode/bindings ()
+;;        (define-key rjsx-mode-map (kbd "M-v") 'babel-repl-send-paragraph)
+;;        (define-key rjsx-mode-map (kbd "<") nil)
+;;        (rcoedo/evil-leader/set-mode-keys
+;;         'rjsx-mode
+;;         '(("<" nil))))
+;;
+;;      (defun rcoedo/rjsx-mode/hook ()
+;;        (rcoedo/rjsx-mode/bindings))
+;;
+;;      (add-hook 'rjsx-mode-hook 'rcoedo/rjsx-mode/hook)))
 #+END_SRC
 
 *** Babel repl
@@ -921,7 +940,7 @@
     (add-to-list 'auto-mode-alist '("\\.mustache\\'"  . web-mode))
     (add-to-list 'auto-mode-alist '("\\.djhtml\\'"    . web-mode))
     (add-to-list 'auto-mode-alist '("\\.ejs\\'"       . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.jsx\\'"       . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.jsx?\\'"       . web-mode))
     :config
     (setq-default flycheck-disabled-checkers
                    (append flycheck-disabled-checkers '(javascript-jshint)))
