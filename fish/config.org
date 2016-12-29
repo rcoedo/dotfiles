@@ -344,6 +344,7 @@ alias dc "docker-compose"
 alias kb "kubectl"
 alias d  "docker"
 alias mk "mkdir -p"
+alias ta "tmux attach-session"
 #+END_SRC
 
 * Travel
