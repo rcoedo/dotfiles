@@ -69,10 +69,12 @@ __add_to_path $EXENV_ROOT/bin
 __add_to_path $EXENV_ROOT/shims
 exenv rehash
 
-set -x PYENV_ROOT $HOME/.pyenv
-__add_to_path $PYENV_ROOT/bin
-__add_to_path $PYENV_ROOT/shims
-pyenv rehash
+# set -x PYENV_ROOT $HOME/.pyenv
+# __add_to_path $PYENV_ROOT/bin
+# __add_to_path $PYENV_ROOT/shims
+# pyenv rehash
+status --is-interactive; and source (pyenv init -|psub)
+status --is-interactive; and source (pyenv virtualenv-init -|psub)
 
 set -x GOPATH $HOME/Workspace
 __add_to_path $GOPATH/bin
