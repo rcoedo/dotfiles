@@ -10,7 +10,7 @@ local key = Spacebar.new {
    prefix = "cmd-return",
    bindings = {
       {"i", "intellij", function() window.launchOrFocus("IntelliJ IDEA") end},
-      {"a", "atom", function() window.launchOrFocus("Atom") end},
+      {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
       {"c", "chrome", function() window.launchOrSwitch("Google Chrome") end},
