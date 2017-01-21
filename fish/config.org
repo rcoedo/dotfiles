@@ -42,8 +42,9 @@ set -gx CDPATH . "$HOME/Workspace"
 set -gx HOMEBREW_NO_ANALYTICS 1
 set -gx BREW_CELLAR "/usr/local/Cellar"
 
-set -x JAVA_HOME (/usr/libexec/java_home)
-__add_to_path $JAVA_HOME/bin
+set -x JENV_ROOT $HOME/.jenv
+__add_to_path $JENV_ROOT/bin
+__add_to_path $JENV_ROOT/shims
 
 set -x TOMCATS $HOME/Workspace/tomcats
 set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
@@ -56,7 +57,7 @@ set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 # set -x MANPATH /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/help/man /usr/local/share/man /usr/share/man /opt/x11/sha
 
 set -gx RBENV_ROOT /usr/local/var/rbenv
-#__add_to_path $HOME/.rbenv/bin
+__add_to_path $HOME/.rbenv/bin
 status --is-interactive; and . (rbenv init -|psub)
 
 set -x NDENV_ROOT $HOME/.ndenv
@@ -69,12 +70,10 @@ __add_to_path $EXENV_ROOT/bin
 __add_to_path $EXENV_ROOT/shims
 exenv rehash
 
-# set -x PYENV_ROOT $HOME/.pyenv
-# __add_to_path $PYENV_ROOT/bin
-# __add_to_path $PYENV_ROOT/shims
-# pyenv rehash
+set -x PYENV_ROOT $HOME/.pyenv
+__add_to_path $PYENV_ROOT/bin
 status --is-interactive; and source (pyenv init -|psub)
-status --is-interactive; and source (pyenv virtualenv-init -|psub)
+# status --is-interactive; and source (pyenv virtualenv-init -|psub)
 
 set -x GOPATH $HOME/Workspace
 __add_to_path $GOPATH/bin
