@@ -956,10 +956,27 @@
 
       (add-hook 'web-mode-hook
                 #'(lambda ()
+                    (setq web-mode-auto-quote-style nil)
                     (setq web-mode-attr-indent-offset 2)
                     (setq web-mode-markup-indent-offset 2)
                     (setq web-mode-css-indent-offset 2)
                     (setq web-mode-code-indent-offset 2)))
+#+END_SRC
+** CSS
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package css-mode
+    :mode "\\.css\\'"
+    :init
+    (progn
+      (defun rcoedo/css-mode/bindings ()
+        (rcoedo/evil-leader/set-mode-keys 'css-mode
+                                          '(("f" helm-css-scss))))
+
+      (defun rcoedo/css-mode/hook ()
+        (rcoedo/css-mode/bindings)
+        (setq css-indent-offset 2))
+
+      (add-hook 'css-mode-hook 'rcoedo/css-mode/hook)))
 #+END_SRC
 
 ** SCSS
@@ -972,8 +989,12 @@
         (rcoedo/evil-leader/set-mode-keys 'scss-mode
                                           '(("f" helm-css-scss))))
 
+      (defun rcoedo/scss-mode/hook ()
+        (rcoedo/scss-mode/bindings)
+        (setq css-indent-offset 2))
+
       (setq scss-compile-at-save nil)
-      (add-hook 'scss-mode-hook 'rcoedo/scss-mode/bindings)))
+      (add-hook 'scss-mode-hook 'rcoedo/scss-mode/hook)))
 #+END_SRC
 
 ** Rainbow mode

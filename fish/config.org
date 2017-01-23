@@ -56,9 +56,13 @@ set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 # set fish_user_paths /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin
 # set -x MANPATH /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/help/man /usr/local/share/man /usr/share/man /opt/x11/sha
 
-set -gx RBENV_ROOT /usr/local/var/rbenv
-__add_to_path $HOME/.rbenv/bin
-status --is-interactive; and . (rbenv init -|psub)
+set -gx RBENV_ROOT $HOME/.rbenv
+__add_to_path $RBENV_ROOT/bin
+status --is-interactive; and source (rbenv init -|psub)
+
+set -gx LUAENV_ROOT $HOME/.luaenv
+__add_to_path $LUAENV_ROOT/bin
+status --is-interactive; and source (luaenv init -|psub)
 
 set -x NDENV_ROOT $HOME/.ndenv
 __add_to_path $NDENV_ROOT/bin
