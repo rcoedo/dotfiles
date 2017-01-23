@@ -40,6 +40,7 @@ set -gx GIT_EDITOR "vim"
 set -gx GREP_OPTIONS "--color=auto"
 set -gx CDPATH . "$HOME/Workspace"
 set -gx HOMEBREW_NO_ANALYTICS 1
+set -gx HOMEBREW_NO_GITHUB_API 1
 set -gx BREW_CELLAR "/usr/local/Cellar"
 
 set -x JENV_ROOT $HOME/.jenv
@@ -151,6 +152,24 @@ set fish_color_command "green"
 
 ** Functions
 #+BEGIN_SRC fish :tangle yes
+  function fbrew
+      if test (count $argv) = 1
+          brew search $argv[1] | __fuzzy_find | read tempvar
+          if [ $tempvar ]
+              brew install $tempvar
+          end
+      end
+  end
+
+  function fcask
+      if test (count $argv) = 1
+          brew cask search $argv[1] | grep -v "==>" | __fuzzy_find | read tempvar
+          if [ $tempvar ]
+              brew cask install $tempvar
+          end
+      end
+  end
+
   function icd
       tree --noreport -d -i -L 1 $CDPATH | grep -v '\(Users\|\.\)' | __fuzzy_find | read tempvar
       if [ $tempvar ]
