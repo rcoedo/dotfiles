@@ -4,6 +4,10 @@
 * Global settings
 ** Helpers
 #+BEGIN_SRC fish :tangle yes
+  function __hostname
+    echo (hostname|cut -d . -f 1)
+  end
+
   function __add_to_path
       if test (count $argv) = 1
           set -gx PATH $argv[1] $PATH
@@ -28,6 +32,14 @@
       complete -C\"$command \$cmd\";
     )"
   end
+
+  function __elenore
+    test (__hostname) = "elenore"
+  end
+
+  function __layla
+    test (__hostname) = "layla"
+  end
 #+END_SRC
 
 ** Environment
@@ -43,44 +55,62 @@ set -gx HOMEBREW_NO_ANALYTICS 1
 set -gx HOMEBREW_NO_GITHUB_API 1
 set -gx BREW_CELLAR "/usr/local/Cellar"
 
-set -x JENV_ROOT $HOME/.jenv
-__add_to_path $JENV_ROOT/bin
-__add_to_path $JENV_ROOT/shims
+set -gx TOMCATS $HOME/Workspace/tomcats
+set -gx CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 
-set -x TOMCATS $HOME/Workspace/tomcats
-set -x CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
+if __elenore
+  set -gx ANDROID_HOME /Volumes/SD/android-sdk
+  __add_to_path $ANDROID_HOME/platform-tools
+end
 
-#set -x ANDROID_HOME $HOME/Library/Android/sdk
-#__add_to_path $ANDROID_HOME/platform-tools
+if test -e $HOME/.jenv
+  set -gx JENV_ROOT $HOME/.jenv
+  __add_to_path $JENV_ROOT/bin
+  __add_to_path $JENV_ROOT/shims
+end
 
-# Google cloud
-# set fish_user_paths /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin
-# set -x MANPATH /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/help/man /usr/local/share/man /usr/share/man /opt/x11/sha
+if test -e $HOME/.rbenv
+  set -gx RBENV_ROOT $HOME/.rbenv
+  __add_to_path $RBENV_ROOT/bin
+  status --is-interactive; and source (rbenv init -|psub)
+end
 
-set -gx RBENV_ROOT $HOME/.rbenv
-__add_to_path $RBENV_ROOT/bin
-status --is-interactive; and source (rbenv init -|psub)
+if test -e $HOME/.luaenv
+  set -gx LUAENV_ROOT $HOME/.luaenv
+  __add_to_path $LUAENV_ROOT/bin
+  status --is-interactive; and source (luaenv init -|psub)
+end
 
-set -gx LUAENV_ROOT $HOME/.luaenv
-__add_to_path $LUAENV_ROOT/bin
-status --is-interactive; and source (luaenv init -|psub)
 
-set -x NDENV_ROOT $HOME/.ndenv
-__add_to_path $NDENV_ROOT/bin
-__add_to_path $NDENV_ROOT/shims
-ndenv rehash
+if test -e $HOME/.ndenv
+  set -gx NDENV_ROOT $HOME/.ndenv
+  __add_to_path $NDENV_ROOT/bin
+  __add_to_path $NDENV_ROOT/shims
+  ndenv rehash
+end
 
-set -x EXENV_ROOT $HOME/.exenv
-__add_to_path $EXENV_ROOT/bin
-__add_to_path $EXENV_ROOT/shims
-exenv rehash
+if test -e $HOME/.exenv
+  set -gx EXENV_ROOT $HOME/.exenv
+  __add_to_path $EXENV_ROOT/bin
+  __add_to_path $EXENV_ROOT/shims
+  exenv rehash
+end
 
-set -x PYENV_ROOT $HOME/.pyenv
-__add_to_path $PYENV_ROOT/bin
-status --is-interactive; and source (pyenv init -|psub)
-# status --is-interactive; and source (pyenv virtualenv-init -|psub)
+if test -e $HOME/.pyenv
+  set -gx PYENV_ROOT $HOME/.pyenv
+  __add_to_path $PYENV_ROOT/bin
+  status --is-interactive; and source (pyenv init -|psub)
+  status --is-interactive; and source (pyenv virtualenv-init -|psub)
+end
 
-set -x GOPATH $HOME/Workspace
+
+if test -e $HOME/.trabe
+  set -gx TRABE_ROOT $HOME/.trabe/trabe
+  __add_to_path $TRABE_ROOT/bin
+  status --is-interactive; and trabe init - | source
+end
+
+set -gx GOPATH $HOME/Workspace
 __add_to_path $GOPATH/bin
 
 #set -x TEXPATH /usr/texbin
@@ -327,31 +357,8 @@ function gg
 end
 #+END_SRC
 * Docker
-** Helpers
-#+BEGIN_SRC fish :tangle yes
-function __update_docker_host
-	sudo sed -i '' '/[[:space:]]docker\.local$/d' /etc/hosts
-	set -x DOCKER_IP (echo $DOCKER_HOST | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
-    if [ $DOCKER_IP ]
-	    sudo /bin/bash -c "echo \"$DOCKER_IP	docker.local\" >> /etc/hosts"
-    end
-end
-#+END_SRC
-
 ** Functions
 #+BEGIN_SRC fish :tangle yes
-function dml
-    if test (count $argv) = 1
-        docker-machine env $argv[1] | source
-        set -gx DOCKER_TLS_VERIFY $DOCKER_TLS_VERIFY
-        set -gx DOCKER_CERT_PATH $DOCKER_CERT_PATH
-        set -gx DOCKER_HOST $DOCKER_HOST
-        __update_docker_host
-    else
-        echo "Usage: dml <machine name>"
-    end
-end
-
 function dr
     if test (count $argv) = 2
         docker run --rm -t -i -v (bash -c "echo \$(cd $argv[2] && pwd)"):/volume -w /volume $argv[1] /bin/bash
@@ -363,17 +370,9 @@ end
 
 ** Aliases
 #+BEGIN_SRC fish :tangle yes
-alias dm "docker-machine"
 alias dc "docker-compose"
 alias kb "kubectl"
 alias d  "docker"
 alias mk "mkdir -p"
 alias ta "tmux attach-session"
-#+END_SRC
-
-* Travel
-#+BEGIN_SRC fish :tangle yes
-  set -gx TRABE_ROOT $HOME/.trabe/trabe
-  __add_to_path $TRABE_ROOT/bin
-  status --is-interactive; and trabe init - | source
 #+END_SRC
