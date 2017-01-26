@@ -1,6 +1,6 @@
 # Tmux configuration
 This configuration uses [tpm](https://github.com/tmux-plugins/tpm) as plugin manager. To a working clipboard in osx
-it is recommended to also install the brew package `reattach-to-user-namespace`.
+sierra it is recommended to also install the brew package `reattach-to-user-namespace`.
 
 ## Installation
 ```
