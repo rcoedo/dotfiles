@@ -39,10 +39,11 @@ set -gx CDPATH . "$HOME/Workspace"
 set -gx HOMEBREW_NO_ANALYTICS 1
 set -gx HOMEBREW_NO_GITHUB_API 1
 set -gx BREW_CELLAR "/usr/local/Cellar"
-
+set -gx GHQ_ROOT "$HOME/Workspace/src"
 set -gx TOMCATS $HOME/Workspace/tomcats
 set -gx CATALINA_HOME $TOMCATS/apache-tomcat-8.0.29
 
+# Do something with all this env stuff
 if __elenore
   set -gx ANDROID_HOME /Volumes/SD/android-sdk
   __add_to_path $ANDROID_HOME/platform-tools
@@ -98,11 +99,14 @@ end
 set -gx GOPATH $HOME/Workspace
 __add_to_path $GOPATH/bin
 
-#set -x TEXPATH /usr/texbin
-#__add_to_path $TEXPATH
+if test -e /usr/texbin
+  set -gx TEXPATH /usr/texbin
+  __add_to_path $TEXPATH
+end
 
 eval (direnv hook fish)
 
+# Move to prompt-fish
 set fish_greeting ""
 set fish_color_command "green"
 
@@ -166,6 +170,7 @@ function v
     echo -e (set_color blue) "lua\t" (set_color normal) (luaenv version | awk '{print $1}')
 end
 
+# Move to keybindings stuff
 function fish_user_key_bindings
     bind \eb 'prevd; commandline -f repaint'
     bind \eu 'cd ..; commandline -f repaint'
@@ -176,15 +181,7 @@ function fish_user_key_bindings
     bind \ew '__fuzzy_ghq; commandline -f repaint'
 end
 
-alias vim   "nvim"
-alias vlc   "/opt/homebrew-cask/Caskroom/vlc/2.2.1/VLC.app/Contents/MacOS/VLC"
-alias wtr   "curl -4 wttr.in"
-alias atmux "tmux -L atom"
-alias tx "tmuxinator"
-alias bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
-alias gh "cd $GHQ_ROOT/github.com/rcoedo"
-alias miex "iex -S mix"
-
+# Move to ranger-fish
 function ranger-cd
     set tempfile '/tmp/ranger-cd'
     ranger --choosedir=$tempfile (pwd)
@@ -197,20 +194,10 @@ function ranger-cd
     rm -f $tempfile
 end
 
-alias r     "ranger"
-alias rr    "ranger-cd"
-
+# Move to fuzzy-fish
 function igitbranch
     git branch | __fuzzy_find | xargs git checkout
 end
-
-function igitbranch
-    git branch | __fuzzy_find | xargs git checkout
-end
-
-alias g "git"
-
-set -x GHQ_ROOT "$HOME/Workspace/src"
 
 function dr
     if test (count $argv) = 2
@@ -220,6 +207,16 @@ function dr
     end
 end
 
+# Move to alias file
+alias vim   "nvim"
+alias wtr   "curl -4 wttr.in"
+alias tx "tmuxinator"
+alias bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
+alias gh "cd $GHQ_ROOT/github.com/rcoedo"
+alias miex "iex -S mix"
+alias r     "ranger"
+alias rr    "ranger-cd"
+alias g "git"
 alias dc "docker-compose"
 alias kb "kubectl"
 alias d  "docker"
