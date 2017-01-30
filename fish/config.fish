@@ -169,11 +169,11 @@ end
 function fish_user_key_bindings
     bind \eb 'prevd; commandline -f repaint'
     bind \eu 'cd ..; commandline -f repaint'
-    bind \cr 'ihistory; commandline -f repaint'
-    bind \eo 'ips; commandline -f repaint'
-    bind \ep 'ifind; commandline -f repaint'
-    bind \ec 'ircd; commandline -f repaint'
-    bind \ew 'ighq; commandline -f repaint'
+    bind \cr '__fuzzy_history; commandline -f repaint'
+    bind \eo '__fuzzy_ps; commandline -f repaint'
+    bind \ep '__fuzzy_file; commandline -f repaint'
+    bind \ec '__fuzzy_rcd; commandline -f repaint'
+    bind \ew '__fuzzy_ghq; commandline -f repaint'
 end
 
 alias vim   "nvim"
@@ -212,27 +212,6 @@ alias g "git"
 
 set -x GHQ_ROOT "$HOME/Workspace/src"
 
-function ighq
-    ghq list | __fuzzy_find | read tempvar
-    if test (count $tempvar) -gt 0
-        cd (ghq root)/$tempvar
-    end
-end
-
-function gg
-    if test (count $argv) = 1
-      if test (echo $argv[1] | grep -o "/" | wc -l | tr -d " ") = "2"
-            set -l __repository (echo $argv[1] | cut -d"/" -f 2-)
-            set -l __hub (echo $argv[1] | cut -d"/" -f 1)
-            if test $__hub = "bb"
-                  ghq get git@bitbucket.org:$__repository.git
-            end
-      else
-            ghq get -p $argv[1]
-      end
-   end
-end
-
 function dr
     if test (count $argv) = 2
         docker run --rm -t -i -v (bash -c "echo \$(cd $argv[2] && pwd)"):/volume -w /volume $argv[1] /bin/bash
@@ -246,3 +225,8 @@ alias kb "kubectl"
 alias d  "docker"
 alias mk "mkdir -p"
 alias ta "tmux attach-session"
+alias gg "__ghq_get"
+alias ibrew "__fuzzy_brew"
+alias icask "__fuzzy_cask"
+alias ik "__fuzzy_kill"
+alias icd "__fuzzy_cd"
