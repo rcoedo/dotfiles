@@ -43,6 +43,7 @@
           ns-use-native-fullscreen nil
           mac-option-modifier 'none
           system-uses-terminfo nil
+          ring-bell-function 'ignore
           osx-clipboard-mode t)
 
     (define-key key-translation-map (kbd "˙") (kbd "H-1"))
