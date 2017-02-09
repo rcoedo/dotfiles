@@ -11,6 +11,7 @@ local key = Spacebar.new {
    bindings = {
       {"i", "intellij", function() window.launchOrFocus("IntelliJ IDEA") end},
       {"u", "android studio", function() window.launchOrFocus("Android Studio") end},
+      {"n", "unity", function() window.launchOrFocus("Unity") end},
       {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
       {"h", "hyper", function() window.launchOrFocus("Hyper") end},
