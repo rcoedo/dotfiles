@@ -13,6 +13,7 @@ local key = Spacebar.new {
       {"u", "android studio", function() window.launchOrFocus("Android Studio") end},
       {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
+      {"h", "hyper", function() window.launchOrFocus("Hyper") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
       {"c", "chrome", function() window.launchOrSwitch("Google Chrome") end},
       {"m", "messaging", {
