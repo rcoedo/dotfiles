@@ -32,8 +32,8 @@ end
 
 set -gx LC_ALL "en_US.UTF-8"
 set -gx LANG "en_US.UTF-8"
-set -gx EDITOR "vim"
-set -gx GIT_EDITOR "vim"
+set -gx EDITOR "nvim"
+set -gx GIT_EDITOR "nvim"
 set -gx GREP_OPTIONS "--color=auto"
 set -gx CDPATH . "$HOME/Workspace"
 set -gx HOMEBREW_NO_ANALYTICS 1
