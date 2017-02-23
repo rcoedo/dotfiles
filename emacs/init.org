@@ -340,6 +340,8 @@
 
     (evil-leader/set-leader "<SPC>")
     (evil-leader/set-key
+      "jr"    'jump-to-register
+      "jd"    'dired-jump
       "yy"    'helm-show-kill-ring
       "cc"    'evilnc-comment-or-uncomment-lines
       "cp"    'evilnc-copy-and-comment-lines
