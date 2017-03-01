@@ -308,6 +308,8 @@
         (git-commit-mode       insert)
         (cider-stacktrace-mode insert)))
 
+    (setq evil-want-fine-undo t)
+
     (dolist (mode evil-mode-list)
       (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
 
