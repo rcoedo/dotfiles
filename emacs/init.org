@@ -537,23 +537,11 @@
       (defun rcoedo/yasnippet/hook ()
         (rcoedo/yasnippet/bindings))
 
+      (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"))
+
       (add-hook 'yas-minor-mode-hook 'rcoedo/yasnippet/hook))
     :config
     (yas-global-mode t))
-#+END_SRC
-** Perspective
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package perspective
-    :config
-    (persp-mode-set-prefix-key (kbd "C-j"))
-    (define-key persp-mode-map (kbd "C-j C-n") 'persp-next)
-    (define-key persp-mode-map (kbd "C-j C-p") 'persp-prev)
-    (define-key persp-mode-map (kbd "C-j C-j") 'other-window)
-    (define-key persp-mode-map (kbd "C-j h") 'windmove-left)
-    (define-key persp-mode-map (kbd "C-j j") 'windmove-down)
-    (define-key persp-mode-map (kbd "C-j k") 'windmove-up)
-    (define-key persp-mode-map (kbd "C-j l") 'windmove-right)
-    (persp-mode t))
 #+END_SRC
 ** Expand region
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1055,7 +1043,7 @@
     :init
     (progn
       (defun rcoedo/emmet-mode/bindings ()
-        (define-key emmet-mode-keymap (kbd "C-j") nil))
+        (define-key emmet-mode-keymap (kbd "<C-return>") nil))
 
       (add-hook 'less-css-mode 'emmet-mode)
       (add-hook 'scss-mode-hook 'emmet-mode)
@@ -1202,6 +1190,7 @@
   (define-key global-map (kbd "M-]")           'rcoedo/buffer/next-non-emacs-buffer)
   (define-key global-map (kbd "M-[")           'rcoedo/buffer/previous-non-emacs-buffer)
   (define-key global-map (kbd "M-q")           'rcoedo/eshell/projectile-eshell-popup)
+  (define-key global-map (kbd "M-i")           'yas-insert-snippet)
   (define-key global-map (kbd "M-s")           'helm-projectile-ag)
   (define-key global-map (kbd "M-t")           'helm-projectile-find-file)
   (define-key global-map (kbd "M-p")           'helm-ghq-list)

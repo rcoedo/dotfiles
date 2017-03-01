@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: react-function-component
+# key: r/fcomp
+# --
+
+const $1 = ({$2}) => (
+  $3
+);

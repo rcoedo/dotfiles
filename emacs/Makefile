@@ -6,10 +6,13 @@ install:
 	cp $(EMACS_TARGET_DIR)/Cask $(EMACS_TARGET_DIR)/Cask.backup
 	cp $(EMACS_TARGET_DIR)/init.org $(EMACS_TARGET_DIR)/init.org.backup
 	cp $(EMACS_TARGET_DIR)/eshell-aliases $(EMACS_TARGET_DIR)/eshell-aliases.backup
+	rm -rf $(EMACS_TARGET_DIR)/snippets.backup
+	mv $(EMACS_TARGET_DIR)/snippets $(EMACS_TARGET_DIR)/snippets.backup
 	# Copy files
 	cp $(EMACS_SOURCE_DIR)/Cask $(EMACS_TARGET_DIR)/Cask
 	cp $(EMACS_SOURCE_DIR)/init.org $(EMACS_TARGET_DIR)/init.org
 	cp $(EMACS_SOURCE_DIR)/eshell-aliases $(EMACS_TARGET_DIR)/eshell-aliases
+	cp -r $(EMACS_SOURCE_DIR)/snippets $(EMACS_TARGET_DIR)/snippets
 	# Tangle the init.org file
 	orgtangle $(EMACS_TARGET_DIR)/init.org
 

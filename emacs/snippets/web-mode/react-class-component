@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: react/class-component
+# key: r/ccomp
+# --
+import React, { Component } from "react";
+
+class $1 extends Component {
+  render() {
+    return (
+      $2
+    );
+  }
+}
+
+export default $1;
