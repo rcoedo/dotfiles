@@ -972,8 +972,8 @@
                         web-mode-code-indent-offset 2)
 
                   (sp-with-modes '(web-mode)
-                                 (sp-local-pair "%" " %" :wrap "C-%")
-                                 (sp-local-pair "<" ">" :wrap "C->"))
+                                 (sp-local-pair "<" nil :actions :rem)
+                                 (sp-local-pair "<%" " %>" :wrap "C-%"))
                   ))))
 #+END_SRC
 ** CSS
