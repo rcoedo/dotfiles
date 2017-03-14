@@ -591,7 +591,7 @@
     (add-hook 'after-init-hook 'global-company-mode)
     (add-hook 'global-company-mode-hook
               #'(lambda ()
-                  (setq company-idle-delay 0
+                  (setq company-idle-delay 1
                         company-dabbrev-downcase nil)
                   (define-key company-active-map (kbd "M-n") nil)
                   (define-key company-active-map (kbd "M-p") nil)
