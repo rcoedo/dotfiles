@@ -34,7 +34,6 @@
   (when (memq window-system '(mac ns))
     (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize)
-    (exec-path-from-shell-copy-env "RBENV_ROOT")
     (exec-path-from-shell-copy-env "GHQ_ROOT")
     (exec-path-from-shell-copy-env "GOPATH")
 
@@ -428,15 +427,6 @@
            (projectile-global-mode)))
 #+END_SRC
 
-*** Rails
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package projectile-rails
-    :require projectile
-    :init
-    (progn
-      (add-hook 'projectile-mode-hook 'projectile-rails-on)))
-#+END_SRC
-
 ** Helm
 *** Helm config
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -519,8 +509,8 @@
             helm-dash-docsets-path "~/.emacs.d/docsets"
             helm-dash-common-docsets (sort
                                       (let (value)
-                                        (dolist (element
-                                                 (directory-files helm-dash-docsets-path nil "\\.docset$" 1)
+                                      (dolist (element
+                                        (directory-files helm-dash-docsets-path nil "\\.docset$" 1)
                                                  value)
                                           (setq value (cons (file-name-sans-extension element) value))))
                                       'string-lessp))))
@@ -528,7 +518,7 @@
 
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package yasnippet
+(req-package yasnippet
     :init
     (progn
       (defun rcoedo/yasnippet/bindings ()
@@ -591,7 +581,7 @@
     (add-hook 'after-init-hook 'global-company-mode)
     (add-hook 'global-company-mode-hook
               #'(lambda ()
-                  (setq company-idle-delay 1
+                  (setq company-idle-delay 0
                         company-dabbrev-downcase nil)
                   (define-key company-active-map (kbd "M-n") nil)
                   (define-key company-active-map (kbd "M-p") nil)
@@ -742,39 +732,6 @@
 ;;      (add-hook 'js2-mode-hook 'rcoedo/js2-mode/hook)))
 #+END_SRC
 
-*** Rjsx
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;  (req-package rjsx-mode :require flycheck
-;;    :mode "\\.jsx?\\'"
-;;    :require flycheck
-;;    :config
-;;    (progn
-;;      (defun rcoedo/rjsx-mode/bindings ()
-;;        (define-key rjsx-mode-map (kbd "M-v") 'babel-repl-send-paragraph)
-;;        (define-key rjsx-mode-map (kbd "<") nil)
-;;        (rcoedo/evil-leader/set-mode-keys
-;;         'rjsx-mode
-;;         '(("<" nil))))
-;;
-;;      (defun rcoedo/rjsx-mode/hook ()
-;;        (rcoedo/rjsx-mode/bindings))
-;;
-;;      (add-hook 'rjsx-mode-hook 'rcoedo/rjsx-mode/hook)))
-#+END_SRC
-
-*** Babel repl
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package babel-repl
-    :require comint
-    :config
-    (progn
-      (add-to-list 'comint-preoutput-filter-functions
-                   (lambda (output)
-                     (replace-regexp-in-string "'use strict'" ""
-                                               (replace-regexp-in-string
-                                                "\033\\[[0-9]+[A-Z]" "" output))))))
-#+END_SRC
-
 ** Clojure
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package cider-repl
@@ -843,27 +800,6 @@
         (rainbow-delimiters-mode t))
 
       (add-hook 'clojure-mode-hook 'rcoedo/clojure-mode/hook)))
-#+END_SRC
-
-** Ruby
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package enh-ruby-mode
-    :mode "\\.rs\\'"
-    :init
-    (progn
-      (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))))
-
-  (req-package robe
-    :require company
-    :init
-    (progn
-      (add-hook 'ruby-mode-hook 'robe-mode)
-      (push 'company-robe company-backends)
-
-      (defun rcoedo/robe/hook ()
-        (if (eq nil (get-buffer "*rails*")) (robe-start "yes")))
-
-      (add-hook 'robe-mode-hook 'rcoedo/robe/hook)))
 #+END_SRC
 
 ** Python
@@ -949,8 +885,8 @@
     ;(add-to-list 'load-path "~/.emacs.d/lisp/")
     ;(load "prettier-js.el")
     ;(require 'prettier-js)
-    ;(setq prettier-args '("--trailing-comma" "true" "--single-quote" "false" "--print-width" "120"))
-
+    ;(setq prettier-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))
+    
     ;(flycheck-add-mode 'javascript-eslint 'web-mode)
     ;(defun rcoedo/web-mode/on-save ()
     ;  (let ((web-mode-cur-language (web-mode-language-at-pos)))
@@ -959,7 +895,7 @@
 
     ;(add-hook 'local-write-file-hooks
     ;          'rcoedo/web-mode/on-save)
-
+    
     (add-hook 'web-mode-hook
               #'(lambda ()
                   (setq web-mode-auto-quote-style nil
@@ -1023,18 +959,6 @@
                                                   web-mode))
       (dolist (mode rainbow-html-colors-major-mode-list)
         (add-hook (intern (format "%s-hook" mode)) 'rainbow-mode))))
-#+END_SRC
-
-** Cc mode
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package cc-mode
-    :defer t
-    :init
-    (progn
-      (defun rcoedo/java-mode/bindings ()
-        (define-key java-mode-map (kbd "M-v") 'rcoedo/java/java-eval-nofocus))
-
-      (add-hook 'java-mode-hook 'rcoedo/java-mode/bindings)))
 #+END_SRC
 
 ** Emmet
