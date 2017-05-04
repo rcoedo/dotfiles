@@ -104,7 +104,7 @@ if test -e /usr/texbin
   __add_to_path $TEXPATH
 end
 
-eval (direnv hook fish)
+direnv hook fish | source
 
 # Move to prompt-fish
 set fish_greeting ""
