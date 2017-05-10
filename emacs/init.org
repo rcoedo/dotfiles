@@ -492,6 +492,21 @@
       #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'below))))))
 #+END_SRC
 
+*** Helm ag
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package helm-ag
+    :config
+    (define-key helm-ag-map   (kbd "<C-return>")
+      #'(lambda ()
+          (interactive)
+          (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'helm-ag--action-find-file 'right)))))
+
+    (define-key helm-ag-map   (kbd "<C-S-return>")
+      #'(lambda ()
+          (interactive)
+          (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'helm-ag--action-find-file 'below))))))
+#+END_SRC
+
 *** Helm dash
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package helm-dash
@@ -886,7 +901,7 @@
     ;(load "prettier-js.el")
     ;(require 'prettier-js)
     ;(setq prettier-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))
-    
+
     ;(flycheck-add-mode 'javascript-eslint 'web-mode)
     ;(defun rcoedo/web-mode/on-save ()
     ;  (let ((web-mode-cur-language (web-mode-language-at-pos)))
@@ -895,7 +910,7 @@
 
     ;(add-hook 'local-write-file-hooks
     ;          'rcoedo/web-mode/on-save)
-    
+
     (add-hook 'web-mode-hook
               #'(lambda ()
                   (setq web-mode-auto-quote-style nil

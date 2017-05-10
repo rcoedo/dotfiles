@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: react/class-component
+# name: react--class-component
 # key: r/ccomp
 # --
 import React, { Component } from "react";
