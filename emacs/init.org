@@ -427,6 +427,16 @@
            (projectile-global-mode)))
 #+END_SRC
 
+** Ivy
+*** Ivy
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package ivy
+  :config
+  (progn (ivy-mode 1)
+         (setq ivy-use-virtual-buffers t
+               ivy-height 25)))
+#+END_SRC
+
 ** Helm
 *** Helm config
 #+BEGIN_SRC emacs-lisp :tangle yes

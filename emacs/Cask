@@ -8,6 +8,7 @@
 (depends-on "clojure-mode")
 (depends-on "company")
 (depends-on "company-anaconda")
+(depends-on "counsel")
 (depends-on "dash")
 (depends-on "direx")
 (depends-on "elixir-mode")
