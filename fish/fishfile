@@ -1,2 +1,9 @@
+rcoedo/anyenv-fish
+rcoedo/direnv-fish
+rcoedo/docker-utils-fish
 rcoedo/fuzzy-fish
 rcoedo/ghq-fish
+rcoedo/host-conf-fish
+rcoedo/kiex-fish
+rcoedo/prompt-fish
+rcoedo/utils-fish

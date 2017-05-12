@@ -458,8 +458,6 @@
     (define-key helm-map   (kbd "<tab>")      'helm-execute-persistent-action)
     (define-key helm-map   (kbd "C-i")        'helm-execute-persistent-action)
     (define-key helm-map   (kbd "C-z")        'helm-select-action)
-    (define-key helm-map   (kbd "C-k")        'helm-previous-source)
-    (define-key helm-map   (kbd "C-j")        'helm-next-source)
 
     (define-key helm-buffer-map     (kbd "<C-backspace>")
       #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (lambda (buffer) (kill-buffer buffer) (helm-mini))))))
