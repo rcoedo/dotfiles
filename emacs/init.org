@@ -267,22 +267,6 @@
     (split-window-vertically (floor (* 0.80 (window-height)))))
 #+END_SRC
 
-** Java
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun rcoedo/java/java-eval-nofocus ()
-    "run current program (that requires no input)"
-    (interactive)
-    (let* ((source (file-name-nondirectory buffer-file-name))
-           (out    (file-name-sans-extension source))
-           (class  (concat out ".class")))
-      (save-buffer)
-      (shell-command (format "rm -f %s" class))
-      (shell-command (format "javac %s" source))
-      (if (file-exists-p class)
-          (shell-command (format "java %s" out) "*scratch*")
-          (shell-command (format "javac %s" source) "*scratch*"))))
-#+END_SRC
-
 * Package settings
 ** Evil
 *** Evil mode
@@ -303,7 +287,6 @@
         (magit-popup-mode      emacs)
         (magit-merge-popup     emacs)
         (magit-revision-mode   emacs)
-        (direx:direx-mode      emacs)
         (git-commit-mode       insert)
         (cider-stacktrace-mode insert)))
 
@@ -1014,21 +997,6 @@
     (popwin-mode 1))
 #+END_SRC
 
-** Direx
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package direx
-    :require popwin projectile
-    :config
-    (push '(direx:direx-mode :position left :width 40 :dedicated t :stick t)
-          popwin:special-display-config)
-    (add-hook 'direx:direx-mode-hook #'(lambda ()
-                                         (setq mode-line-format nil)
-                                         (linum-mode -1)))
-    (global-set-key (kbd "C-x t") #'(lambda ()
-                                      (interactive)
-                                      (direx:find-directory-other-window (projectile-project-root)))))
-#+END_SRC
-
 ** Org mode
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package org
@@ -1109,6 +1077,15 @@
     (progn
       (evil-define-key 'normal eww-mode-map
         (kbd "q") 'quit-window)))
+#+END_SRC
+
+** Dired
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package dired
+    :defer t
+    :config
+    (progn
+      (define-key dired-mode-map (kbd "M-s") nil)))
 #+END_SRC
 
 * TODO Globals
