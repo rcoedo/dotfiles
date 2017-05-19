@@ -102,6 +102,15 @@
 #+END_SRC
 
 * rcoedo
+** Utilities
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun rcoedo/enable-minor-mode (my-pair)
+    "Enable minor mode if it match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+    (if (buffer-file-name)
+        (if (string-match (car my-pair) buffer-file-name)
+        (funcall (cdr my-pair)))))
+#+END_SRC
+
 ** Buffer
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun rcoedo/buffer/rename-current-file ()
@@ -226,43 +235,43 @@
       (funcall fun args)))
 
   (defun rcoedo/window/split-vertically-focus ()
-    "Splits the window vertically and then focus the new window"
+    "Split the window vertically and then focus the new window."
     (interactive)
     (split-window-vertically)
     (other-window 1))
 
   (defun rcoedo/window/split-horizontally-focus ()
-    "Splits the window horizontally and then focus the new window"
+    "Split the window horizontally and then focus the new window."
     (interactive)
     (split-window-horizontally)
     (other-window 1))
 
   (defun rcoedo/window/split-vertically-focus-next-buffer ()
-    "Splits the window vertically, focus the new window and loads next non emacs buffer"
+    "Split the window vertically, focus the new window and load next non Emacs buffer."
     (interactive)
     (rcoedo/window/split-vertically-focus)
     (rcoedo/buffer/next-non-emacs-buffer))
 
   (defun rcoedo/window/split-horizontally-focus-next-buffer ()
-    "Splits the window horizontally, focus the new window and loads next non emacs buffer"
+    "Split the window horizontally, focus the new window and load next non Emacs buffer."
     (interactive)
     (rcoedo/window/split-horizontally-focus)
     (rcoedo/buffer/next-non-emacs-buffer))
 
   (defun rcoedo/window/split-vertically-next-buffer ()
-    "Splits the window vertically and then focus the new window"
+    "Split the window vertically and then focus the new window."
     (interactive)
     (rcoedo/window/split-vertically-focus-next-buffer)
     (other-window -1))
 
   (defun rcoedo/window/split-horizontally-next-buffer ()
-    "Splits the window horizontally and then focus the new window"
+    "Split the window horizontally and then focus the new window."
     (interactive)
     (rcoedo/window/split-horizontally-focus-next-buffer)
     (other-window -1))
 
   (defun rcoedo/window/split-bottom-panel ()
-    "Splits the window vertically to open a bottom panel"
+    "Split the window vertically to open a bottom panel."
     (interactive)
     (split-window-vertically (floor (* 0.80 (window-height)))))
 #+END_SRC
@@ -897,7 +906,7 @@
     (add-to-list 'web-mode-comment-formats '("jsx" . "//" ))
     (add-to-list 'web-mode-comment-formats '("javascript" . "//" ))
 
-    (add-hook 'web-mode-hook 'prettier-mode)
+    (add-hook 'web-mode-hook (lambda () (rcoedo/enable-minor-mode '("\\.jsx?\\'" . prettier-mode))))
     (add-hook 'web-mode-hook
               #'(lambda ()
                   (setq web-mode-auto-quote-style nil
