@@ -45,6 +45,7 @@
 (depends-on "org")
 (depends-on "osx-clipboard")
 (depends-on "pallet")
+(depends-on "prettier-js" :git "https://github.com/prettier/prettier.git" :files ("editors/emacs/prettier-js.el"))
 (depends-on "projectile")
 (depends-on "pyenv-mode")
 (depends-on "rainbow-delimiters")

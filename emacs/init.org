@@ -861,11 +861,20 @@
       (add-hook 'haskell-mode-hook 'rcoedo/haskell/hook)))
 #+END_SRC
 
+** Prettier
+#+BEGIN_SRC emacs-lisp :tangle yes
+(req-package prettier-js
+  :init
+  (progn
+    (setq prettier-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120")
+          prettier-target-mode "web-mode")))
+#+END_SRC
+
 ** Web
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package web-mode
   :defer t
-  :require flycheck
+  :require flycheck prettier-js
   :init
   (add-to-list 'auto-mode-alist '("\\.phtml\\'"     . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -888,20 +897,7 @@
     (add-to-list 'web-mode-comment-formats '("jsx" . "//" ))
     (add-to-list 'web-mode-comment-formats '("javascript" . "//" ))
 
-    ;(add-to-list 'load-path "~/.emacs.d/lisp/")
-    ;(load "prettier-js.el")
-    ;(require 'prettier-js)
-    ;(setq prettier-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))
-
-    ;(flycheck-add-mode 'javascript-eslint 'web-mode)
-    ;(defun rcoedo/web-mode/on-save ()
-    ;  (let ((web-mode-cur-language (web-mode-language-at-pos)))
-    ;    (if (string= web-mode-cur-language "jsx")
-    ;        (prettier))))
-
-    ;(add-hook 'local-write-file-hooks
-    ;          'rcoedo/web-mode/on-save)
-
+    (add-hook 'web-mode-hook 'prettier-mode)
     (add-hook 'web-mode-hook
               #'(lambda ()
                   (setq web-mode-auto-quote-style nil
