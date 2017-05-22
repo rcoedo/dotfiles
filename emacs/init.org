@@ -105,14 +105,16 @@
 ** Utilities
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun rcoedo/enable-minor-mode (my-pair)
-    "Enable minor mode if it match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+    "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
     (if (buffer-file-name)
         (if (string-match (car my-pair) buffer-file-name)
         (funcall (cdr my-pair)))))
-#+END_SRC
 
-** Buffer
-#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun rcoedo/window/call-other (fun position)
+    (lambda (args)
+      (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
+      (funcall fun args)))
+
   (defun rcoedo/buffer/rename-current-file ()
     "Renames current buffer and file it is visiting."
     (interactive)
@@ -227,54 +229,6 @@
   (defun rcoedo/eshell/x ()
     (kill-buffer-and-window))
 #+END_SRC
-** Window
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun rcoedo/window/call-other (fun position)
-    (lambda (args)
-      (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
-      (funcall fun args)))
-
-  (defun rcoedo/window/split-vertically-focus ()
-    "Split the window vertically and then focus the new window."
-    (interactive)
-    (split-window-vertically)
-    (other-window 1))
-
-  (defun rcoedo/window/split-horizontally-focus ()
-    "Split the window horizontally and then focus the new window."
-    (interactive)
-    (split-window-horizontally)
-    (other-window 1))
-
-  (defun rcoedo/window/split-vertically-focus-next-buffer ()
-    "Split the window vertically, focus the new window and load next non Emacs buffer."
-    (interactive)
-    (rcoedo/window/split-vertically-focus)
-    (rcoedo/buffer/next-non-emacs-buffer))
-
-  (defun rcoedo/window/split-horizontally-focus-next-buffer ()
-    "Split the window horizontally, focus the new window and load next non Emacs buffer."
-    (interactive)
-    (rcoedo/window/split-horizontally-focus)
-    (rcoedo/buffer/next-non-emacs-buffer))
-
-  (defun rcoedo/window/split-vertically-next-buffer ()
-    "Split the window vertically and then focus the new window."
-    (interactive)
-    (rcoedo/window/split-vertically-focus-next-buffer)
-    (other-window -1))
-
-  (defun rcoedo/window/split-horizontally-next-buffer ()
-    "Split the window horizontally and then focus the new window."
-    (interactive)
-    (rcoedo/window/split-horizontally-focus-next-buffer)
-    (other-window -1))
-
-  (defun rcoedo/window/split-bottom-panel ()
-    "Split the window vertically to open a bottom panel."
-    (interactive)
-    (split-window-vertically (floor (* 0.80 (window-height)))))
-#+END_SRC
 
 * Package settings
 ** Evil
@@ -336,10 +290,21 @@
       "jr"    'jump-to-register
       "jd"    'dired-jump
       "yy"    'helm-show-kill-ring
+
       "cc"    'evilnc-comment-or-uncomment-lines
       "cp"    'evilnc-copy-and-comment-lines
       "cb"    'evilnc-comment-or-uncomment-paragraphs
       "co"    'evilnc-comment-operator
+
+      "fK"    'kill-buffer-and-window
+      "fk"    'kill-this-buffer
+      "fd"    'rcoedo/buffer/delete-current-file
+      "fr"    'rcoedo/buffer/rename-current-file
+
+      "ss"    'helm-projectile-ag
+      "st"    'helm-projectile-find-file
+      "sf"    'helm-find-files
+      "sp"    'helm-ghq-list
       "sh"    'evil-search-highlight-persist-remove-all)
 
     (setq rcoedo/evil-leader/mode-leader "<SPC>")
@@ -1125,10 +1090,6 @@
   (define-key global-map (kbd "M-s")           'helm-projectile-ag)
   (define-key global-map (kbd "M-t")           'helm-projectile-find-file)
   (define-key global-map (kbd "M-p")           'helm-ghq-list)
-  (define-key global-map (kbd "C-x C-r")       'rcoedo/buffer/rename-current-file)
-  (define-key global-map (kbd "C-x C-d")       'rcoedo/buffer/delete-current-file)
-  (define-key global-map (kbd "C-x C-k")       'kill-this-buffer)
-  (define-key global-map (kbd "C-x k")         'kill-buffer-and-window)
   (define-key global-map (kbd "M-/")           'evilnc-comment-or-uncomment-lines)
 
   (define-key global-map (kbd "H-1") 'windmove-left)
