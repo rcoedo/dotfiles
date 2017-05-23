@@ -277,47 +277,6 @@
     (define-key evil-motion-state-map (kbd "<up>")    nil))
 #+END_SRC
 
-*** Evil leader
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (req-package evil-leader
-    :require evil
-    :config
-    (global-evil-leader-mode)
-    (setq evil-leader/in-all-states t)
-
-    (evil-leader/set-leader "<SPC>")
-    (evil-leader/set-key
-      "jr"    'jump-to-register
-      "jd"    'dired-jump
-      "yy"    'helm-show-kill-ring
-
-      "cc"    'evilnc-comment-or-uncomment-lines
-      "cp"    'evilnc-copy-and-comment-lines
-      "cb"    'evilnc-comment-or-uncomment-paragraphs
-      "co"    'evilnc-comment-operator
-
-      "fK"    'kill-buffer-and-window
-      "fk"    'kill-this-buffer
-      "fd"    'rcoedo/buffer/delete-current-file
-      "fr"    'rcoedo/buffer/rename-current-file
-
-      "ss"    'helm-projectile-ag
-      "st"    'helm-projectile-find-file
-      "sf"    'helm-find-files
-      "sp"    'helm-ghq-list
-      "sh"    'evil-search-highlight-persist-remove-all)
-
-    (setq rcoedo/evil-leader/mode-leader "<SPC>")
-
-    (defun rcoedo/evil-leader/prefix-mode-binding (element)
-      (cons (concat rcoedo/evil-leader/mode-leader (car element)) (cdr element)))
-
-    (defun rcoedo/evil-leader/set-mode-keys (mode bindings)
-      (let ((prefixed-bindings (-map 'rcoedo/evil-leader/prefix-mode-binding bindings))
-            (set-key '(lambda (binding) (evil-leader/set-key-for-mode mode (car binding) (car (cdr binding))))))
-        (-map set-key prefixed-bindings))))
-#+END_SRC
-
 *** Evil surround
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package evil-surround
@@ -330,11 +289,12 @@
 
 *** Evil search highlight persist
 #+BEGIN_SRC emacs-lisp :tangle yes
-(req-package evil-search-highlight-persist
-  :require evil
-  :config
-  (global-evil-search-highlight-persist t)
-  (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00"))))))
+  (req-package evil-search-highlight-persist
+    :require evil
+    :config
+    (global-evil-search-highlight-persist t)
+    (define-key evil-normal-state-map (kbd "<backspace>") 'evil-search-highlight-persist-remove-all)
+    (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00"))))))
 #+END_SRC
 
 *** Evil matchit
@@ -367,6 +327,42 @@
     :init
     (progn
       (add-hook 'org-mode-hook 'evil-org-mode)))
+#+END_SRC
+
+** General
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (req-package general
+    :config
+    (progn
+      (general-create-definer rcoedo--leader-key
+                              :states '(normal insert emacs)
+                              :prefix "SPC"
+                              :non-normal-prefix "C-SPC")
+
+      (general-create-definer rcoedo--mode-key
+                              :states '(normal insert emacs)
+                              :prefix "<SPC>m"
+                              :non-normal-prefix "<C-SPC>m")
+
+      (rcoedo--leader-key "jr"    'jump-to-register
+                          "jd"    'dired-jump
+                          "yy"    'helm-show-kill-ring
+
+                          "cc"    'evilnc-comment-or-uncomment-lines
+                          "cp"    'evilnc-copy-and-comment-lines
+                          "cb"    'evilnc-comment-or-uncomment-paragraphs
+                          "co"    'evilnc-comment-operator
+
+                          "bK"    'kill-buffer-and-window
+                          "bk"    'kill-this-buffer
+                          "bd"    'rcoedo/buffer/delete-current-file
+                          "br"    'rcoedo/buffer/rename-current-file
+
+                          "fs"    'helm-projectile-ag
+                          "ft"    'helm-projectile-find-file
+                          "ff"    'helm-find-files
+                          "fp"    'helm-ghq-list
+                          "fb"    'helm-mini)))
 #+END_SRC
 
 ** Projectile
@@ -405,23 +401,12 @@
   (req-package helm
     :require helm-config
     :config
-    ;; (setq helm-ff-skip-boring-files t
-    ;;       helm-boring-file-regexp-list   '("\\.git$" "\\.hg$" "\\.svn$" "\\.CVS$" "\\._darcs$" "\\.la$" "\\.o$" "~$" "\\.so$" "\\.a$"
-    ;;                                        "\\.elc$" "\\.fas$" "\\.fasl$" "\\.pyc$" "\\.pyo$" "bower_components" "node_modules")
-    ;;       helm-boring-buffer-regexp-list '("\\` " "\\*helm" "\\*helm-mode" "\\*Echo Area" "\\*tramp" "\\*Minibuf" "\\*epc"))
-
-    ;; (advice-add 'helm-ff-filter-candidate-one-by-one
-    ;;             :around (lambda (fcn file)
-    ;;                       (unless (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)
-    ;;                         (funcall fcn file))))
-
     (setq helm-exit-idle-delay 0)
     (helm-autoresize-mode t)
     (helm-mode t)
 
     (define-key global-map (kbd "C-x C-f")    'helm-find-files)
     (define-key global-map (kbd "M-x")        'helm-M-x)
-    (define-key global-map (kbd "C-SPC")      'helm-mini)
     (define-key helm-map   (kbd "<tab>")      'helm-execute-persistent-action)
     (define-key helm-map   (kbd "C-i")        'helm-execute-persistent-action)
     (define-key helm-map   (kbd "C-z")        'helm-select-action)
@@ -681,35 +666,11 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
 (req-package guide-key
   :config
-  (setq guide-key/guide-key-sequence '("<SPC>" "C-c")
+  (setq guide-key/guide-key-sequence '("<SPC>" "<C-SPC>" "C-c")
         guide-key/recursive-key-sequence-flag t
         guide-key/idle-delay 0.1
         guide-key/popup-window-position 'bottom)
   (guide-key-mode t))
-#+END_SRC
-
-** Javascript
-*** Js2
-#+BEGIN_SRC emacs-lisp :tangle yes
-;;  (req-package js2-mode :require flycheck
-;;    :mode "\\.js\\'"
-;;    :config
-;;    (progn
-;;      (defun rcoedo/js2-mode/bindings ()
-;;        (define-key js2-mode-map (kbd "M-v") 'babel-repl-send-paragraph)
-;;        (rcoedo/evil-leader/set-mode-keys
-;;         'js2-mode
-;;         '(("oe" js2-mode-toggle-element)
-;;           ("ow" js2-mode-toggle-warnings-and-errors)
-;;           ("oc" js2-mode-toggle-hide-comments)
-;;           ("of" js2-mode-toggle-hide-functions)
-;;           ("oa" js2-mode-show-all))))
-;;
-;;      (defun rcoedo/js2-mode/hook ()
-;;        (rcoedo/js2-mode/bindings))
-;;
-;;      (setq-default js2-basic-offset 2)
-;;      (add-hook 'js2-mode-hook 'rcoedo/js2-mode/hook)))
 #+END_SRC
 
 ** Clojure
@@ -892,35 +853,25 @@
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package css-mode
     :mode "\\.css\\'"
-    :init
+    :require general helm-css-scss
+    :config
     (progn
-      (defun rcoedo/css-mode/bindings ()
-        (rcoedo/evil-leader/set-mode-keys 'css-mode
-                                          '(("f" helm-css-scss))))
-
-      (defun rcoedo/css-mode/hook ()
-        (rcoedo/css-mode/bindings)
-        (setq css-indent-offset 2))
-
-      (add-hook 'css-mode-hook 'rcoedo/css-mode/hook)))
+      (setq css-indent-offset 2)
+      (rcoedo--mode-key :keymaps 'css-mode-map
+                        "f" 'helm-css-scss)))
 #+END_SRC
 
 ** SCSS
 #+BEGIN_SRC emacs-lisp :tangle yes
   (req-package scss-mode
     :mode "\\.scss\\'"
-    :init
+    :require general helm-css-scss
+    :config
     (progn
-      (defun rcoedo/scss-mode/bindings ()
-        (rcoedo/evil-leader/set-mode-keys 'scss-mode
-                                          '(("f" helm-css-scss))))
-
-      (defun rcoedo/scss-mode/hook ()
-        (rcoedo/scss-mode/bindings)
-        (setq css-indent-offset 2))
-
-      (setq scss-compile-at-save nil)
-      (add-hook 'scss-mode-hook 'rcoedo/scss-mode/hook)))
+      (setq scss-compile-at-save nil
+            css-indent-offset 2)
+      (rcoedo--mode-key :keymaps 'css-mode-map
+                        "f" 'helm-css-scss)))
 #+END_SRC
 
 ** Rainbow mode
@@ -972,15 +923,11 @@
   (req-package org
     :config
     (progn
-      (defun rcoedo/org-mode/bindings ()
-        (rcoedo/evil-leader/set-mode-keys 'org-mode
-         '(("t" org-babel-tangle)))
-
-        (define-key org-mode-map (kbd "<S-right>") nil)
-        (define-key org-mode-map (kbd "<S-left>")  nil)
-        (define-key org-mode-map (kbd "C-'")       nil))
-
-      (add-hook 'org-mode-hook 'rcoedo/org-mode/bindings)))
+      (rcoedo--mode-key :keymaps 'org-mode-map
+                        "t" 'org-babel-tangle)
+      (define-key org-mode-map (kbd "<S-right>") nil)
+      (define-key org-mode-map (kbd "<S-left>")  nil)
+      (define-key org-mode-map (kbd "C-'")       nil)))
 #+END_SRC
    
 ** Transpose frame
@@ -1090,6 +1037,7 @@
   (define-key global-map (kbd "M-s")           'helm-projectile-ag)
   (define-key global-map (kbd "M-t")           'helm-projectile-find-file)
   (define-key global-map (kbd "M-p")           'helm-ghq-list)
+  (define-key global-map (kbd "M-b")           'helm-mini)
   (define-key global-map (kbd "M-/")           'evilnc-comment-or-uncomment-lines)
 
   (define-key global-map (kbd "H-1") 'windmove-left)
