@@ -801,7 +801,7 @@
 (req-package prettier-js
   :init
   (progn
-    (setq prettier-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120")
+    (setq prettier-js--prettier-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120")
           prettier-target-mode "web-mode")))
 #+END_SRC
 
