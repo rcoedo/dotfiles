@@ -13,6 +13,7 @@ export GOPATH=$HOME/Workspace
 __add_to_path $GOPATH/bin
 
 alias vim "nvim"
+alias hm "history --merge"
 alias wtr "curl -4 wttr.in"
 alias tx "tmuxinator"
 alias bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
