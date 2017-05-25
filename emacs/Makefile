@@ -10,12 +10,10 @@ install:
 	mv $(EMACS_TARGET_DIR)/snippets $(EMACS_TARGET_DIR)/snippets.backup
 	# Copy files
 	cp $(EMACS_SOURCE_DIR)/Cask $(EMACS_TARGET_DIR)/Cask
-	cp $(EMACS_SOURCE_DIR)/init.org $(EMACS_TARGET_DIR)/init.org
+	cp $(EMACS_SOURCE_DIR)/init.el $(EMACS_TARGET_DIR)/init.el
 	cp $(EMACS_SOURCE_DIR)/eshell-aliases $(EMACS_TARGET_DIR)/eshell-aliases
 	cp -r $(EMACS_SOURCE_DIR)/snippets $(EMACS_TARGET_DIR)/snippets
-	# Tangle the init.org file
-	orgtangle $(EMACS_TARGET_DIR)/init.org
 
 get:
 	cp $(EMACS_TARGET_DIR)/Cask $(EMACS_SOURCE_DIR)/Cask
-	cp $(EMACS_TARGET_DIR)/init.org $(EMACS_SOURCE_DIR)/init.org
+	cp $(EMACS_TARGET_DIR)/init.el $(EMACS_SOURCE_DIR)/init.el
