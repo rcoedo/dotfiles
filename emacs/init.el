@@ -1,4 +1,6 @@
-;;; -*- lexical-binding: t -*-
+;;; init.el -- -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
 
 
 ;; Added by Package.el.  This must come before configurations of
@@ -27,7 +29,6 @@
   (exec-path-from-shell-copy-env "GOPATH")
 
   (setq mac-command-modifier 'meta
-        mac-option-key-is-meta nil
         ns-use-native-fullscreen nil
         mac-option-modifier 'none
         system-uses-terminfo nil
@@ -76,18 +77,49 @@
   (set-face-italic 'font-lock-comment-face t)
   (setq-default line-spacing 3))
 
-(defun rcoedo/enable-minor-mode (my-pair)
+(defun rcoedo--split-right-other-window ()
+  "Split window right and move to that window."
+  (interactive)
+  (split-window-right)
+  (other-window 1))
+
+(defun rcoedo--split-below-other-window ()
+  "Split window below and move to that window."
+  (interactive)
+  (split-window-below)
+  (other-window 1))
+
+(defun rcoedo--switch-to-buffer-right (buffer-or-name)
+  "Split window right and then switch to buffer BUFFER-OR-NAME."
+  (interactive)
+  (rcoedo--split-right-other-window)
+  (switch-to-buffer buffer-or-name))
+
+(defun rcoedo--switch-to-buffer-below (buffer-or-name)
+  "Split window right and then switch to buffer BUFFER-OR-NAME."
+  (interactive)
+  (rcoedo--split-below-other-window)
+  (switch-to-buffer buffer-or-name))
+
+(defun rcoedo--find-file-right (filename)
+  "Split window right and then visit file FILENAME."
+  (interactive)
+  (rcoedo--split-right-other-window)
+  (find-file filename))
+
+(defun rcoedo--find-file-below (filename)
+  "Split window below and then visit file FILENAME."
+  (interactive)
+  (rcoedo--split-below-other-window)
+  (find-file filename))
+
+(defun rcoedo--enable-minor-mode (my-pair)
   "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
   (if (buffer-file-name)
       (if (string-match (car my-pair) buffer-file-name)
       (funcall (cdr my-pair)))))
 
-(defun rcoedo/window/call-other (fun position)
-  (lambda (args)
-    (select-window (if (eq position 'below) (split-window-below) (split-window-right)))
-    (funcall fun args)))
-
-(defun rcoedo/buffer/rename-current-file ()
+(defun rcoedo--rename-current-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
   (let ((name (buffer-name))
@@ -104,7 +136,7 @@
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
 
-(defun rcoedo/buffer/delete-current-file ()
+(defun rcoedo--delete-current-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
   (let ((filename (buffer-file-name))
@@ -117,41 +149,41 @@
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
-(defun rcoedo/buffer/emacs-buffer-p (name)
+(defun rcoedo--emacs-buffer-p (name)
   "Returns true if the name matches an Emacs buffer."
   (string-match-p "\\*.*\\*" name))
 
-(defun rcoedo/buffer/next-non-emacs-buffer (&optional original)
+(defun rcoedo--next-non-emacs-buffer (&optional original)
   "Similar to next-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
   (interactive)
   (let ((tmp-orig (or original (buffer-name))))
     (next-buffer)
     (if (and
          (not (eq (buffer-name) tmp-orig))
-         (rcoedo/buffer/emacs-buffer-p (buffer-name)))
-        (rcoedo/buffer/next-non-emacs-buffer tmp-orig))))
+         (rcoedo--emacs-buffer-p (buffer-name)))
+        (rcoedo--next-non-emacs-buffer tmp-orig))))
 
-(defun rcoedo/buffer/previous-non-emacs-buffer (&optional original)
+(defun rcoedo--previous-non-emacs-buffer (&optional original)
   "Similar to previous-buffer, but ignores emacs buffer such as *scratch*, *messages* etc."
   (interactive)
   (let ((tmp-orig (or original (buffer-name))))
     (previous-buffer)
     (if (and
          (not (eq (buffer-name) tmp-orig))
-         (rcoedo/buffer/emacs-buffer-p (buffer-name)))
-        (rcoedo/buffer/previous-non-emacs-buffer tmp-orig))))
+         (rcoedo--emacs-buffer-p (buffer-name)))
+        (rcoedo--previous-non-emacs-buffer tmp-orig))))
 
-(defun rcoedo/eshell/maybe-bol ()
-      (interactive)
-      (let ((p (point)))
-        (eshell-bol)
-        (if (= p (point))
-            (beginning-of-line))))
+(defun rcoedo--eshell-maybe-bol ()
+  "Move cursor to beginning of line."
+  (interactive)
+  (let ((p (point)))
+    (eshell-bol)
+    (if (= p (point))
+        (beginning-of-line))))
 
-(defun rcoedo/eshell/eshell-here ()
-  "Opens up a new shell in the directory associated with the
-current buffer's file. The eshell is renamed to match that
-directory to make multiple eshell windows easier."
+(defun rcoedo--eshell-here ()
+  "Open up a new shell in the dir associated with the current buffer file.
+The eshell is renamed to match that directory to make multiple eshell windows easier."
   (interactive)
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name))
@@ -166,13 +198,20 @@ directory to make multiple eshell windows easier."
     (insert (concat "ls"))
     (eshell-send-input)))
 
-(defun rcoedo/eshell/clear ()
+(defun rcoedo--eshell-prompt ()
+  "Build a prompt string for eshell."
+  (concat (getenv "USER") "@" (system-name) ":"
+          (abbreviate-file-name (eshell/pwd))
+          (if (= (user-uid) 0) " # " " $ ")))
+
+(defun rcoedo--eshell-clear ()
   "Clear the eshell buffer."
   (let ((inhibit-read-only t))
     (erase-buffer)
     (eshell-send-input)))
 
-(defun rcoedo/eshell/projectile-eshell-popup ()
+(defun rcoedo--projectile-eshell-popup ()
+  "Open an eshell popup in the projectile root."
   (interactive)
   (let* ((height (/ (window-total-height) 3))
          (name   (projectile-project-root)))
@@ -182,96 +221,139 @@ directory to make multiple eshell windows easier."
     (rename-buffer (concat "*eshell: " name "*"))
 
     (cd (projectile-project-root)))
-  (rcoedo/eshell/clear)
+  (rcoedo--eshell-clear)
   (insert "ls")
   (eshell-send-input))
 
-(defun rcoedo/eshell/projectile-eshell ()
+(defun rcoedo--helm-kill-buffers ()
+  "Kill helm buffer candidates and stay open."
   (interactive)
-  (eshell "new")
-  (rename-buffer (concat "*eshell: " name "*"))
-  (cd (projectile-project-root))
-  (rcoedo/eshell/clear)
-  (insert "ls")
-  (eshell-send-input))
+  (with-helm-alive-p
+    (helm-attrset 'helm-kill-buffers 'helm-kill-marked-buffers)
+    (helm-execute-persistent-action 'helm-kill-buffers)
+    (helm-force-update)))
 
-(defun rcoedo/eshell/x ()
-  (kill-buffer-and-window))
+(defun rcoedo--helm-switch-buffer-below ()
+  "Run switch to buffer below action."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'rcoedo--switch-to-buffer-below)))
+
+(defun rcoedo--helm-switch-buffer-right ()
+  "Run switch to buffer right action."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'rcoedo--switch-to-buffer-right)))
+
+(defun rcoedo--helm-find-file-below ()
+  "Run find file below action."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'rcoedo--find-file-below)))
+
+(defun rcoedo--helm-find-file-right ()
+  "Run find file right action."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'rcoedo--find-file-right)))
+
+(defun rcoedo--helm-ag-find-file-right ()
+  "Split window right and run helm-ag--action-find-file."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action #'(lambda (args)
+                                    (rcoedo--split-right-other-window)
+                                    (funcall 'helm-ag--action-find-file args)))))
+
+(defun rcoedo--helm-ag-find-file-below ()
+  "Split window below and run helm-ag--action-find-file."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action #'(lambda (args)
+                                    (rcoedo--split-below-other-window)
+                                    (funcall 'helm-ag--action-find-file args)))))
 
 (req-package evil
   :require general
   :config
-  (evil-mode t)
+  (progn
+    (evil-mode t)
 
-  (setq evil-want-fine-undo t)
+    (setq evil-want-fine-undo t)
 
-  (defvar evil-mode-list
-    '((eshell-mode           insert)
-      (comint-mode           insert)
-      (alchemist-iex-mode    insert)
-      (magit-mode            emacs)
-      (magit-status          emacs)
-      (magit-log-mode        emacs)
-      (magit-commit-mode     emacs)
-      (magit-diff-mode       emacs)
-      (magit-popup-mode      emacs)
-      (magit-merge-popup     emacs)
-      (magit-revision-mode   emacs)
-      (git-commit-mode       insert)
-      (cider-stacktrace-mode insert)))
+    (defvar evil-mode-list
+      '((eshell-mode           insert)
+        (comint-mode           insert)
+        (alchemist-iex-mode    insert)
+        (magit-mode            emacs)
+        (magit-status          emacs)
+        (magit-log-mode        emacs)
+        (magit-commit-mode     emacs)
+        (magit-diff-mode       emacs)
+        (magit-popup-mode      emacs)
+        (magit-merge-popup     emacs)
+        (magit-revision-mode   emacs)
+        (git-commit-mode       insert)
+        (cider-stacktrace-mode insert)))
 
-  (dolist (mode evil-mode-list)
-    (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
+    (dolist (mode evil-mode-list)
+      (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
 
-  (nmap "\C-p" nil
-        "<tab>" 'other-window)
+    (nmap "C-p"    nil
+          "<tab>" 'other-window)
 
-  (imap "\C-a" 'beginning-of-line
-        "\C-e" 'end-of-line
-        "\C-f" 'forward-char
-        "\C-b" 'backward-char
-        "\C-d" 'delete-char
-        "\C-n" 'next-line
-        "\C-p" 'previous-line
-        "\C-w" 'evil-delete
-        "\C-k" 'kill-line)
+    (imap "C-a" 'beginning-of-line
+          "C-e" 'end-of-line
+          "C-f" 'forward-char
+          "C-b" 'backward-char
+          "C-d" 'delete-char
+          "C-n" 'next-line
+          "C-p" 'previous-line
+          "C-w" 'evil-delete
+          "C-k" 'kill-line)
 
-  (mmap "<right>" nil
-        "<left>"  nil
-        "<down>"  nil
-        "<up>"    nil))
+    (mmap "<right>" nil
+          "<left>"  nil
+          "<down>"  nil
+          "<up>"    nil)))
 
 (req-package evil-surround
-  :require evil
+  :require evil general
   :config
-  (global-evil-surround-mode t)
-  (define-key evil-visual-state-map "s" 'evil-surround-region)
-  (define-key evil-normal-state-map "s" 'evil-surround-edit))
+  (progn
+    (global-evil-surround-mode t)
+    (vmap "s" 'evil-surround-region)
+    (nmap "s" 'evil-surround-edit)))
 
 (req-package evil-search-highlight-persist
-  :require evil
+  :require evil general
   :config
-  (global-evil-search-highlight-persist t)
-  (define-key evil-normal-state-map (kbd "<backspace>") 'evil-search-highlight-persist-remove-all)
-  (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00"))))))
+  (progn
+    (global-evil-search-highlight-persist t)
+    (nmap "<backspace>" 'evil-search-highlight-persist-remove-all)
+    (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00")))))))
 
 (req-package evil-matchit
-  :require evil
+  :require evil general
   :config
   (progn
     (global-evil-matchit-mode t)))
 
 (req-package evil-lisp-state
+  :require evil general
   :init
   (progn
     (setq evil-lisp-state-global t
           evil-lisp-state-enter-lisp-state-on-command nil))
   :config
   (progn
+    (evil-lisp-state-leader "L")
+
     (add-to-list 'evil-lisp-state-major-modes 'clojure-mode)
-    (define-key evil-lisp-state-map (kbd "o") 'lisp-state-insert-sexp-after)
-    (define-key evil-lisp-state-map (kbd "O") 'lisp-state-insert-sexp-before)
-    (evil-lisp-state-leader "L")))
+
+    (general-define-key :keymaps 'evil-lisp-state
+                        "o" 'lisp-state-insert-sexp-after
+                        "O" 'lisp-state-insert-sexp-before)))
 
 (req-package evil-org
   :init
@@ -298,159 +380,136 @@ directory to make multiple eshell windows easier."
                         "C-." (kbd "C-c")
                         "\e"  (kbd "C-g"))
 
-    (general-define-key "M-]" 'rcoedo/buffer/next-non-emacs-buffer
-                        "M-[" 'rcoedo/buffer/previous-non-emacs-buffer
-                        "M-q" 'rcoedo/eshell/projectile-eshell-popup
-                        "M-i" 'yas-insert-snippet
-                        "M-s" 'helm-projectile-ag
-                        "M-t" 'helm-projectile-find-file
-                        "M-p" 'helm-ghq-list
-                        "M-b" 'helm-mini
-                        "M-/" 'evilnc-comment-or-uncomment-lines
-                        "H-1" 'windmove-left
-                        "H-2" 'windmove-down
-                        "H-3" 'windmove-up
-                        "H-4" 'windmove-right
-                        "\C-x2" (lambda () (interactive)(split-window-below) (other-window 1))
-                        "\C-x3" (lambda () (interactive)(split-window-right) (other-window 1)))
+    (general-define-key "M-]"     'rcoedo--next-non-emacs-buffer
+                        "M-["     'rcoedo--previous-non-emacs-buffer
+                        "M-q"     'rcoedo--projectile-eshell-popup
+                        "M-i"     'yas-insert-snippet
+                        "M-s"     'helm-projectile-ag
+                        "M-t"     'helm-projectile-find-file
+                        "M-p"     'helm-ghq-list
+                        "M-b"     'helm-mini
+                        "C-x C-f" 'helm-find-files
+                        "M-D"     'helm-dash-at-point
+                        "M-d"     'helm-dash
+                        "M-x"     'helm-M-x
+                        "M-/"     'evilnc-comment-or-uncomment-lines
+                        "H-1"     'windmove-left
+                        "H-2"     'windmove-down
+                        "H-3"     'windmove-up
+                        "H-4"     'windmove-right
+                        "\C-x2"   'rcoedo--split-below-other-window
+                        "\C-x3"   'rcoedo--split-right-other-window)
 
-    (rcoedo--leader-key "jr"    'jump-to-register
-                        "jd"    'dired-jump
-                        "yy"    'helm-show-kill-ring
+    (rcoedo--leader-key "jr"      'jump-to-register
+                        "jd"      'dired-jump
+                        "yy"      'helm-show-kill-ring
 
-                        "cc"    'evilnc-comment-or-uncomment-lines
-                        "cp"    'evilnc-copy-and-comment-lines
-                        "cb"    'evilnc-comment-or-uncomment-paragraphs
-                        "co"    'evilnc-comment-operator
+                        "cc"      'evilnc-comment-or-uncomment-lines
+                        "cp"      'evilnc-copy-and-comment-lines
+                        "cb"      'evilnc-comment-or-uncomment-paragraphs
+                        "co"      'evilnc-comment-operator
 
-                        "bK"    'kill-buffer-and-window
-                        "bk"    'kill-this-buffer
-                        "bd"    'rcoedo/buffer/delete-current-file
-                        "br"    'rcoedo/buffer/rename-current-file
+                        "bK"      'kill-buffer-and-window
+                        "bk"      'kill-this-buffer
+                        "bd"      'rcoedo--delete-current-file
+                        "br"      'rcoedo--rename-current-file
 
-                        "fs"    'helm-projectile-ag
-                        "ft"    'helm-projectile-find-file
-                        "ff"    'helm-find-files
-                        "fp"    'helm-ghq-list
-                        "fb"    'helm-mini)))
+                        "fs"      'helm-projectile-ag
+                        "ft"      'helm-projectile-find-file
+                        "ff"      'helm-find-files
+                        "fp"      'helm-ghq-list
+                        "fb"      'helm-mini)))
 
 (req-package projectile
   :require ghq
   :config
-  (progn (setq projectile-enable-caching t
-               projectile-switch-project-action 'projectile-dired
-               projectile-ignored-project-function #'(lambda (project-root) 'true)
-               projectile-completion-system 'helm
-               projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
-               projectile-project-root-files ())
-         (projectile-global-mode)))
+  (progn
+    (setq projectile-enable-caching t
+          projectile-switch-project-action 'projectile-dired
+          projectile-ignored-project-function #'(lambda (project-root) 'true)
+          projectile-completion-system 'helm
+          projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
+          projectile-project-root-files ())
+
+    (projectile-global-mode)))
 
 (req-package ivy
   :config
-  (progn (ivy-mode 1)
-         (setq ivy-use-virtual-buffers t
-               ivy-height 25)))
-
-(req-package helm-config)
+  (progn
+    ;; (ivy-mode 1)                        ;
+    (setq ivy-use-virtual-buffers t
+          ivy-height 25)))
 
 (req-package helm
-  :require helm-config
+  :require general
   :config
-  (setq helm-exit-idle-delay 0)
-  (helm-autoresize-mode t)
-  (helm-mode t)
+  (progn
+    (setq helm-exit-idle-delay 0)
+    (helm-autoresize-mode t)
+    (helm-mode t)
 
-  (define-key global-map (kbd "C-x C-f")    'helm-find-files)
-  (define-key global-map (kbd "M-x")        'helm-M-x)
-  (define-key helm-map   (kbd "<tab>")      'helm-execute-persistent-action)
-  (define-key helm-map   (kbd "C-i")        'helm-execute-persistent-action)
-  (define-key helm-map   (kbd "C-z")        'helm-select-action)
+    (general-define-key :keymaps 'helm-map
+                        "<tab>"  'helm-execute-persistent-action
+                        "C-i"    'helm-execute-persistent-action
+                        "C-j"    'helm-select-action)
 
-  (define-key helm-buffer-map     (kbd "<C-backspace>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (lambda (buffer) (kill-buffer buffer) (helm-mini))))))
+    (general-define-key :keymaps 'helm-buffer-map
+                        "<C-backspace>" 'rcoedo--helm-kill-buffers
+                        "<C-return>"    'rcoedo--helm-switch-buffer-right
+                        "<C-S-return>"  'rcoedo--helm-switch-to-buffer-below)
 
-  (define-key helm-buffer-map     (kbd "<C-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'switch-to-buffer 'right)))))
-
-  (define-key helm-buffer-map     (kbd "<C-S-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'switch-to-buffer 'below)))))
-
-  (define-key helm-find-files-map (kbd "<C-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'right)))))
-
-  (define-key helm-find-files-map (kbd "<C-S-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'below))))))
+    (general-define-key :keymaps 'helm-find-files-map
+                        "<C-return>"   'rcoedo--helm-find-file-right
+                        "<C-S-return>" 'rcoedo--helm-find-file-below)))
 
 (req-package helm-projectile
-  :require projectile helm grep
+  :require general projectile helm grep
   :config
-  (helm-projectile-toggle 1)
-  (setq projectile-switch-project-action 'projectile-dired) ;; Override helm-projectile-on setting
-  (define-key projectile-command-map (kbd "s s") 'helm-projectile-ag)
-  (define-key projectile-command-map (kbd "p") 'helm-ghq-list)
-  (define-key helm-projectile-find-file-map (kbd "<C-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'right)))))
-  (define-key helm-projectile-find-file-map (kbd "<C-S-return>")
-    #'(lambda () (interactive) (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'find-file 'below))))))
+  (progn
+    (helm-projectile-toggle 1)
+
+    (setq projectile-switch-project-action 'projectile-dired)
+
+    (genera-define-key :keymaps 'projectile-command-map
+                       "s s" 'helm-projectile-ag
+                       "p" 'helm-ghq-list)
+
+    (general-define-key :keymaps 'helm-projectile-find-file-map
+                        "<C-return>" 'rcoedo--helm-find-file-right
+                        "<C-S-return>" 'rcoedo--helm-find-file-below)))
 
 (req-package helm-ag
+  :require general helm
   :config
-  (define-key helm-ag-map   (kbd "<C-return>")
-    #'(lambda ()
-        (interactive)
-        (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'helm-ag--action-find-file 'right)))))
-
-  (define-key helm-ag-map   (kbd "<C-S-return>")
-    #'(lambda ()
-        (interactive)
-        (with-helm-alive-p (helm-exit-and-execute-action (rcoedo/window/call-other 'helm-ag--action-find-file 'below))))))
+  (progn
+    (general-define-key :keymaps 'helm-ag-map
+                        "<C-return>"   'rcoedo--helm-ag-find-file-right
+                        "<C-S-return>" 'rcoedo--helm-ag-find-file-below)))
 
 (req-package helm-dash
   :require helm
   :config
   (progn
-    (defun rcoedo/helm-dash/setup-docsets (hook docsets)
-      (add-hook hook `(lambda ()
-                        (setq-local helm-dash-common-docsets ',docsets)
-                        (setq helm-current-buffer (current-buffer)))))
-
-    (define-key global-map (kbd "M-d") 'helm-dash-at-point)
-    (define-key global-map (kbd "M-D") 'helm-dash)
     (setq helm-dash-browser-func 'eww
           helm-dash-docsets-path "~/.emacs.d/docsets"
-          helm-dash-common-docsets (sort
-                                    (let (value)
-                                    (dolist (element
-                                      (directory-files helm-dash-docsets-path nil "\\.docset$" 1)
-                                               value)
-                                        (setq value (cons (file-name-sans-extension element) value))))
-                                    'string-lessp))))
+          helm-dash-common-docsets (helm-dash-installed-docsets))))
 
 (req-package yasnippet
-    :init
-    (progn
-      (defun rcoedo/yasnippet/bindings ()
-        (define-key yas-minor-mode-map (kbd "<tab>") nil)
-        (define-key yas-minor-mode-map (kbd "TAB") nil)
-        (define-key yas-minor-mode-map (kbd "<C-return>") 'yas-expand))
-
-      (defun rcoedo/yasnippet/hook ()
-        (rcoedo/yasnippet/bindings))
-
-      (setq-default yas-snippet-dirs '("~/.emacs.d/snippets"))
-
-      (add-hook 'yas-minor-mode-hook 'rcoedo/yasnippet/hook))
-    :config
-    (yas-global-mode t))
-
-(req-package expand-region
-  :require evil
+  :require general
   :config
   (progn
-    (define-key evil-normal-state-map "-" 'er/expand-region)))
+    (yas-global-mode t)
+    (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+    (general-define-key :keymaps 'yas-minor-mode-map
+                        "<tab>"       nil
+                        "TAB"         nil
+                        "<C-return>" 'yas-expand)))
 
-(req-package eval-in-repl
-  :defer t)
+(req-package expand-region
+  :require evil general
+  :config
+  (progn
+    (nmap "-" 'er/expand-region)))
 
 (req-package ghq)
 
@@ -458,86 +517,86 @@ directory to make multiple eshell windows easier."
   :mode "\\.md\\'")
 
 (req-package comint
-  :defer t
-  :require evil
+  :require evil general
   :config
-  (add-hook 'comint-mode-hook
-            #'(lambda ()
-                (evil-define-key 'insert comint-mode-map
-                  (kbd "C-r") 'helm-comint-input-ring
-                  (kbd "C-p") 'comint-previous-input
-                  (kbd "C-n") 'comint-next-input))))
+  (progn
+    (general-define-key :states  'insert
+                        :keymaps 'comint-modemap
+                        "C-r"    'helm-comint-input-ring
+                        "C-p"    'comint-previous-input
+                        "C-n"    'comint-next-input)))
 
 (req-package company
-  :defer t
-  :require helm-company
+  :require general helm-company
   :config
-  (add-hook 'after-init-hook 'global-company-mode)
-  (add-hook 'global-company-mode-hook
-            #'(lambda ()
-                (setq company-idle-delay 0
-                      company-dabbrev-downcase nil)
-                (define-key company-active-map (kbd "M-n") nil)
-                (define-key company-active-map (kbd "M-p") nil)
-                (define-key company-active-map (kbd "\C-n") 'company-select-next)
-                (define-key company-active-map (kbd "\C-p") 'company-select-previous))))
+  (progn
+    (setq company-idle-delay 0
+          company-dabbrev-downcase nil)
+
+    (general-define-key :keymaps 'company-active-map
+                        "M-n"   nil
+                        "M-p"   nil
+                        "C-n"  'company-select-next
+                        "C-p"  'company-select-previous)
+
+    (global-company-mode)))
 
 (req-package eshell
-  :defer t
-  :require evil
+  :require evil general company
   :config
-  (setq eshell-history-size 1000
-        eshell-aliases-file (concat user-emacs-directory "eshell-aliases")
-        eshell-prompt-function #'(lambda nil (concat (getenv "USER") "@" (system-name) ":"
-                                                     (abbreviate-file-name (eshell/pwd))
-                                                     (if (= (user-uid) 0) " # " " $ "))))
+  (progn
+    (setq eshell-history-size 1000
+          eshell-aliases-file "~/.emacs.d/eshell-aliases"
+          eshell-prompt-function 'rcoedo--eshell-prompt)
 
-  (add-hook 'eshell-mode-hook #'(lambda ()
-                                  (evil-define-key 'insert eshell-mode-map
-                                    (kbd "C-a") 'rcoedo/eshell/maybe-bol
-                                    (kbd "C-r") 'helm-eshell-history
-                                    (kbd "C-p") 'eshell-previous-matching-input-from-input
-                                    (kbd "C-n") 'eshell-next-matching-input-from-input)
+    (general-define-key :states  'insert
+                        :keymaps 'eshell-mode-map
+                        "C-a"    'rcoedo--eshell-maybe-bol
+                        "C-r"    'helm-eshell-history
+                        "C-p"    'eshell-previous-matching-input-from-input
+                        "C-n"    'eshell-next-matching-input-from-input)
 
-                                  (company-mode -1)
+    (company-mode -1)
 
-                                  (defalias 'ff 'find-file)
-                                  (defalias 'd  'dired))))
+    (defalias 'ff 'find-file)
+    (defalias 'd  'dired)
+    (defalias 'x  'kill-buffer-and-window)))
 
 (req-package flycheck
-  :defer t
-  :init
-  (add-hook 'after-init-hook 'global-flycheck-mode))
+  :config
+  (progn
+    (global-flycheck-mode)))
 
 (req-package elixir-mode
   :defer t
   :require smartparens
   :config
-  (setq blink-matching-delay 0.1)
+  (progn
+    (setq blink-matching-delay 0.1)
 
-  (add-hook 'elixir-mode-hook 'alchemist-mode)
+    (add-hook 'elixir-mode-hook 'alchemist-mode)
 
-  (defun my-elixir-do-end-close-action (id action context)
-    (when (eq action 'insert)
-      (newline-and-indent)
-      (forward-line -1)
-      (indent-according-to-mode)))
+    (defun my-elixir-do-end-close-action (id action context)
+      (when (eq action 'insert)
+        (newline-and-indent)
+        (forward-line -1)
+        (indent-according-to-mode)))
 
-  (sp-with-modes '(elixir-mode)
-    (sp-local-pair "->" "end"
-                   :when '(("RET"))
-                   :post-handlers '(:add my-elixir-do-end-close-action)
-                   :actions '(insert)))
+    (sp-with-modes '(elixir-mode)
+      (sp-local-pair "->" "end"
+                     :when '(("RET"))
+                     :post-handlers '(:add my-elixir-do-end-close-action)
+                     :actions '(insert))
 
-  (sp-with-modes '(elixir-mode)
-    (sp-local-pair "do" "end"
-                   :when '(("SPC" "RET"))
-                   :post-handlers '(:add my-elixir-do-end-close-action)
-                   :actions '(insert))))
+      (sp-local-pair "do" "end"
+                     :when '(("SPC" "RET"))
+                     :post-handlers '(:add my-elixir-do-end-close-action)
+                     :actions '(insert)))))
 
 (req-package smartparens-config
   :config
-  (smartparens-global-mode))
+  (progn
+    (smartparens-global-mode)))
 
 (req-package tex-mode
   :defer t
@@ -581,7 +640,7 @@ directory to make multiple eshell windows easier."
   :defer t
   :init
   (progn
-    (defun rcoedo/cider-repl/helm-cider-history ()
+    (defun rcoedo--cider-repl-helm-cider-history ()
       "Show `cider-input-history` in `helm`."
       (interactive)
       (helm :sources (helm-build-sync-source "Helm Cider History"
@@ -593,37 +652,37 @@ directory to make multiple eshell windows easier."
             :buffer "*helm cider history*"
             :resume 'noresume))
 
-    (defun rcoedo/cider-repl/bindings ()
+    (defun rcoedo--cider-repl-bindings ()
       (define-key cider-repl-mode-map (kbd "M-p") nil)
       (define-key cider-repl-mode-map (kbd "M-n") nil)
       (define-key cider-repl-mode-map (kbd "M-r") nil)
 
       (evil-define-key 'insert cider-repl-mode-map
-        (kbd "C-r") 'rcoedo/cider-repl/helm-cider-history
+        (kbd "C-r") 'rcoedo--cider-repl-helm-cider-history
         (kbd "C-p") 'cider-repl-previous-input
         (kbd "C-n") 'cider-repl-next-input))
 
-    (defun rcoedo/cider-repl/hook ()
+    (defun rcoedo--cider-repl-hook ()
       (setq cider-cljs-lein-repl
                "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
-      (rcoedo/cider-repl/bindings))
+      (rcoedo--cider-repl-bindings))
 
-    (add-hook 'cider-repl-mode-hook 'rcoedo/cider-repl/hook)))
+    (add-hook 'cider-repl-mode-hook 'rcoedo--cider-repl-hook)))
 
 (req-package cider
   :defer t
   :init
   (progn
-    (defun rcoedo/cider/bindings ()
+    (defun rcoedo--cider-bindings ()
       (define-key cider-mode-map (kbd "M-v") 'cider-eval-defun-at-point))
 
-    (defun rcoedo/cider/hook ()
+    (defun rcoedo--cider-hook ()
       (eldoc-mode t)
-      (rcoedo/cider/bindings))
+      (rcoedo--cider-bindings))
 
-    (add-hook 'cider-mode-hook 'rcoedo/cider/hook)
+    (add-hook 'cider-mode-hook 'rcoedo--cider-hook)
 
-    (defun rcoedo/cider/figwheel-repl ()
+    (defun rcoedo--cider-figwheel-repl ()
       (interactive)
       (save-some-buffers)
       (with-current-buffer (cider-current-repl-buffer)
@@ -638,34 +697,33 @@ directory to make multiple eshell windows easier."
   :mode "\\.clj\\'"
   :config
   (progn
-    (rcoedo/helm-dash/setup-docsets 'clojure-mode-hook '("Clojure"))
-    (defun rcoedo/clojure-mode/hook ()
+    (defun rcoedo--clojure-mode-hook ()
       (rainbow-delimiters-mode t))
 
-    (add-hook 'clojure-mode-hook 'rcoedo/clojure-mode/hook)))
+    (add-hook 'clojure-mode-hook 'rcoedo--clojure-mode-hook)))
 
 (req-package anaconda-mode
   :require company eval-in-repl-python
   :init
   (progn
-    (defun rcoedo/anaconda-mode/bindings ()
+    (defun rcoedo--anaconda-mode-bindings ()
       (define-key python-mode-map (kbd "M-v") 'eir-eval-in-python))
 
-    (defun rcoedo/anaconda-mode/hook ()
+    (defun rcoedo--anaconda-mode-hook ()
       (pyenv-mode t)
       (anaconda-mode t)
       (eldoc-mode t)
-      (rcoedo/anaconda-mode/bindings))
+      (rcoedo--anaconda-mode-bindings))
 
     (add-to-list 'company-backends 'company-anaconda)
-    (add-hook 'python-mode-hook 'rcoedo/anaconda-mode/hook)))
+    (add-hook 'python-mode-hook 'rcoedo--anaconda-mode-hook)))
 
 (req-package
   :mode "\\.hs\\'"
   :commands haskell-mode
   :init
   (progn
-    (defun rcoedo/haskell/bindings ()
+    (defun rcoedo--haskell-bindings ()
       (eval-after-load 'haskell-mode '(progn
                                         (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
                                         (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
@@ -679,7 +737,7 @@ directory to make multiple eshell windows easier."
                                          (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
                                          (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal))))
 
-    (defun rcoedo/haskell/hook ()
+    (defun rcoedo--haskell-hook ()
       (interactive-haskell-mode 1)
       (hindent-mode 1)
       (custom-set-variables
@@ -687,9 +745,9 @@ directory to make multiple eshell windows easier."
        '(haskell-process-auto-import-loaded-modules t)
        '(haskell-process-log t)
        '(haskell-process-type 'cabal-repl))
-      (rcoedo/haskell/bindings))
+      (rcoedo--haskell-bindings))
 
-    (add-hook 'haskell-mode-hook 'rcoedo/haskell/hook)))
+    (add-hook 'haskell-mode-hook 'rcoedo--haskell-hook)))
 
 (req-package prettier-js
   :init
@@ -722,7 +780,7 @@ directory to make multiple eshell windows easier."
     (add-to-list 'web-mode-comment-formats '("jsx" . "//" ))
     (add-to-list 'web-mode-comment-formats '("javascript" . "//" ))
 
-    (add-hook 'web-mode-hook (lambda () (rcoedo/enable-minor-mode '("\\.jsx?\\'" . prettier-mode))))
+    (add-hook 'web-mode-hook (lambda () (rcoedo--enable-minor-mode '("\\.jsx?\\'" . prettier-mode))))
     (add-hook 'web-mode-hook
               #'(lambda ()
                   (setq web-mode-auto-quote-style nil
@@ -774,13 +832,13 @@ directory to make multiple eshell windows easier."
   :require web-mode
   :init
   (progn
-    (defun rcoedo/emmet-mode/bindings ()
+    (defun rcoedo--emmet-mode-bindings ()
       (define-key emmet-mode-keymap (kbd "<C-return>") nil))
 
     (add-hook 'less-css-mode 'emmet-mode)
     (add-hook 'scss-mode-hook 'emmet-mode)
     (add-hook 'web-mode-hook 'emmet-mode))
-    (add-hook 'emmet-mode-hook 'rcoedo/emmet-mode/bindings))
+    (add-hook 'emmet-mode-hook 'rcoedo--emmet-mode-bindings))
 
 (req-package magit
   :bind (("C-c g s"   . magit-status)
@@ -810,39 +868,39 @@ directory to make multiple eshell windows easier."
 (req-package lisp-mode
   :init
   (progn
-    (defun rcoedo/lisp-mode/bindings ()
+    (defun rcoedo--lisp-mode-bindings ()
       (define-key emacs-lisp-mode-map (kbd "M-v") 'eval-defun))
 
-    (defun rcoedo/lisp-mode/hook ()
-      (rcoedo/lisp-mode/bindings)
+    (defun rcoedo--lisp-mode-hook ()
+      (rcoedo--lisp-mode-bindings)
       (rainbow-delimiters-mode t))
 
-    (add-hook 'emacs-lisp-mode-hook 'rcoedo/lisp-mode/hook)))
+    (add-hook 'emacs-lisp-mode-hook 'rcoedo--lisp-mode-hook)))
 
 (req-package octave
   :mode ("\\.m$" . octave-mode)
   :init
   (progn
-    (defun rcoedo/octave-mode/bindings ()
+    (defun rcoedo--octave-mode-bindings ()
       (define-key octave-mode-map (kbd "M-v") 'octave-send-defun))
 
-    (defun rcoedo/octave-mode/hook ()
-      (rcoedo/octave-mode/bindings))
+    (defun rcoedo--octave-mode-hook ()
+      (rcoedo--octave-mode-bindings))
 
-    (add-hook 'octave-mode-hook 'rcoedo/octave-mode/hook)))
+    (add-hook 'octave-mode-hook 'rcoedo--octave-mode-hook)))
 
 (req-package ess-site
   :disabled t
   :mode ("\\.R$" . R-mode)
   :init
   (progn
-    (defun rcoedo/ess-mode/bindings ()
+    (defun rcoedo--ess-mode-bindings ()
       (define-key ess-mode-map (kbd "M-v") 'ess-eval-paragraph-and-step))
 
-    (defun rcoedo/ess-mode/hook ()
-      (rcoedo/ess-mode/bindings))
+    (defun rcoedo--ess-mode-hook ()
+      (rcoedo--ess-mode-bindings))
 
-    (add-hook 'ess-mode-hook 'rcoedo/ess-mode/hook)))
+    (add-hook 'ess-mode-hook 'rcoedo--ess-mode-hook)))
 
 (req-package eww
   :defer t
@@ -857,11 +915,9 @@ directory to make multiple eshell windows easier."
   (progn
     (define-key dired-mode-map (kbd "M-s") nil)))
 
-(put 'dired-find-alternate-file 'disabled nil)
-(put 'erase-buffer 'disabled nil)                 ; Allow the use of erase-buffer
-(windmove-default-keybindings)                    ; Move between windows with shift + arrow keys
-(transient-mark-mode t)                           ; Show the mark as selected
-(global-auto-revert-mode t)                       ; Reload buffers when they change outside emacs
+(put 'erase-buffer 'disabled nil) ;; Allow the use of erase-buffer
+(transient-mark-mode t)           ;; Show the mark as selected
+(global-auto-revert-mode t)       ;; Reload buffers when they change outside emacs
 
 (setq-default c-basic-offset 4
               truncate-lines nil
@@ -871,9 +927,6 @@ directory to make multiple eshell windows easier."
               auto-revert-verbose nil
               tab-width 4
               backup-inhibited t
-              auto-save-default nil
-              rcoedo/layout/layout-list '(rcoedo/layout/three rcoedo/layout/four rcoedo/layout/side-by-side rcoedo/layout/bottom-panel))
-
-(eval-after-load 'undo-tree '(progn (define-key undo-tree-map (kbd "C-/") nil)))
+              auto-save-default nil)
 
 (req-package-finish)
