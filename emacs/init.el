@@ -571,6 +571,13 @@
     (general-define-key :keymaps 'dired-mode-map
                         "M-s" nil)))
 
+(req-package exec-path-from-shell
+  :config
+  (progn
+    (setq exec-path-from-shell-check-startup-files nil)
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-envs '("GHQ_ROOT" "GOPATH"))))
+
 (put 'erase-buffer 'disabled nil) ;; Allow the use of erase-buffer
 (transient-mark-mode t)           ;; Show the mark as selected
 (global-auto-revert-mode t)       ;; Reload buffers when they change outside emacs
@@ -590,11 +597,7 @@
               inhibit-splash-screen t
               menu-bar-mode -1)
 
-(when (memq window-system '(mac ns))
-  (setq exec-path-from-shell-check-startup-files nil)
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-envs '("GHQ_ROOT" "GOPATH"))
-
+(when (memq window-system '(mac ns)) ;; MacOS specific configuration
   (setq mac-command-modifier 'meta
         ns-use-native-fullscreen nil
         mac-option-modifier 'none
@@ -602,10 +605,11 @@
         ring-bell-function 'ignore
         osx-clipboard-mode t)
 
-  (define-key key-translation-map (kbd "˙") (kbd "H-1"))
-  (define-key key-translation-map (kbd "∆") (kbd "H-2"))
-  (define-key key-translation-map (kbd "˚") (kbd "H-3"))
-  (define-key key-translation-map (kbd "¬") (kbd "H-4")))
+  (general-define-key :keymaps 'key-translation-map
+                      "˙"   (kbd "H-1")
+                      "∆"   (kbd "H-2")
+                      "˚"   (kbd "H-3")
+                      "¬"   (kbd "H-4")))
 
 (req-package-finish)
 (custom-set-variables
