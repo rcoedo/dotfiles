@@ -1,12 +1,6 @@
 ;;; init.el -- -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
-
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
 
 (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
@@ -76,6 +70,7 @@
     (general-define-key "M-]"     'rcoedo--next-non-emacs-buffer
                         "M-["     'rcoedo--previous-non-emacs-buffer
                         "M-q"     'rcoedo--projectile-eshell-popup
+                        "M-e"     'eval-expression
                         "M-f"     'flip-frame
                         "M-F"     'flop-frame
                         "M-r"     'rotate-frame-clockwise
@@ -122,6 +117,8 @@
   (progn
     (evil-mode t)
 
+    (evil-select-search-module 'evil-search-module 'evil-search)
+
     (setq evil-want-fine-undo t)
 
     (defvar evil-mode-list
@@ -142,8 +139,10 @@
     (dolist (mode evil-mode-list)
       (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
 
-    (nmap "C-p"    nil
-          "<tab>" 'other-window)
+    (nmap "C-p"          nil
+          "<tab>"       'other-window
+          "<backspace>" 'evil-ex-nohighlight
+          "/"           'swiper)
 
     (imap "C-a" 'beginning-of-line
           "C-e" 'end-of-line
@@ -167,14 +166,6 @@
     (global-evil-surround-mode t)
     (vmap "s" 'evil-surround-region)
     (nmap "s" 'evil-surround-edit)))
-
-(req-package evil-search-highlight-persist
-  :require evil
-  :config
-  (progn
-    (global-evil-search-highlight-persist t)
-    (nmap "<backspace>" 'evil-search-highlight-persist-remove-all)
-    (custom-set-faces '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00")))))))
 
 (req-package evil-matchit
   :require evil
@@ -217,9 +208,13 @@
 (req-package ivy
   :config
   (progn
-    ;; (ivy-mode 1)                        ;
     (setq ivy-use-virtual-buffers t
           ivy-height 25)))
+
+(req-package swiper
+  :config
+  (progn
+    (setq swiper-goto-start-of-match t)))
 
 (req-package helm
   :config
@@ -404,7 +399,7 @@
 
 (req-package which-key
   :config
-  (setq which-key-idle-delay 0.2)
+  (setq which-key-idle-delay 0.5)
 
   (which-key-mode))
 
@@ -485,6 +480,7 @@
       (sp-local-pair "<%" " %>" :wrap "C-%"))
 
     (add-hook 'web-mode-hook #'(lambda ()
+                                 (rainbow-delimiters-mode)
                                  (rcoedo--enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))))))
 
 (req-package css-mode
@@ -569,7 +565,8 @@
   :config
   (progn
     (general-define-key :keymaps 'dired-mode-map
-                        "M-s" nil)))
+                        "M-s" nil)
+    (setq dired-use-ls-dired nil)))
 
 (req-package exec-path-from-shell
   :config
@@ -578,12 +575,13 @@
     (exec-path-from-shell-initialize)
     (exec-path-from-shell-copy-envs '("GHQ_ROOT" "GOPATH"))))
 
-(put 'erase-buffer 'disabled nil) ;; Allow the use of erase-buffer
-(transient-mark-mode t)           ;; Show the mark as selected
-(global-auto-revert-mode t)       ;; Reload buffers when they change outside emacs
-(menu-bar-mode -1)                ;; Hide menu bar
-(scroll-bar-mode -1)              ;; Hide scroll bar
-(tool-bar-mode -1)                ;; Hide tool bar
+(put 'dired-find-alternate-file 'disabled nil) ;; Allow the use of dired-find-alternate-file
+(put 'erase-buffer 'disabled nil)              ;; Allow the use of erase-buffer
+(transient-mark-mode t)                        ;; Show the mark as selected
+(global-auto-revert-mode t)                    ;; Reload buffers when they change outside emacs
+(menu-bar-mode -1)                             ;; Hide menu bar
+(scroll-bar-mode -1)                           ;; Hide scroll bar
+(tool-bar-mode -1)                             ;; Hide tool bar
 
 (setq-default c-basic-offset 4
               truncate-lines nil
@@ -612,17 +610,6 @@
                       "¬"   (kbd "H-4")))
 
 (req-package-finish)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (prettier-js which-key yasnippet web-mode transpose-frame smart-mode-line scss-mode req-package rainbow-mode rainbow-delimiters pyenv-mode pallet osx-clipboard markdown-mode magit lua-mode js2-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode guide-key gruvbox-theme ghq general flycheck-elm fish-mode expand-region exec-path-from-shell evil-surround evil-search-highlight-persist evil-org evil-nerd-commenter evil-matchit evil-lisp-state evil-leader eval-in-repl ess emmet-mode elm-mode dired+ counsel company-anaconda cider alchemist))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-search-highlight-persist-highlight-face ((t (:foreground "white" :background "#718c00")))))
+
+(provide 'init)
+;;; init.el ends here

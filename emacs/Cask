@@ -16,7 +16,6 @@
 (depends-on "evil-matchit")
 (depends-on "evil-nerd-commenter")
 (depends-on "evil-org")
-(depends-on "evil-search-highlight-persist")
 (depends-on "evil-surround")
 (depends-on "exec-path-from-shell")
 (depends-on "expand-region")
