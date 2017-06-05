@@ -43,6 +43,9 @@
     (set-face-italic 'font-lock-comment-face t)
     (setq-default line-spacing 3)))
 
+(req-package dash
+  :force t)
+
 (req-package rcoedo
   :force t)
 
@@ -52,12 +55,12 @@
   (progn
     (general-evil-setup t t)
 
-    (general-create-definer rcoedo--leader-key
+    (general-create-definer rcoedo-leader-key
                             :states '(normal insert emacs)
                             :prefix "SPC"
                             :non-normal-prefix "C-SPC")
 
-    (general-create-definer rcoedo--mode-key
+    (general-create-definer rcoedo-mode-key
                             :states '(normal insert emacs)
                             :prefix "<SPC>m"
                             :non-normal-prefix "<C-SPC>m")
@@ -67,9 +70,9 @@
                         "C-." (kbd "C-c")
                         "\e"  (kbd "C-g"))
 
-    (general-define-key "M-]"     'rcoedo--next-non-emacs-buffer
-                        "M-["     'rcoedo--previous-non-emacs-buffer
-                        "M-q"     'rcoedo--projectile-eshell-popup
+    (general-define-key "M-]"     'rcoedo-next-non-emacs-buffer
+                        "M-["     'rcoedo-previous-non-emacs-buffer
+                        "M-q"     'rcoedo-projectile-eshell-popup
                         "M-e"     'eval-expression
                         "M-f"     'flip-frame
                         "M-F"     'flop-frame
@@ -89,10 +92,30 @@
                         "H-2"     'windmove-down
                         "H-3"     'windmove-up
                         "H-4"     'windmove-right
-                        "\C-x2"   'rcoedo--split-below-other-window
-                        "\C-x3"   'rcoedo--split-right-other-window)
+                        "\C-x2"   'rcoedo-split-below-other-window
+                        "\C-x3"   'rcoedo-split-right-other-window)
 
-    (rcoedo--leader-key "jr"      'jump-to-register
+    (mmap "<right>" nil
+          "<left>"  nil
+          "<down>"  nil
+          "<up>"    nil)
+
+    (nmap "C-p"          nil
+          "<tab>"       'other-window
+          "<backspace>" 'evil-ex-nohighlight
+          "/"           'swiper)
+
+    (imap "C-a" 'beginning-of-line
+          "C-e" 'end-of-line
+          "C-f" 'forward-char
+          "C-b" 'backward-char
+          "C-d" 'delete-char
+          "C-n" 'next-line
+          "C-p" 'previous-line
+          "C-w" 'evil-delete
+          "C-k" 'kill-line)
+
+    (rcoedo-leader-key "jr"      'jump-to-register
                         "jd"      'dired-jump
                         "yy"      'helm-show-kill-ring
 
@@ -103,8 +126,8 @@
 
                         "bK"      'kill-buffer-and-window
                         "bk"      'kill-this-buffer
-                        "bd"      'rcoedo--delete-current-file
-                        "br"      'rcoedo--rename-current-file
+                        "bd"      'rcoedo-delete-current-file
+                        "br"      'rcoedo-rename-current-file
 
                         "fs"      'helm-projectile-ag
                         "ft"      'helm-projectile-find-file
@@ -137,27 +160,7 @@
         (cider-stacktrace-mode insert)))
 
     (dolist (mode evil-mode-list)
-      (evil-set-initial-state (nth 0 mode) (nth 1 mode)))
-
-    (nmap "C-p"          nil
-          "<tab>"       'other-window
-          "<backspace>" 'evil-ex-nohighlight
-          "/"           'swiper)
-
-    (imap "C-a" 'beginning-of-line
-          "C-e" 'end-of-line
-          "C-f" 'forward-char
-          "C-b" 'backward-char
-          "C-d" 'delete-char
-          "C-n" 'next-line
-          "C-p" 'previous-line
-          "C-w" 'evil-delete
-          "C-k" 'kill-line)
-
-    (mmap "<right>" nil
-          "<left>"  nil
-          "<down>"  nil
-          "<up>"    nil)))
+      (evil-set-initial-state (nth 0 mode) (nth 1 mode)))))
 
 (req-package evil-surround
   :require evil
@@ -229,13 +232,13 @@
                         "C-j"    'helm-select-action)
 
     (general-define-key :keymaps 'helm-buffer-map
-                        "<C-backspace>" 'rcoedo--helm-kill-buffers
-                        "<C-return>"    'rcoedo--helm-switch-buffer-right
-                        "<C-S-return>"  'rcoedo--helm-switch-to-buffer-below)
+                        "<C-backspace>" 'rcoedo-helm-kill-buffers
+                        "<C-return>"    'rcoedo-helm-switch-buffer-right
+                        "<C-S-return>"  'rcoedo-helm-switch-to-buffer-below)
 
     (general-define-key :keymaps 'helm-find-files-map
-                        "<C-return>"   'rcoedo--helm-find-file-right
-                        "<C-S-return>" 'rcoedo--helm-find-file-below)))
+                        "<C-return>"   'rcoedo-helm-find-file-right
+                        "<C-S-return>" 'rcoedo-helm-find-file-below)))
 
 (req-package helm-projectile
   :require projectile helm grep
@@ -250,16 +253,16 @@
                        "p" 'helm-ghq-list)
 
     (general-define-key :keymaps 'helm-projectile-find-file-map
-                        "<C-return>" 'rcoedo--helm-find-file-right
-                        "<C-S-return>" 'rcoedo--helm-find-file-below)))
+                        "<C-return>" 'rcoedo-helm-find-file-right
+                        "<C-S-return>" 'rcoedo-helm-find-file-below)))
 
 (req-package helm-ag
   :require helm
   :config
   (progn
     (general-define-key :keymaps 'helm-ag-map
-                        "<C-return>"   'rcoedo--helm-ag-find-file-right
-                        "<C-S-return>" 'rcoedo--helm-ag-find-file-below)))
+                        "<C-return>"   'rcoedo-helm-ag-find-file-right
+                        "<C-S-return>" 'rcoedo-helm-ag-find-file-below)))
 
 (req-package helm-dash
   :require helm
@@ -272,7 +275,7 @@
 (req-package helm-css-scss
   :config
   (progn
-    (rcoedo--mode-key :keymaps 'css-mode-map
+    (rcoedo-mode-key :keymaps 'css-mode-map
                       "f" 'helm-css-scss)))
 
 (req-package yasnippet
@@ -327,11 +330,11 @@
   (progn
     (setq eshell-history-size 1000
           eshell-aliases-file "~/.emacs.d/eshell-aliases"
-          eshell-prompt-function 'rcoedo--eshell-prompt)
+          eshell-prompt-function 'rcoedo-eshell-prompt)
 
     (general-define-key :states  'insert
                         :keymaps 'eshell-mode-map
-                        "C-a"    'rcoedo--eshell-maybe-bol
+                        "C-a"    'rcoedo-eshell-maybe-bol
                         "C-r"    'helm-eshell-history
                         "C-p"    'eshell-previous-matching-input-from-input
                         "C-n"    'eshell-next-matching-input-from-input)
@@ -343,9 +346,11 @@
     (defalias 'x  'kill-buffer-and-window)))
 
 (req-package flycheck
+  :require flycheck-cask
   :config
   (progn
-    (global-flycheck-mode)))
+    (global-flycheck-mode)
+    (add-hook 'flycheck-mode-hook #'flycheck-cask-setup)))
 
 (req-package alchemist
   :require elixir-mode
@@ -362,12 +367,12 @@
     (sp-with-modes '(elixir-mode)
       (sp-local-pair "->" "end"
                      :when '(("RET"))
-                     :post-handlers '(:add rcoedo--elixir-do-end-close-action)
+                     :post-handlers '(:add rcoedo-elixir-do-end-close-action)
                      :actions '(insert))
 
       (sp-local-pair "do" "end"
                      :when '(("SPC" "RET"))
-                     :post-handlers '(:add rcoedo--elixir-do-end-close-action)
+                     :post-handlers '(:add rcoedo-elixir-do-end-close-action)
                      :actions '(insert)))))
 
 (req-package smartparens-config
@@ -428,7 +433,7 @@
           haskell-process-log t
           haskell-process-type 'cabal-repl)
 
-    (rcoedo--mode-key :keymaps '(haskell-mode-map haskell-cabal-mode-map)
+    (rcoedo-mode-key :keymaps '(haskell-mode-map haskell-cabal-mode-map)
                       "z" 'haskell-interactive-switch
                       "k" 'haskell-interactive-mode-clear
                       "pt" 'haskell-process-do-type
@@ -481,7 +486,7 @@
 
     (add-hook 'web-mode-hook #'(lambda ()
                                  (rainbow-delimiters-mode)
-                                 (rcoedo--enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))))))
+                                 (rcoedo-enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))))))
 
 (req-package css-mode
   :mode "\\.css$'"
@@ -498,12 +503,12 @@
 (req-package rainbow-mode
   :init
   (progn
-    (rcoedo--add-hooks 'rainbow-mode '(css-mode-hook scss-mode-hook html-mode-hook web-mode-hook))))
+    (rcoedo-add-hooks 'rainbow-mode '(css-mode-hook scss-mode-hook html-mode-hook web-mode-hook))))
 
 (req-package emmet-mode
   :init
   (progn
-    (rcoedo--add-hooks 'emmet-mode '(less-css-mode-hook scss-mode-hook web-mode-hook)))
+    (rcoedo-add-hooks 'emmet-mode '(less-css-mode-hook scss-mode-hook web-mode-hook)))
   :config
   (progn
     (general-define-key :keymaps 'emmet-mode-keymap
@@ -525,7 +530,7 @@
 (req-package org
   :config
   (progn
-    (rcoedo--mode-key :keymaps 'org-mode-map
+    (rcoedo-mode-key :keymaps 'org-mode-map
                       "t" 'org-babel-tangle)
 
     (general-define-key :keymaps org-mode-map
@@ -613,3 +618,17 @@
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (flycheck-cask yasnippet which-key web-mode transpose-frame smart-mode-line scss-mode req-package rcoedo rainbow-mode rainbow-delimiters pyenv-mode prettier-js popwin pallet osx-clipboard markdown-mode magit lua-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode gruvbox-theme ghq general flycheck-elm fish-mode expand-region exec-path-from-shell evil-surround evil-search-highlight-persist evil-org evil-nerd-commenter evil-matchit evil-lisp-state emmet-mode elm-mode counsel company-anaconda alchemist))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
