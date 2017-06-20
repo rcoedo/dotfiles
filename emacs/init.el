@@ -56,12 +56,12 @@
     (general-evil-setup t t)
 
     (general-create-definer rcoedo-leader-key
-                            :states '(normal insert emacs)
+                            :states '(normal insert visual emacs)
                             :prefix "SPC"
                             :non-normal-prefix "C-SPC")
 
     (general-create-definer rcoedo-mode-key
-                            :states '(normal insert emacs)
+                            :states '(normal insert visual emacs)
                             :prefix "<SPC>m"
                             :non-normal-prefix "<C-SPC>m")
 
@@ -115,7 +115,7 @@
           "C-w" 'evil-delete
           "C-k" 'kill-line)
 
-    (rcoedo-leader-key "jr"      'jump-to-register
+    (rcoedo-leader-key "jr"       'jump-to-register
                         "jd"      'dired-jump
                         "yy"      'helm-show-kill-ring
 
@@ -123,6 +123,9 @@
                         "cp"      'evilnc-copy-and-comment-lines
                         "cb"      'evilnc-comment-or-uncomment-paragraphs
                         "co"      'evilnc-comment-operator
+
+                        "es"      'evil-ex-sort
+                        "ee"      '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
 
                         "bK"      'kill-buffer-and-window
                         "bk"      'kill-this-buffer
@@ -404,9 +407,9 @@
 
 (req-package which-key
   :config
-  (progn
-    (setq which-key-idle-delay 0.5)
-    (which-key-mode)))
+  (setq which-key-idle-delay 0.5)
+
+  (which-key-mode))
 
 (req-package pyenv-mode
   :config
@@ -485,6 +488,7 @@
       (sp-local-pair "<%" " %>" :wrap "C-%"))
 
     (add-hook 'web-mode-hook #'(lambda ()
+                                 (setq emmet-expand-jsx-className? t)
                                  (rainbow-delimiters-mode)
                                  (rcoedo-enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))))))
 
@@ -492,6 +496,7 @@
   :mode "\\.css$'"
   :config
   (progn
+    (add-hook 'css-mode-hook 'prettier-js-mode)
     (setq css-indent-offset 2)))
 
 (req-package scss-mode
@@ -617,18 +622,3 @@
 (req-package-finish)
 
 (provide 'init)
-;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (flycheck-cask yasnippet which-key web-mode transpose-frame smart-mode-line scss-mode req-package rcoedo rainbow-mode rainbow-delimiters pyenv-mode prettier-js popwin pallet osx-clipboard markdown-mode magit lua-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode gruvbox-theme ghq general flycheck-elm fish-mode expand-region exec-path-from-shell evil-surround evil-search-highlight-persist evil-org evil-nerd-commenter evil-matchit evil-lisp-state emmet-mode elm-mode counsel company-anaconda alchemist))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
