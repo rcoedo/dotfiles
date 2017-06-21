@@ -1,14 +1,10 @@
 FISH_TARGET_DIR=~/.config/fish
+FISH_SOURCE_DIR=.
 
 install:
-	cp $(FISH_TARGET_DIR)/config.fish $(FISH_TARGET_DIR)/config.fish.backup
-	cp $(FISH_TARGET_DIR)/fishfile $(FISH_TARGET_DIR)/fishfile.backup
-	cp -r $(FISH_TARGET_DIR)/hosts $(FISH_TARGET_DIR)/hosts.backup
-	cp ./config.fish $(FISH_TARGET_DIR)/config.fish
-	cp ./fishfile $(FISH_TARGET_DIR)/fishfile
-	cp -r ./hosts $(FISH_TARGET_DIR)/hosts
+	rsync -av --exclude=Makefile $(FISH_SOURCE_DIR) $(FISH_TARGET_DIR)
 
 get:
 	cp $(FISH_TARGET_DIR)/config.fish ./config.fish
 	cp $(FISH_TARGET_DIR)/fishfile ./fishfile
-	cp -r $(FISH_TARGET_DIR)/hosts ./hosts
+	rsync -av $(FISH_TARGET_DIR)/hosts/ $(FISH_SOURCE_DIR)/hosts/
