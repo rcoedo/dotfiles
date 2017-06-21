@@ -416,6 +416,19 @@
   (progn
     (add-hook 'python-mode-hook 'pyenv-mode)))
 
+(req-package enh-ruby-mode
+  :mode "\\.rb$'"
+  :init
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
+    (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
+    (add-to-list 'auto-mode-alist '("Rakefile$" . enh-ruby-mode))
+    (add-to-list 'auto-mode-alist '("\\.gemspec$" . enh-ruby-mode))
+    (add-to-list 'auto-mode-alist '("\\.ru$" . enh-ruby-mode))
+    (add-to-list 'auto-mode-alist '("Gemfile$" . enh-ruby-mode))
+
+    (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))))
+
 (req-package anaconda-mode
   :require company eval-in-repl-python
   :config
@@ -622,3 +635,4 @@
 (req-package-finish)
 
 (provide 'init)
+;;; init.el ends here
