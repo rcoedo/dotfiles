@@ -1,0 +1,10 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+{ "key": "cmd+x", "command": "workbench.action.showCommands" },
+{ "key": "cmd+t", "command": "workbench.action.quickOpen" },
+{ "key": "j",  "command": "list.focusDown", "when": "listFocus" },
+{ "key": "k",  "command": "list.focusUp", "when": "listFocus" },
+{ "key": "l",  "command": "list.expand", "when": "listFocus" },
+{ "key": "h",  "command": "list.collapse", "when": "listFocus" },
+{ "key": "enter", "command": "list.select", "when": "filesExplorerFocus" }
+]

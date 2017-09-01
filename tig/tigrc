@@ -1,0 +1,1 @@
+bind ref d !@?git branch -D %(branch)

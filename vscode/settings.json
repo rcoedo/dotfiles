@@ -1,0 +1,23 @@
+// Place your settings in this file to overwrite the default settings
+{
+  "editor.fontSize": 16,
+  "editor.fontFamily": "Operator Mono",
+  "vim.useCtrlKeys": true,
+  "vim.useSystemClipboard": true,
+  "vim.leader": " ",
+  "vim.enableNeovim": true,
+  "vim.otherModesKeyBindingsNonRecursive": [
+    {
+      "before": ["<tab>"],
+      "after": ["<Esc>"],
+      "commands": [
+        {
+          "command": "workbench.action.navigateEditorGroups",
+          "args": []
+        }
+      ]
+    }
+],
+"workbench.colorTheme": "Gruvbox Dark (Medium Contrast)",
+"vim.disableAnnoyingNeovimMessage": true
+}
