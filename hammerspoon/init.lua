@@ -14,7 +14,7 @@ local key = Spacebar.new {
       {"n", "unity", function() window.launchOrFocus("Unity") end},
       {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
-      {"f", "firefox", function() window.launchOrFocus("Firefox") end},
+      {"f", "firefox", function() window.launchOrFocus("FirefoxDeveloperEdition") end},
       {"r", "trello", function() window.launchOrFocus("Trello") end},
       {"h", "hyper", function() window.launchOrFocus("Hyper") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
