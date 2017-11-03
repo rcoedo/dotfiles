@@ -38,3 +38,4 @@ alias dcpg "wget https://gist.github.com/rcoedo/63cc1f7c3af12fb9c0a38e2e10843ea7
 alias b "bundle"
 alias be "bundle exec"
 alias note "jupyter notebook"
+alias da "django-admin"
