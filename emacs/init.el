@@ -87,7 +87,6 @@
                         "M-D"     'helm-dash-at-point
                         "M-d"     'helm-dash
                         "M-x"     'helm-M-x
-                        "M-/"     'evilnc-comment-or-uncomment-lines
                         "H-1"     'windmove-left
                         "H-2"     'windmove-down
                         "H-3"     'windmove-up
@@ -115,28 +114,24 @@
           "C-w" 'evil-delete
           "C-k" 'kill-line)
 
-    (rcoedo-leader-key "jr"       'jump-to-register
-                        "jd"      'dired-jump
-                        "yy"      'helm-show-kill-ring
+    (rcoedo-leader-key "jr"      'jump-to-register
+                       "jd"      'dired-jump
+                       "yy"      'helm-show-kill-ring
+                       "SPC"     'ace-jump-char-mode
 
-                        "cc"      'evilnc-comment-or-uncomment-lines
-                        "cp"      'evilnc-copy-and-comment-lines
-                        "cb"      'evilnc-comment-or-uncomment-paragraphs
-                        "co"      'evilnc-comment-operator
+                       "es"      'evil-ex-sort
+                       "ee"      '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
 
-                        "es"      'evil-ex-sort
-                        "ee"      '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
+                       "bK"      'kill-buffer-and-window
+                       "bk"      'kill-this-buffer
+                       "bd"      'rcoedo-delete-current-file
+                       "br"      'rcoedo-rename-current-file
 
-                        "bK"      'kill-buffer-and-window
-                        "bk"      'kill-this-buffer
-                        "bd"      'rcoedo-delete-current-file
-                        "br"      'rcoedo-rename-current-file
-
-                        "fs"      'helm-projectile-ag
-                        "ft"      'helm-projectile-find-file
-                        "ff"      'helm-find-files
-                        "fp"      'helm-ghq-list
-                        "fb"      'helm-mini)))
+                       "fs"      'helm-projectile-ag
+                       "ft"      'helm-projectile-find-file
+                       "ff"      'helm-find-files
+                       "fp"      'helm-ghq-list
+                       "fb"      'helm-mini)))
 
 (req-package evil
   :config
@@ -173,6 +168,12 @@
     (vmap "s" 'evil-surround-region)
     (nmap "s" 'evil-surround-edit)))
 
+(req-package evil-commentary
+  :require evil
+  :config
+  (progn
+    (evil-commentary-mode)))
+
 (req-package evil-matchit
   :require evil
   :config
@@ -197,6 +198,8 @@
   :init
   (progn
     (add-hook 'org-mode-hook 'evil-org-mode)))
+
+(req-package ace-jump-mode)
 
 (req-package projectile
   :require ghq
@@ -361,6 +364,13 @@
   (progn
     (add-hook 'elixir-mode-hook 'alchemist-mode)))
 
+;; (req-package 'elixir-format
+;;   :require elixir-mode
+;;   :init
+;;   (progn
+;;     (add-hook 'elixir-mode-hook
+;;               (lambda () (add-hook 'before-save-hook elixir-format-before-save)))))
+
 (req-package elixir-mode
   :require smartparens
   :config
@@ -430,12 +440,9 @@
     (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))))
 
 (req-package anaconda-mode
-  :require company eval-in-repl-python
+  :require company
   :config
   (progn
-    (general-define-key :keymaps 'python-mode-map
-                        "M-v" 'eir-eval-in-python)
-
     (add-to-list 'company-backends 'company-anaconda)
     (add-hook 'python-mode-hook 'anaconda-mode)))
 
@@ -503,7 +510,20 @@
     (add-hook 'web-mode-hook #'(lambda ()
                                  (setq emmet-expand-jsx-className? t)
                                  (rainbow-delimiters-mode)
-                                 (rcoedo-enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))))))
+                                 (rcoedo-enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))
+                                 (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))))))
+
+(req-package tide
+  :mode ("\\.ts$'" . typescript-mode)
+  :require prettier-js
+  :init
+  (progn
+    (add-hook 'typescript-mode-hook #'(lambda()
+                                        (tide-setup)
+                                        (setq typescript-indent-level 2)
+                                        (tide-hl-identifier-mode t)
+                                        (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--parser" "typescript" "--print-width" "120"))
+                                        (prettier-js-mode t)))))
 
 (req-package css-mode
   :mode "\\.css$'"
