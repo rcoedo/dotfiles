@@ -1,4 +1,6 @@
 rcoedo/anyenv-fish
+edc/bass
+rcoedo/dir-abbr-fish
 rcoedo/direnv-fish
 rcoedo/docker-utils-fish
 rcoedo/fuzzy-fish
