@@ -99,6 +99,7 @@ set wrap
 set laststatus=2
 set ttyfast
 set mouse=a
+"set clipboard+=unnamedplus
 set clipboard=unnamed
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
