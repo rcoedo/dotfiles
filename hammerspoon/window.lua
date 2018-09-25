@@ -106,6 +106,13 @@ local function launchOrSwitch(name, realName)
     end
 end
 
+local function focus(name)
+  local win = hs.window.find(name)
+  if (win ~= null) then
+    win:focus()
+  end
+end
+
 local function pushToNextScreen()
    win = window.frontmostWindow()
    win:moveToScreen(win:screen():next())
@@ -139,6 +146,7 @@ return {
   pushWindowRight = grid.pushWindowRight,
   pushWindowLeft = grid.pushWindowLeft,
   maximizeWindow = grid.maximizeWindow,
+  focus = focus,
   fullscreen = fullscreen,
   close = close,
   kill = kill

@@ -11,10 +11,10 @@ local key = Spacebar.new {
    bindings = {
       {"i", "intellij", function() window.launchOrFocus("IntelliJ IDEA") end},
       {"u", "android studio", function() window.launchOrFocus("Android Studio") end},
-      {"n", "unity", function() window.launchOrFocus("Unity") end},
+      {"d", "ndb", function() window.focus("ndb") end},
       {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs") end},
-      {"f", "firefox", function() window.launchOrFocus("FirefoxDeveloperEdition") end},
+      {"f", "firefox", function() window.launchOrFocus("Firefox") end},
       {"r", "trello", function() window.launchOrFocus("Trello") end},
       {"h", "hyper", function() window.launchOrFocus("Hyper") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
