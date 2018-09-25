@@ -17,7 +17,6 @@ ui = true
 [core]
 excludesfile = /Users/rcoedo/.gitignore_global
 editor = nvim
-pager = diff-so-fancy | less --tabs=4 -RFX
 
 [help]
 autocorrect = 1
@@ -26,6 +25,7 @@ autocorrect = 1
 default = simple
 
 [alias]
+bistec = bisect
 aa = add -A
 addall = add -A
 ai = !fish -c git-ai
@@ -43,6 +43,7 @@ cot = checkout -t
 cp = cherry-pick
 d  = diff
 dc = diff --cached
+ic = icdiff
 delete-branch = branch -d
 delete-branch-for-good = branch -D
 fl = log -u
@@ -58,7 +59,7 @@ nuke = reset --hard HEAD
 po = push origin
 pou = push --set-upstream origin
 pt = push --tags
-punch = push --force
+punch = push --force-with-lease
 put = "!git rev-parse --abbrev-ref HEAD | xargs git push -u origin"
 rc = rebase --continue
 rename-branch = branch -m
