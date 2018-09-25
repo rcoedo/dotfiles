@@ -6,7 +6,7 @@
   "vim.useSystemClipboard": true,
   "vim.leader": " ",
   "vim.enableNeovim": true,
-  "vim.otherModesKeyBindingsNonRecursive": [
+  "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": ["<tab>"],
       "after": ["<Esc>"],
@@ -17,7 +17,11 @@
         }
       ]
     }
-],
-"workbench.colorTheme": "Gruvbox Dark (Medium Contrast)",
-"vim.disableAnnoyingNeovimMessage": true
+  ],
+  "workbench.colorTheme": "Gruvbox Dark (Medium Contrast)",
+  "editor.formatOnSave": true,
+  "prettier.trailingComma": "all",
+  "prettier.printWidth": 120,
+  "javascript.validate.enable": false,
+  "terminal.integrated.commandsToSkipShell": ["workbench.debug.action.toggleRepl"]
 }

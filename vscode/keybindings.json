@@ -1,10 +1,49 @@
-// Place your key bindings in this file to overwrite the defaults
 [
-{ "key": "cmd+x", "command": "workbench.action.showCommands" },
-{ "key": "cmd+t", "command": "workbench.action.quickOpen" },
-{ "key": "j",  "command": "list.focusDown", "when": "listFocus" },
-{ "key": "k",  "command": "list.focusUp", "when": "listFocus" },
-{ "key": "l",  "command": "list.expand", "when": "listFocus" },
-{ "key": "h",  "command": "list.collapse", "when": "listFocus" },
-{ "key": "enter", "command": "list.select", "when": "filesExplorerFocus" }
+  { "key": "cmd+x", "command": "workbench.action.showCommands" },
+  { "key": "cmd+t", "command": "workbench.action.quickOpen" },
+  { "key": "cmd+k t", "command": "workbench.files.action.focusFilesExplorer" },
+  { "key": "cmd+]", "command": "workbench.action.nextEditor" },
+  { "key": "cmd+[", "command": "workbench.action.previousEditor" },
+  { "key": "j", "command": "list.focusDown", "when": "listFocus" },
+  { "key": "k", "command": "list.focusUp", "when": "listFocus" },
+  { "key": "l", "command": "list.expand", "when": "listFocus" },
+  { "key": "h", "command": "list.collapse", "when": "listFocus" },
+  { "key": "n", "command": "explorer.newFile", "when": "filesExplorerFocus" },
+  { "key": "d", "command": "explorer.newFolder", "when": "filesExplorerFocus" },
+  { "key": "escape", "command": "workbench.action.focusActiveEditorGroup", "when": "filesExplorerFocus" },
+  {
+    "key": "enter",
+    "command": "list.select",
+    "when": "listFocus"
+  },
+  {
+    "key": "ctrl+, 3",
+    "command": "workbench.action.splitEditorRight"
+  },
+  {
+    "key": "ctrl+, 3",
+    "command": "workbench.action.terminal.split",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+\\",
+    "command": "-workbench.action.terminal.split",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+, 2",
+    "command": "workbench.action.splitEditorDown"
+  },
+  {
+    "key": "ctrl+\\",
+    "command": "workbench.debug.action.toggleRepl"
+  },
+  {
+    "key": "shift+cmd+y",
+    "command": "-workbench.debug.action.toggleRepl"
+  },
+  {
+    "key": "cmd+r",
+    "command": "workbench.action.debug.selectandstart"
+  }
 ]
