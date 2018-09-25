@@ -6,8 +6,8 @@
 (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
 (cask-initialize)
 
-(require 'pallet)
-(pallet-mode t)
+;; TODO remove these
+(load "/Users/rcoedo/.emacs.d/rcoedo.el")
 
 (setq ad-redefinition-action 'accept)
 (require 'req-package)
@@ -46,8 +46,9 @@
 (req-package dash
   :force t)
 
-(req-package rcoedo
-  :force t)
+;; TODO: activate this
+;(req-package rcoedo
+;  :force t)
 
 (req-package general
   :force t
@@ -139,6 +140,7 @@
     (evil-mode t)
 
     (evil-select-search-module 'evil-search-module 'evil-search)
+    (add-hook 'write-file-hooks 'delete-trailing-whitespace)
 
     (setq evil-want-fine-undo t)
 
@@ -525,6 +527,15 @@
                                         (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--parser" "typescript" "--print-width" "120"))
                                         (prettier-js-mode t)))))
 
+(req-package protobuf-mode
+  :mode "\\.proto$'")
+
+(req-package go-mode
+  :mode "\\.go$'"
+  :config
+  (progn
+    (add-hook 'before-save-hook 'gofmt-before-save)))
+
 (req-package css-mode
   :mode "\\.css$'"
   :config
@@ -596,7 +607,7 @@
   (progn
     (general-define-key :keymaps octave-mode-map
                         "M-v" 'octave-send-defun)))
-    
+
 (req-package eww
   :config
   (progn
@@ -656,3 +667,17 @@
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (realgud yaml-mode go-mode yasnippet which-key web-mode twittering-mode transpose-frame tide smart-mode-line scss-mode req-package rainbow-mode rainbow-delimiters pyenv-mode protobuf-mode prettier-js popwin osx-clipboard markdown-mode magit lua-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode gruvbox-theme ghq general flycheck-elm flycheck-cask fish-mode expand-region exec-path-from-shell evil-surround evil-org evil-matchit evil-lisp-state evil-commentary enh-ruby-mode emmet-mode elm-mode el-get counsel company-anaconda alchemist ace-jump-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
