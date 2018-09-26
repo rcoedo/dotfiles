@@ -6,9 +6,6 @@
 (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
 (cask-initialize)
 
-;; TODO remove these
-(load "/Users/rcoedo/.emacs.d/rcoedo.el")
-
 (setq ad-redefinition-action 'accept)
 (require 'req-package)
 
@@ -46,9 +43,8 @@
 (req-package dash
   :force t)
 
-;; TODO: activate this
-;(req-package rcoedo
-;  :force t)
+(req-package rcoedo
+  :force t)
 
 (req-package general
   :force t
