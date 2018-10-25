@@ -210,7 +210,8 @@
           projectile-globally-ignored-directories (append '(".cask") projectile-globally-ignored-files)
           projectile-project-root-files ())
 
-    (projectile-global-mode)))
+    (projectile-global-mode)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)))
 
 (req-package ivy
   :config
@@ -252,7 +253,7 @@
 
     (setq projectile-switch-project-action 'projectile-dired)
 
-    (genera-define-key :keymaps 'projectile-command-map
+    (general-define-key :keymaps 'projectile-command-map
                        "s s" 'helm-projectile-ag
                        "p" 'helm-ghq-list)
 
@@ -481,14 +482,15 @@
          ("\\.mustache\\'"  . web-mode)
          ("\\.djhtml\\'"    . web-mode)
          ("\\.ejs\\'"       . web-mode)
-         ("\\.jsx?\\'"      . web-mode)
+         ("\\.json?\\'"     . web-mode)
+         ("\\.m?jsx?\\'"    . web-mode)
          ("\\.eex\\'"       . web-mode))
   :config
   (progn
     (setq-default flycheck-disabled-checkers
                   (append flycheck-disabled-checkers '(javascript-jshint)))
 
-    (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'"))
+    (setq web-mode-content-types-alist '(("jsx" . "\\.[m]?js[x]?\\'"))
           web-mode-auto-quote-style nil
           web-mode-enable-auto-pairing nil
           web-mode-enable-current-column-highlight t
@@ -508,7 +510,7 @@
     (add-hook 'web-mode-hook #'(lambda ()
                                  (setq emmet-expand-jsx-className? t)
                                  (rainbow-delimiters-mode)
-                                 (rcoedo-enable-minor-mode '("\\.jsx?\\'" . prettier-js-mode))
+                                 (rcoedo-enable-minor-mode '("\\.m?jsx?\\'" . prettier-js-mode))
                                  (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))))))
 
 (req-package tide
