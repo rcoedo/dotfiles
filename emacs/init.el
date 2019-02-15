@@ -99,6 +99,7 @@
     (nmap "C-p"          nil
           "<tab>"       'other-window
           "<backspace>" 'evil-ex-nohighlight
+          "C-j"         'helm-resume
           "/"           'swiper)
 
     (imap "C-a" 'beginning-of-line
@@ -232,9 +233,7 @@
     (helm-mode t)
 
     (general-define-key :keymaps 'helm-map
-                        "<tab>"  'helm-execute-persistent-action
-                        "C-i"    'helm-execute-persistent-action
-                        "C-j"    'helm-select-action)
+                        "<tab>"  'helm-execute-persistent-action)
 
     (general-define-key :keymaps 'helm-buffer-map
                         "<C-backspace>" 'rcoedo-helm-kill-buffers
@@ -534,6 +533,9 @@
   (progn
     (add-hook 'before-save-hook 'gofmt-before-save)))
 
+(req-package yaml-mode
+  :mode "\\.yml$'")
+
 (req-package css-mode
   :mode "\\.css$'"
   :config
@@ -672,7 +674,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (realgud yaml-mode go-mode yasnippet which-key web-mode twittering-mode transpose-frame tide smart-mode-line scss-mode req-package rainbow-mode rainbow-delimiters pyenv-mode protobuf-mode prettier-js popwin osx-clipboard markdown-mode magit lua-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode gruvbox-theme ghq general flycheck-elm flycheck-cask fish-mode expand-region exec-path-from-shell evil-surround evil-org evil-matchit evil-lisp-state evil-commentary enh-ruby-mode emmet-mode elm-mode el-get counsel company-anaconda alchemist ace-jump-mode))))
+    (realgud yaml-mode go-mode yasnippet which-key web-mode transpose-frame tide smart-mode-line scss-mode req-package rainbow-mode rainbow-delimiters pyenv-mode protobuf-mode prettier-js popwin osx-clipboard markdown-mode magit lua-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode gruvbox-theme ghq general flycheck-elm flycheck-cask fish-mode expand-region exec-path-from-shell evil-surround evil-org evil-matchit evil-lisp-state evil-commentary enh-ruby-mode emmet-mode elm-mode el-get counsel company-anaconda alchemist ace-jump-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

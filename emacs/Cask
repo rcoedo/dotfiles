@@ -57,7 +57,7 @@
 (depends-on "smartparens")
 (depends-on "tide")
 (depends-on "transpose-frame")
-(depends-on "twittering-mode")
 (depends-on "web-mode")
 (depends-on "which-key")
+(depends-on "yaml-mode")
 (depends-on "yasnippet")
