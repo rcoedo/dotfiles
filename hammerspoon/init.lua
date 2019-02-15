@@ -13,7 +13,7 @@ local key = Spacebar.new {
       {"u", "android studio", function() window.launchOrFocus("Android Studio") end},
       {"d", "ndb", function() window.focus("ndb") end},
       {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
-      {"e", "emacs", function() window.launchOrFocus("Emacs") end},
+      {"e", "emacs", function() window.launchOrFocus("Emacs.app") end},
       {"f", "firefox", function() window.launchOrFocus("Firefox") end},
       {"r", "trello", function() window.launchOrFocus("Trello") end},
       {"h", "hyper", function() window.launchOrFocus("Hyper") end},
@@ -23,7 +23,7 @@ local key = Spacebar.new {
       {"m", "messaging", {
           {"w", "whatsapp", function() window.launchOrSwitch("WhatsApp") end},
           {"d", "discord", function() window.launchOrSwitch("Discord") end},
-          {"t", "telegram", function() window.launchOrFocus("Telegram Desktop") end},
+          {"t", "telegram", function() window.launchOrFocus("Telegram") end},
           {"l", "slack", function() window.launchOrFocus("Slack") end}
       }},
       {"s", "spotify mode", {
