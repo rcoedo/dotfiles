@@ -3,7 +3,7 @@ protocol = https
 
 [user]
 name = Roman Coedo
-email = romancoedo@gmail.com
+email = rcoedo@nibelheim.es
 
 [credential]
 helper = CREDENTIAL
