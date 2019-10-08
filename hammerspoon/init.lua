@@ -1,5 +1,6 @@
 local window = require "window"
 local spotify = require "spotify"
+local emoji = require "emoji"
 local Spacebar = require "modal/spacebar"
 
 -- Reload configuration
@@ -14,17 +15,19 @@ local key = Spacebar.new {
       {"d", "ndb", function() window.focus("ndb") end},
       {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
       {"e", "emacs", function() window.launchOrFocus("Emacs.app") end},
-      {"f", "firefox", function() window.launchOrFocus("Firefox") end},
+      {"b", "brave", function() window.launchOrFocus("Brave Browser") end},
       {"r", "trello", function() window.launchOrFocus("Trello") end},
       {"h", "hyper", function() window.launchOrFocus("Hyper") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
       {"p", "postman", function() window.launchOrFocus("Postman") end},
+      {"j", "emoji selector", function() emoji.emoji_chooser:show() end},
       {"c", "chrome", function() window.launchOrSwitch("Google Chrome") end},
       {"m", "messaging", {
           {"w", "whatsapp", function() window.launchOrSwitch("WhatsApp") end},
           {"d", "discord", function() window.launchOrSwitch("Discord") end},
           {"t", "telegram", function() window.launchOrFocus("Telegram") end},
-          {"l", "slack", function() window.launchOrFocus("Slack") end}
+          {"l", "slack", function() window.launchOrFocus("Slack") end},
+          {"r", "wire", function() window.launchOrFocus("Wire") end}
       }},
       {"s", "spotify mode", {
           {"p", "previous", spotify.previous, {modal = "stay"}},
