@@ -40,9 +40,6 @@
     (set-face-italic 'font-lock-comment-face t)
     (setq-default line-spacing 3)))
 
-(req-package dash
-  :force t)
-
 (req-package rcoedo
   :force t)
 
@@ -81,8 +78,6 @@
                         "M-p"     'helm-ghq-list
                         "M-b"     'helm-mini
                         "C-x C-f" 'helm-find-files
-                        "M-D"     'helm-dash-at-point
-                        "M-d"     'helm-dash
                         "M-x"     'helm-M-x
                         "H-1"     'windmove-left
                         "H-2"     'windmove-down
@@ -232,6 +227,13 @@
     (helm-autoresize-mode t)
     (helm-mode t)
 
+    (add-to-list 'helm-find-files-actions '("rc.Find file right" . rcoedo-find-file-right) :append)
+    (add-to-list 'helm-find-files-actions '("rc.Find file below" . rcoedo-find-file-below) :append)
+
+    (add-to-list 'helm-type-buffer-actions '("rc.Find buffer right" . rcoedo-switch-to-buffer-right) :append)
+    (add-to-list 'helm-type-buffer-actions '("rc.Find buffer below" . rcoedo-switch-to-buffer-below) :append)
+
+
     (general-define-key :keymaps 'helm-map
                         "<tab>"  'helm-execute-persistent-action)
 
@@ -252,6 +254,9 @@
 
     (setq projectile-switch-project-action 'projectile-dired)
 
+    (add-to-list 'helm-projectile-file-actions '("rc.Find file right" . rcoedo-find-file-right) t)
+    (add-to-list 'helm-projectile-file-actions '("rc.Find file below" . rcoedo-find-file-below) t)
+
     (general-define-key :keymaps 'projectile-command-map
                        "s s" 'helm-projectile-ag
                        "p" 'helm-ghq-list)
@@ -264,17 +269,12 @@
   :require helm
   :config
   (progn
+    (add-to-list 'helm-ag--actions '("rc.Ag Find file right" . rcoedo-helm-ag-find-file-right) t)
+    (add-to-list 'helm-ag--actions '("rc.Ag Find file below" . rcoedo-helm-ag-find-file-below) t)
+
     (general-define-key :keymaps 'helm-ag-map
                         "<C-return>"   'rcoedo-helm-ag-find-file-right
                         "<C-S-return>" 'rcoedo-helm-ag-find-file-below)))
-
-(req-package helm-dash
-  :require helm
-  :config
-  (progn
-    (setq helm-dash-browser-func 'eww
-          helm-dash-docsets-path "~/.emacs.d/docsets"
-          helm-dash-common-docsets (helm-dash-installed-docsets))))
 
 (req-package helm-css-scss
   :config
@@ -302,7 +302,10 @@
 (req-package ghq)
 
 (req-package markdown-mode
-  :mode "\\.md\\'")
+  :mode "\\.md\\'"
+  :config
+  (progn
+    (nmap "<C-return>" 'markdown-table-align)))
 
 (req-package comint
   :config
@@ -354,6 +357,10 @@
   :config
   (progn
     (global-flycheck-mode)
+    (setq
+     flycheck-python-flake8-executable "python3"
+     flycheck-python-pycompile-executable "python3"
+     flycheck-python-pylint-executable "python3")
     (add-hook 'flycheck-mode-hook #'flycheck-cask-setup)))
 
 (req-package alchemist
@@ -419,11 +426,6 @@
 
   (which-key-mode))
 
-(req-package pyenv-mode
-  :config
-  (progn
-    (add-hook 'python-mode-hook 'pyenv-mode)))
-
 (req-package enh-ruby-mode
   :mode "\\.rb$'"
   :init
@@ -444,32 +446,32 @@
     (add-to-list 'company-backends 'company-anaconda)
     (add-hook 'python-mode-hook 'anaconda-mode)))
 
-(req-package
-  :mode "\\.hs$'"
-  :commands general haskell-mode
-  :config
+(req-package blacken
+  :init
   (progn
-    (setq haskell-process-suggest-remove-import-lines t
-          haskell-process-auto-import-loaded-modules t
-          haskell-process-log t
-          haskell-process-type 'cabal-repl)
-
-    (rcoedo-mode-key :keymaps '(haskell-mode-map haskell-cabal-mode-map)
-                      "z" 'haskell-interactive-switch
-                      "k" 'haskell-interactive-mode-clear
-                      "pt" 'haskell-process-do-type
-                      "pi" 'haskell-process-do-info
-                      "pp" 'haskell-process-cabal-build
-                      "pl" 'haskell-process-load-or-reload
-                      "pc" 'haskell-process-cabal)
-
-    (interactive-haskell-mode 1)
-    (hindent-mode 1)))
+    (add-hook 'python-mode-hook 'blacken-mode)))
 
 (req-package prettier-js
   :init
   (progn
     (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))))
+
+(req-package rjsx-mode
+  :require flycheck prettier-js eglot
+  :mode (("\\.m?jsx?\\'" . rjsx-mode))
+  :config
+  (progn
+    (setq js2-include-node-externs t)
+
+    (add-to-list 'eglot-server-programs
+             '(typescript-mode . ("javascript-typescript-stdio")))
+
+    (add-hook 'rjsx-mode-hook #'(lambda ()
+                                 (setq emmet-expand-jsx-className? t
+                                        js-indent-level 2)
+                                 (rainbow-delimiters-mode)
+                                 (rcoedo-enable-minor-mode '("\\.m?jsx?\\'" . prettier-js-mode))
+                                 (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))))))
 
 (req-package web-mode
   :require flycheck prettier-js
@@ -482,7 +484,6 @@
          ("\\.djhtml\\'"    . web-mode)
          ("\\.ejs\\'"       . web-mode)
          ("\\.json?\\'"     . web-mode)
-         ("\\.m?jsx?\\'"    . web-mode)
          ("\\.eex\\'"       . web-mode))
   :config
   (progn
@@ -511,18 +512,6 @@
                                  (rainbow-delimiters-mode)
                                  (rcoedo-enable-minor-mode '("\\.m?jsx?\\'" . prettier-js-mode))
                                  (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120"))))))
-
-(req-package tide
-  :mode ("\\.ts$'" . typescript-mode)
-  :require prettier-js
-  :init
-  (progn
-    (add-hook 'typescript-mode-hook #'(lambda()
-                                        (tide-setup)
-                                        (setq typescript-indent-level 2)
-                                        (tide-hl-identifier-mode t)
-                                        (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--parser" "typescript" "--print-width" "120"))
-                                        (prettier-js-mode t)))))
 
 (req-package protobuf-mode
   :mode "\\.proto$'")
@@ -615,6 +604,14 @@
                         :keymaps 'eww-mode-map
                         "q" 'quit-window)))
 
+(req-package rust-mode
+  :require flycheck-rust
+  :mode ("\\.rs$" . rust-mode)
+  :config
+  (progn
+    (setq rust-format-on-save t)
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+
 (req-package dired
   :config
   (progn
@@ -626,8 +623,24 @@
   :config
   (progn
     (setq exec-path-from-shell-check-startup-files nil)
-    (exec-path-from-shell-initialize)
-    (exec-path-from-shell-copy-envs '("GHQ_ROOT" "GOPATH"))))
+    (exec-path-from-shell-initialize)))
+
+;; (req-package exec-path-from-shell
+;;   :config
+;;   (progn
+;;     (setq
+;;      exec-path-from-shell-check-startup-files nil
+;;      exec-path-from-shell-arguments '("--interactive"))
+
+;;     (exec-path-from-shell-initialize)
+
+;;     (mapc #'(lambda(str)
+;;               (progn
+;;                 (exec-path-from-shell-copy-env (concat str "_ROOT"))
+;;                 (exec-path-from-shell-copy-env (concat str "_SHELL"))))
+;;           (split-string (upcase (shell-command-to-string "anyenv envs"))))
+
+;;     (exec-path-from-shell-copy-envs '("GHQ_ROOT" "GOPATH"))))
 
 (put 'dired-find-alternate-file 'disabled nil) ;; Allow the use of dired-find-alternate-file
 (put 'erase-buffer 'disabled nil)              ;; Allow the use of erase-buffer
@@ -636,6 +649,8 @@
 (menu-bar-mode -1)                             ;; Hide menu bar
 (scroll-bar-mode -1)                           ;; Hide scroll bar
 (tool-bar-mode -1)                             ;; Hide tool bar
+
+;; (exec-path-from-shell-getenv "PATH")
 
 (setq-default c-basic-offset 4
               truncate-lines nil
@@ -667,17 +682,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (realgud yaml-mode go-mode yasnippet which-key web-mode transpose-frame tide smart-mode-line scss-mode req-package rainbow-mode rainbow-delimiters pyenv-mode protobuf-mode prettier-js popwin osx-clipboard markdown-mode magit lua-mode hindent helm-projectile helm-dash helm-css-scss helm-company helm-ag haskell-mode gruvbox-theme ghq general flycheck-elm flycheck-cask fish-mode expand-region exec-path-from-shell evil-surround evil-org evil-matchit evil-lisp-state evil-commentary enh-ruby-mode emmet-mode elm-mode el-get counsel company-anaconda alchemist ace-jump-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
