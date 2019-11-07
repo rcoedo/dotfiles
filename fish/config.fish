@@ -10,7 +10,13 @@ export TOMCATS=$HOME/Workspace/tomcats
 export CATALINA_HOME=$TOMCATS/apache-tomcat-8.0.29
 export GOPATH=$HOME/Workspace
 export YARNPATH=$HOME/.config/yarn
+export CARGO_PATH=$HOME/.cargo
+export POETRY_PATH=$HOME/.poetry
 __add_to_path $GOPATH/bin
+__add_to_path $CARGO_PATH/bin
+__add_to_path $POETRY_PATH/bin
+
+set -gx PATH $PATH
 
 abbr hm "history --merge"
 abbr g "git"
@@ -25,9 +31,18 @@ abbr note "jupyter notebook"
 abbr dja "django-admin"
 abbr dj "python manage.py"
 abbr y "yarn"
-abbr ll "ls -lash"
+abbr ll "exa -lah --git"
+abbr ls "exa"
 abbr fk "kill -9"
 abbr k "kill"
+abbr bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
+abbr gh "cd $GHQ_ROOT/github.com/rcoedo"
+abbr gl "cd $GHQ_ROOT/gitlab.com/rcoedo"
+abbr da "django-admin"
+abbr pm "python manage.py"
+abbr ag "rg"
+abbr p "poetry"
+abbr find "fd"
 
 abbr t "tig"
 abbr ts "tig status"
@@ -36,9 +51,6 @@ abbr tl "tig log"
 alias vim "nvim"
 alias wtr "curl -4 wttr.in"
 alias tx "tmuxinator"
-alias bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
-alias gh "cd $GHQ_ROOT/github.com/rcoedo"
-alias gl "cd $GHQ_ROOT/gitlab.com/rcoedo"
 alias miex "iex -S mix"
 alias r "ranger"
 alias ta "tmux attach-session"
@@ -48,7 +60,7 @@ alias icask "__fuzzy_cask"
 alias ik "__fuzzy_kill"
 alias icd "__fuzzy_cd"
 alias dr "__docker_run_in_dir"
-alias tree "tree -C -I 'node_modules'"
+alias tree "~/.config/fish/scripts/tree.sh"
 alias dcpg "wget https://gist.github.com/rcoedo/63cc1f7c3af12fb9c0a38e2e10843ea7/raw/ -O docker-compose.yml"
 alias bat "bat --theme=zenburn"
 alias du "ncdu --color dark -rr -x"
@@ -56,3 +68,4 @@ alias du "ncdu --color dark -rr -x"
 alias yd "ydiff -s"
 alias db "nodevtools"
 alias cat "bat --theme=zenburn"
+alias https "http --default-scheme=https --verify=no"
