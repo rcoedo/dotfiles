@@ -1,6 +1,6 @@
 local window = require "window"
 local spotify = require "spotify"
-local emoji = require "emoji"
+local amphetamine = require "amphetamine"
 local Spacebar = require "modal/spacebar"
 
 -- Reload configuration
@@ -20,7 +20,6 @@ local key = Spacebar.new {
       {"h", "hyper", function() window.launchOrFocus("Hyper") end},
       {"t", "terminal", function() window.launchOrFocus("iTerm") end},
       {"p", "postman", function() window.launchOrFocus("Postman") end},
-      {"j", "emoji selector", function() emoji.emoji_chooser:show() end},
       {"c", "chrome", function() window.launchOrSwitch("Google Chrome") end},
       {"m", "messaging", {
           {"w", "whatsapp", function() window.launchOrSwitch("WhatsApp") end},

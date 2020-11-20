@@ -440,11 +440,13 @@
     (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))))
 
 (req-package anaconda-mode
-  :require company
+  :require company rainbow-delimiters
   :config
   (progn
     (add-to-list 'company-backends 'company-anaconda)
-    (add-hook 'python-mode-hook 'anaconda-mode)))
+    (setq python-indent-offset 4)
+    (add-hook 'python-mode-hook 'anaconda-mode)
+    (add-hook 'python-mode-hook 'rainbow-delimiters-mode)))
 
 (req-package blacken
   :init
@@ -541,7 +543,7 @@
 (req-package rainbow-mode
   :init
   (progn
-    (rcoedo-add-hooks 'rainbow-mode '(css-mode-hook scss-mode-hook html-mode-hook web-mode-hook))))
+    (rcoedo-add-hooks 'rainbow-mode '(css-mode-hook scss-mode-hook html-mode-hook web-mode-hook c++-mode-hook))))
 
 (req-package emmet-mode
   :init
