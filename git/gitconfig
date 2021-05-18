@@ -6,7 +6,7 @@ name = Roman Coedo
 email = rcoedo@nibelheim.es
 
 [credential]
-helper = CREDENTIAL
+	helper = osxkeychain
 
 [color]
 diff = auto
