@@ -59,7 +59,7 @@
 ;; Theme
 (use-package gruvbox-theme
   :init
-  (set-frame-font (font-spec :family "Operator Mono" :size 16))
+  (set-frame-font (font-spec :family "Fira Code" :size 14))
   (set-face-italic 'font-lock-comment-face t)
   (setq-default line-spacing 3)
   :config
