@@ -20,39 +20,6 @@
 (setq straight-use-package-by-default t)
 ;;
 
-;; Misc
-(put 'dired-find-alternate-file 'disabled nil)          ;; Allow the use of dired-find-alternate-file
-(put 'erase-buffer 'disabled nil)                       ;; Allow the use of erase-buffer
-(transient-mark-mode)                                   ;; Show the mark as selected
-(global-auto-revert-mode)                               ;; Reload buffers when they change outside emacs
-(menu-bar-mode -1)                                      ;; Hide menu bar
-(scroll-bar-mode -1)                                    ;; Hide scroll bar
-(tool-bar-mode -1)                                      ;; Hide tool bar
-
-(setq-default c-basic-offset 4
-              truncate-lines nil
-              prefer-coding-system 'utf-8
-              indent-tabs-mode nil
-              global-auto-revert-non-file-buffers t     ;; Auto-revert
-              auto-revert-verbose nil
-              tab-width 4
-              backup-inhibited t
-              auto-save-default nil
-              inhibit-splash-screen t
-              menu-bar-mode -1)
-
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)   ;; Line numbers in major modes derived from prog-mode
-(add-hook 'write-file-hooks 'delete-trailing-whitespace) ;; Delete trailing spaces
-
- ;; MacOS specific configuration
-(when (memq window-system '(mac ns))
-  (setq mac-command-modifier 'meta
-        ns-use-native-fullscreen nil
-        mac-option-modifier 'none
-        system-uses-terminfo nil
-        ring-bell-function 'ignore))
-;;
-
 ;; Load helpers
 (load "~/.emacs.d/helpers.el")
 
@@ -90,6 +57,7 @@
   (general-define-key "M-]"     'rcoedo-next-non-emacs-buffer
                       "M-["     'rcoedo-previous-non-emacs-buffer
                       "M-e"     'eval-expression
+                      "M--"     'toggle-frame-fullscreen
                       "\C-x2"   'rcoedo-split-below-other-window
                       "\C-x3"   'rcoedo-split-right-other-window)
 
@@ -421,6 +389,39 @@
   :mode "\\.css$'"
   :init
   (setq css-indent-offset 2))
+
+;; Misc
+(put 'dired-find-alternate-file 'disabled nil)          ;; Allow the use of dired-find-alternate-file
+(put 'erase-buffer 'disabled nil)                       ;; Allow the use of erase-buffer
+(transient-mark-mode)                                   ;; Show the mark as selected
+(global-auto-revert-mode)                               ;; Reload buffers when they change outside emacs
+(menu-bar-mode -1)                                      ;; Hide menu bar
+(scroll-bar-mode -1)                                    ;; Hide scroll bar
+(tool-bar-mode -1)                                      ;; Hide tool bar
+
+(setq-default c-basic-offset 4
+              truncate-lines nil
+              prefer-coding-system 'utf-8
+              indent-tabs-mode nil
+              global-auto-revert-non-file-buffers t     ;; Auto-revert
+              auto-revert-verbose nil
+              tab-width 4
+              backup-inhibited t
+              auto-save-default nil
+              inhibit-splash-screen t
+              menu-bar-mode -1)
+
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)   ;; Line numbers in major modes derived from prog-mode
+(add-hook 'write-file-hooks 'delete-trailing-whitespace) ;; Delete trailing spaces
+
+ ;; MacOS specific configuration
+(when (memq window-system '(mac ns))
+  (setq mac-command-modifier 'meta
+        ns-use-native-fullscreen nil
+        mac-option-modifier 'none
+        system-uses-terminfo nil
+        ring-bell-function 'ignore))
+;;
 
 (provide 'init)
 ;;; init.el ends here
