@@ -12,8 +12,6 @@
 ;; Utility function library
 
 ;;; Code:
-;(require 'dash)
-
 (defun rcoedo-split-right-other-window ()
   "Split window right and move to that window."
   (interactive)
@@ -227,6 +225,17 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (dolist (element elements)
           (add-to-list 'list-var element)
           (print list-var)))
+
+(defun rcoedo-sort-words (reverse beg end)
+  "Sort words from BEG to END in region alphabetically, in REVERSE if negative.
+Prefixed with negative \\[universal-argument], sorts in reverse.
+
+    The variable `sort-fold-case' determines whether alphabetic case
+    affects the sort order.
+
+    See `sort-regexp-fields'."
+      (interactive "*P\nr")
+      (sort-regexp-fields reverse "\\w+" "\\&" beg end))
 
 (provide 'rcoedo)
 ;;; rcoedo.el ends here
