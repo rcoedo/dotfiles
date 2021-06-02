@@ -1,9 +1,8 @@
-NVIM_SOURCE=./init.vim
-NVIM_TARGET=~/.config/nvim/init.vim
+NVIM_SOURCE_DIR=./nvim/
+NVIM_TARGET_DIR=~/.config/nvim/
 
 install:
-	cp $(NVIM_TARGET) $(NVIM_TARGET).backup
-	cp $(NVIM_SOURCE) $(NVIM_TARGET)
+	rsync -av $(NVIM_SOURCE_DIR) $(NVIM_TARGET_DIR)
 
 get:
-	cp $(NVIM_TARGET) $(NVIM_SOURCE)
+	rsync -av $(NVIM_TARGET_DIR) $(NVIM_SOURCE_DIR)
