@@ -1,4 +1,4 @@
-EMACS_TARGET_DIR=~/.emacs.d
+EMACS_TARGET_DIR=~/.emacs.d/
 EMACS_SOURCE_DIR=./emacs.d/
 
 install:

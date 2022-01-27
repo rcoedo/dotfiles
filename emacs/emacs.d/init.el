@@ -23,10 +23,19 @@
 ;; Load helpers
 (load "~/.emacs.d/helpers.el")
 
+;; The first thing we do is load our environment
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns x))
+  :demand
+  :init
+  (setq exec-path-from-shell-check-startup-files nil)
+  :config
+  (exec-path-from-shell-initialize))
+
 ;; Theme
 (use-package gruvbox-theme
   :init
-  (set-frame-font (font-spec :family "Fira Code" :size 14))
+  (set-frame-font (font-spec :family "FiraCode NF" :size 14))
   (set-face-italic 'font-lock-comment-face t)
   (setq-default line-spacing 3)
   :config
@@ -54,12 +63,13 @@
                       "C-." (kbd "C-c")
                       "\e"  (kbd "C-g"))
 
-  (general-define-key "M-]"     'rcoedo-next-non-emacs-buffer
-                      "M-["     'rcoedo-previous-non-emacs-buffer
-                      "M-e"     'eval-expression
-                      "M--"     'toggle-frame-fullscreen
-                      "\C-x2"   'rcoedo-split-below-other-window
-                      "\C-x3"   'rcoedo-split-right-other-window)
+  (general-define-key
+   "s-t" nil
+   "s-p" nil)
+
+  (general-define-key
+   "\C-x2" 'rcoedo-split-below-other-window
+   "\C-x3" 'rcoedo-split-right-other-window)
 
   (mmap
     "<right>" nil
@@ -68,8 +78,8 @@
     "<up>"    nil)
 
   (nmap
-    "C-p"          nil
-    "<tab>"       'other-window)
+    "C-p"   nil
+    "<tab>" 'other-window)
 
   (imap
     "C-a" 'beginning-of-line
@@ -84,14 +94,19 @@
   (rcoedo-leader-key
     "jr"      'jump-to-register
     "ee"      '(lambda () (interactive) (find-file "~/.emacs.d/init.el"))
+    "wa"      'toggle-frame-fullscreen
     "bK"      'kill-buffer-and-window
     "bk"      'kill-this-buffer
     "bd"      'rcoedo-delete-current-file
-    "br"      'rcoedo-rename-current-file))
+    "br"      'rcoedo-rename-current-file
+    "]"       'rcoedo-next-non-emacs-buffer
+    "["       'rcoedo-previous-non-emacs-buffer
+    "dl"      'display-line-numbers-mode))
 
 (use-package yasnippet
   :general
-  ("M-i"     'yas-insert-snippet)
+  (rcoedo-leader-key
+    "is"      'yas-insert-snippet)
   (:keymaps 'yas-minor-mode-map
             "<tab>"       nil
             "TAB"         nil
@@ -114,16 +129,17 @@
 (use-package helm
   :demand
   :general
-  ("M-b"     'helm-mini)
   ("C-x C-f" 'helm-find-files)
-  ("M-x"     'helm-M-x)
   (nmap "C-j" 'helm-resume)
   (rcoedo-leader-key
-    "yy"      'helm-show-kill-ring
+    "."       'helm-resume
+    "fy"      'helm-show-kill-ring
     "ff"      'helm-find-files
-    "fb"      'helm-mini)
+    "bb"      'helm-mini
+    "x"       'helm-M-x)
   (:keymaps 'helm-map
-            "<tab>"  'helm-execute-persistent-action)
+            "<tab>"  'helm-execute-persistent-action
+            "TAB"  'helm-execute-persistent-action)
   (:keymaps 'helm-buffer-map
             "<C-backspace>" 'rcoedo-helm-kill-buffers
             "<C-return>"    'rcoedo-helm-switch-buffer-right
@@ -143,15 +159,7 @@
   (add-to-list 'helm-type-buffer-actions '("rc.Find buffer below" . rcoedo-switch-to-buffer-below) :append))
 
 (use-package helm-projectile
-  :after (projectile helm)
   :general
-  ("M-s"      'helm-projectile-ag)
-  ("M-t"      'helm-projectile-find-file)
-  (rcoedo-leader-key
-    "fs"      'helm-projectile-ag
-    "ft"      'helm-projectile-find-file)
-  (:keymaps 'projectile-command-map
-            "s s" 'helm-projectile-ag)
   (:keymaps 'helm-projectile-find-file-map
             "<C-return>" 'rcoedo-helm-find-file-right
             "<C-S-return>" 'rcoedo-helm-find-file-below)
@@ -161,7 +169,6 @@
   (add-to-list 'helm-projectile-file-actions '("rc.Find file below" . rcoedo-find-file-below) t))
 
 (use-package helm-ag
-  :after helm
   :general
   (:keymaps 'helm-ag-map
             "<C-return>"   'rcoedo-helm-ag-find-file-right
@@ -170,16 +177,11 @@
   (add-to-list 'helm-ag--actions '("rc.Ag Find file right" . rcoedo-helm-ag-find-file-right) t)
   (add-to-list 'helm-ag--actions '("rc.Ag Find file below" . rcoedo-helm-ag-find-file-below) t))
 
-(use-package ghq
-  :general
-  ("M-p"     'helm-ghq-list)
-  (rcoedo-leader-key
-    "fp"     'helm-ghq-list)
-  (:keymaps 'projectile-command-map
-            "p" 'helm-ghq-list))
+(use-package ghq)
 
 (use-package company
   :after general
+  :demand
   :general
   (:keymaps 'company-active-map
             "M-n"   nil
@@ -193,10 +195,14 @@
   (global-company-mode))
 
 (use-package projectile
-  :after general
+  :demand
   :general
-  (:keymaps 'projectile-mode-map
-            "C-c p" 'projectile-command-map)
+  (rcoedo-leader-key
+    "p" 'projectile-command-map)
+  (:keymaps 'projectile-command-map
+            "t" 'helm-projectile
+            "p" 'helm-ghq-list
+            "s" 'helm-projectile-ag)
   :init
   (setq projectile-enable-caching t
         projectile-switch-project-action 'projectile-dired
@@ -261,7 +267,7 @@
   :after evil
   :hook emacs-lisp-mode
   :general
-  (:keymaps 'evil-lisp-state
+  (:keymaps 'evil-lisp-state-map
             "o" 'lisp-state-insert-sexp-after
             "O" 'lisp-state-insert-sexp-before)
   :init
@@ -287,10 +293,11 @@
 
 (use-package transpose-frame
   :general
-  ("M-f"     'flip-frame)
-  ("M-F"     'flop-frame)
-  ("M-r"     'rotate-frame-clockwise)
-  ("M-R"     'rotate-frame-anticlockwise))
+  (rcoedo-leader-key
+    "wf" 'flip-frame
+    "wF" 'flop-frame
+    "wr" 'rotate-frame-clockwise
+    "wR" 'rotate-frame-anticlockwise))
 
 (use-package rainbow-delimiters
   :hook ((go-mode emacs-lisp-mode rjsx-mode) . rainbow-delimiters-mode))
@@ -320,16 +327,10 @@
   (rcoedo-leader-key
     "jd"      'dired-jump)
   (:keymaps 'dired-mode-map
-            "M-s" nil)
+            "M-s" nil
+            "<SPC>" nil)
   :init
   (setq dired-use-ls-dired nil))
-
-(use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
-  :init
-  (setq exec-path-from-shell-check-startup-files nil)
-  :config
-  (exec-path-from-shell-initialize))
 
 (use-package markdown-mode
   :mode "\\.md\\'"
@@ -362,7 +363,7 @@
   :hook (python-mode . blacken-mode))
 
 (use-package prettier-js
-  :hook ((rjsx-mode css-mode) . prettier-js-mode)
+  :hook ((rjsx-mode css-mode typescript-mode) . prettier-js-mode)
   :init
   (setq prettier-js-args '("--trailing-comma" "all" "--single-quote" "false" "--print-width" "120")))
 
@@ -371,6 +372,38 @@
   :init
   (setq js2-include-node-externs t
         js-indent-level 2))
+
+(use-package typescript-mode
+  :mode "\\.ts$'")
+
+(use-package web-mode
+  :ensure t
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         ("\\.jsx\\'" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-block-padding 2
+        web-mode-comment-style 2
+
+        web-mode-enable-css-colorization t
+        web-mode-enable-auto-pairing t
+        web-mode-enable-comment-keywords t
+        web-mode-enable-current-element-highlight t
+        )
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (when (string-equal "tsx" (file-name-extension buffer-file-name))
+		(setup-tide-mode))))
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
+
+(use-package tide
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 
 (use-package protobuf-mode
   :mode "\\.proto$'")
@@ -389,6 +422,10 @@
   :mode "\\.css$'"
   :init
   (setq css-indent-offset 2))
+
+;; (use-package lsp-mode
+;;     :hook (rjsx-mode . lsp-deferred)
+;;     :commands (lsp lsp-deferred))
 
 ;; Misc
 (put 'dired-find-alternate-file 'disabled nil)          ;; Allow the use of dired-find-alternate-file
@@ -416,9 +453,7 @@
 
  ;; MacOS specific configuration
 (when (memq window-system '(mac ns))
-  (setq mac-command-modifier 'meta
-        ns-use-native-fullscreen nil
-        mac-option-modifier 'none
+  (setq ns-use-native-fullscreen nil
         system-uses-terminfo nil
         ring-bell-function 'ignore))
 ;;
