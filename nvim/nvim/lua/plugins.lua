@@ -29,6 +29,7 @@ require("packer").startup(function(use)
           vim.g.NERDTreeDirArrowExpandable = '▸'
           vim.g.NERDTreeDirArrowCollapsible = '▾'
           vim.g.NERDTreeIgnore = {'node_modules'}
+          vim.g.NERDTReeMinimalUI = 1
 
           function open_nerd_tree()
              local readable = vim.fn.filereadable(vim.fn.bufname(vim.fn.expand('%:p')))
@@ -52,7 +53,6 @@ require("packer").startup(function(use)
 
     use 'terryma/vim-expand-region'
     use 'bronson/vim-trailing-whitespace'
-    use 'AndrewRadev/splitjoin.vim'
 
     -- completion
     use {

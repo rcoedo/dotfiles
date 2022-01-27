@@ -4,6 +4,7 @@ vim.cmd [[
 
   noremap <leader>bd :bd<cr>
   noremap <leader>ft :lua open_nerd_tree()<cr>
+  noremap <leader>ft :NERDTreeToggle<cr>
 
   nmap <leader>sh :noh<cr>
   nmap <tab> <c-w><c-w>
