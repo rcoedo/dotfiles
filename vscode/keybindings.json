@@ -1,21 +1,116 @@
 [
-  { "key": "cmd+x", "command": "workbench.action.showCommands" },
-  { "key": "cmd+t", "command": "workbench.action.quickOpen" },
-  { "key": "cmd+k t", "command": "workbench.files.action.focusFilesExplorer" },
-  { "key": "cmd+]", "command": "workbench.action.nextEditor" },
-  { "key": "cmd+[", "command": "workbench.action.previousEditor" },
-  { "key": "j", "command": "list.focusDown", "when": "listFocus" },
-  { "key": "k", "command": "list.focusUp", "when": "listFocus" },
-  { "key": "l", "command": "list.expand", "when": "listFocus" },
-  { "key": "h", "command": "list.collapse", "when": "listFocus" },
-  { "key": "n", "command": "explorer.newFile", "when": "filesExplorerFocus" },
-  { "key": "d", "command": "explorer.newFolder", "when": "filesExplorerFocus" },
-  { "key": "escape", "command": "workbench.action.focusActiveEditorGroup", "when": "filesExplorerFocus" },
+  /////////////////////////////////////////////////////////////////
+  //// Global actions /////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  {
+    "key": "cmd+f l",
+    "command": "search.action.clearSearchResults"
+  },
+  {
+    "key": "cmd+]",
+    "command": "workbench.action.nextEditor"
+  },
+  {
+    "key": "cmd+[",
+    "command": "workbench.action.previousEditor"
+  },
+  {
+    "key": "space",
+    "command": "vspacecode.space",
+    "when": "activeEditorGroupEmpty && focusedView == '' && !whichkeyActive && !inputFocus"
+  },
+  {
+    "key": "alt+space",
+    "command": "vspacecode.space",
+    "when": "activeEditorGroupEmpty && focusedView == '' && !whichkeyActive"
+  },
+  {
+    "key": "space",
+    "command": "vspacecode.space",
+    "when": "sideBarFocus && !whichkeyActive && !inputFocus"
+  },
+  {
+    "key": "alt+space",
+    "command": "vspacecode.space",
+    "when": "sideBarFocus && !whichkeyActive"
+  },
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  //// SideBar ////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  {
+    "key": "tab",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "sideBarFocus"
+  },
+  {
+    "key": "escape",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "sideBarFocus"
+  },
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  //// Search Viewlet /////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  {
+    "key": "cmd+n",
+    "command": "search.action.focusNextSearchResult",
+    "when": "hasSearchResult && inSearchEditor"
+  },
+  {
+    "key": "cmd+p",
+    "command": "search.action.focusPreviousSearchResult",
+    "when": "hasSearchResult && inSearchEditor"
+  },
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  //// Lists //////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  {
+    "key": "j",
+    "command": "list.focusDown",
+    "when": "listFocus"
+  },
+  {
+    "key": "k",
+    "command": "list.focusUp",
+    "when": "listFocus"
+  },
+  {
+    "key": "l",
+    "command": "list.expand",
+    "when": "listFocus"
+  },
+  {
+    "key": "h",
+    "command": "list.collapse",
+    "when": "listFocus"
+  },
   {
     "key": "enter",
     "command": "list.select",
     "when": "listFocus"
   },
+  /////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////
+  //// File Explorer //////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  {
+    "key": "n",
+    "command": "explorer.newFile",
+    "when": "filesExplorerFocus"
+  },
+  {
+    "key": "d",
+    "command": "explorer.newFolder",
+    "when": "filesExplorerFocus"
+  },
+  /////////////////////////////////////////////////////////////////
+
   {
     "key": "ctrl+, 3",
     "command": "workbench.action.splitEditorRight"
@@ -45,5 +140,178 @@
   {
     "key": "cmd+r",
     "command": "workbench.action.debug.selectandstart"
-  }
+  },
+  {
+    "key": "cmd+n",
+    "command": "references-view.next",
+    "when": "reference-list.hasResult && references-view.canNavigate"
+  },
+  {
+    "key": "f4",
+    "command": "-references-view.next",
+    "when": "reference-list.hasResult && references-view.canNavigate"
+  },
+  {
+    "key": "cmd+p",
+    "command": "references-view.prev",
+    "when": "reference-list.hasResult && references-view.canNavigate"
+  },
+  {
+    "key": "shift+f4",
+    "command": "-references-view.prev",
+    "when": "reference-list.hasResult && references-view.canNavigate"
+  },
+  {
+    "key": "cmd+n",
+    "command": "search.action.focusNextSearchResult",
+    "when": "hasSearchResult || inSearchEditor"
+  },
+  {
+    "key": "f4",
+    "command": "-search.action.focusNextSearchResult",
+    "when": "hasSearchResult || inSearchEditor"
+  },
+  {
+    "key": "cmd+p",
+    "command": "search.action.focusPreviousSearchResult",
+    "when": "hasSearchResult || inSearchEditor"
+  },
+  {
+    "key": "shift+f4",
+    "command": "-search.action.focusPreviousSearchResult",
+    "when": "hasSearchResult || inSearchEditor"
+  },
+  {
+    "key": "cmd+n",
+    "command": "goToNextReference",
+    "when": "inReferenceSearchEditor || referenceSearchVisible"
+  },
+  {
+    "key": "f4",
+    "command": "-goToNextReference",
+    "when": "inReferenceSearchEditor || referenceSearchVisible"
+  },
+  {
+    "key": "cmd+p",
+    "command": "goToPreviousReference",
+    "when": "inReferenceSearchEditor || referenceSearchVisible"
+  },
+  {
+    "key": "shift+f4",
+    "command": "-goToPreviousReference",
+    "when": "inReferenceSearchEditor || referenceSearchVisible"
+},
+{
+	"key": "space",
+	"command": "vspacecode.space",
+	"when": "sideBarFocus && !inputFocus && !whichkeyActive"
+},
+{
+	"key": "tab",
+	"command": "extension.vim_tab",
+	"when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && editorLangId != 'magit'"
+},
+{
+	"key": "tab",
+	"command": "-extension.vim_tab",
+	"when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
+},
+{
+	"key": "x",
+	"command": "magit.discard-at-point",
+	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+},
+{
+	"key": "k",
+	"command": "-magit.discard-at-point"
+},
+{
+	"key": "-",
+	"command": "magit.reverse-at-point",
+	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+},
+{
+	"key": "v",
+	"command": "-magit.reverse-at-point"
+},
+{
+	"key": "shift+-",
+	"command": "magit.reverting",
+	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+},
+{
+	"key": "shift+v",
+	"command": "-magit.reverting"
+},
+{
+	"key": "shift+o",
+	"command": "magit.resetting",
+	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+},
+{
+	"key": "shift+x",
+	"command": "-magit.resetting"
+},
+{
+	"key": "x",
+	"command": "-magit.reset-mixed"
+},
+{
+	"key": "ctrl+u x",
+	"command": "-magit.reset-hard"
+},
+{
+	"key": "y",
+	"command": "-magit.show-refs"
+},
+{
+	"key": "y",
+	"command": "vspacecode.showMagitRefMenu",
+	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode == 'Normal'"
+},
+{
+	"key": "ctrl+j",
+	"command": "workbench.action.quickOpenSelectNext",
+	"when": "inQuickOpen"
+},
+{
+	"key": "ctrl+k",
+	"command": "workbench.action.quickOpenSelectPrevious",
+	"when": "inQuickOpen"
+},
+{
+	"key": "ctrl+j",
+	"command": "selectNextSuggestion",
+	"when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+},
+{
+	"key": "ctrl+k",
+	"command": "selectPrevSuggestion",
+	"when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+},
+{
+	"key": "ctrl+l",
+	"command": "acceptSelectedSuggestion",
+	"when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+},
+{
+	"key": "ctrl+j",
+	"command": "showNextParameterHint",
+	"when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+},
+{
+	"key": "ctrl+k",
+	"command": "showPrevParameterHint",
+	"when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+},
+{
+	"key": "ctrl+h",
+	"command": "file-browser.stepOut",
+	"when": "inFileBrowser"
+},
+{
+	"key": "ctrl+l",
+	"command": "file-browser.stepIn",
+	"when": "inFileBrowser"
+},
 ]

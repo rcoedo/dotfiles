@@ -1,27 +1,101 @@
-// Place your settings in this file to overwrite the default settings
 {
-  "editor.fontSize": 16,
-  "editor.fontFamily": "Operator Mono",
-  "vim.useCtrlKeys": true,
-  "vim.useSystemClipboard": true,
-  "vim.leader": " ",
-  "vim.enableNeovim": true,
-  "vim.normalModeKeyBindingsNonRecursive": [
-    {
-      "before": ["<tab>"],
-      "after": ["<Esc>"],
-      "commands": [
+    "editor.fontSize": 16,
+    "editor.fontFamily": "Operator Mono",
+    "vim.useCtrlKeys": true,
+    "vim.useSystemClipboard": true,
+    "vim.leader": ",",
+    "vim.enableNeovim": true,
+    "vim.hlsearch": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+      {
+        "before": ["<tab>"],
+        "after": ["<Esc>"],
+        "commands": [
+          {
+            "command": "workbench.action.navigateEditorGroups",
+            "args": []
+          }
+        ]
+      },
+      {
+        "before":["<backspace>"],
+        "after":[],
+        "commands": [
+            {
+                "command": ":nohl"
+            }
+        ]
+      },
         {
-          "command": "workbench.action.navigateEditorGroups",
-          "args": []
+            "before": ["<space>"],
+            "commands": ["vspacecode.space"]
+        },
+        {
+            "before": [","],
+            "commands": [
+                "vspacecode.space",
+                {
+                    "command": "whichkey.triggerKey",
+                    "args": "m"
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "workbench.colorTheme": "Gruvbox Dark (Medium Contrast)",
-  "editor.formatOnSave": true,
-  "prettier.trailingComma": "all",
-  "prettier.printWidth": 120,
-  "javascript.validate.enable": false,
-  "terminal.integrated.commandsToSkipShell": ["workbench.debug.action.toggleRepl"]
-}
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<space>"],
+            "commands": ["vspacecode.space"]
+        },
+        {
+            "before": [","],
+            "commands": [
+                "vspacecode.space",
+                {
+                    "command": "whichkey.triggerKey",
+                    "args": "m"
+                }
+            ]
+        }
+    ],
+    "vspacecode.bindingOverrides": [
+      {
+        "keys": "p.s",
+        "name": "Search in project",
+        "type": "command",
+        "command": "workbench.view.search.focus",
+      },
+      {
+        "keys": "p.p",
+        "name": "Switch project",
+        "type": "command",
+        "command": "extension.ghqOpen",
+      },
+      {
+        "keys": "p.t",
+        "name": "Switch project",
+        "type": "command",
+        "command": "workbench.action.quickOpen",
+      },
+      {
+        "keys": "s.l",
+        "name": "Clear search results",
+        "type": "command",
+        "command": "search.action.clearSearchResults",
+      }
+    ],
+    "workbench.colorTheme": "Gruvbox Dark Medium",
+    "editor.formatOnSave": true,
+    "prettier.trailingComma": "all",
+    "prettier.printWidth": 120,
+    "javascript.validate.enable": false,
+    "terminal.integrated.commandsToSkipShell": [
+      "workbench.debug.action.toggleRepl"
+    ],
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.renderWhitespace": "none"
+  }
