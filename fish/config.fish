@@ -6,15 +6,9 @@ export GREP_OPTIONS="--color=auto"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_GITHUB_API=1
 export BREW_CELLAR="/usr/local/Cellar"
-export TOMCATS=$HOME/Workspace/tomcats
-export CATALINA_HOME=$TOMCATS/apache-tomcat-8.0.29
-export GOPATH=$HOME/Workspace
-export YARNPATH=$HOME/.config/yarn
-export CARGO_PATH=$HOME/.cargo
-export POETRY_PATH=$HOME/.poetry
-__add_to_path $GOPATH/bin
-__add_to_path $CARGO_PATH/bin
-__add_to_path $POETRY_PATH/bin
+#export YARNPATH=$HOME/.config/yarn
+#export CARGO_PATH=$HOME/.cargo
+#__add_to_path $CARGO_PATH/bin
 
 set -gx PATH $PATH
 
@@ -41,11 +35,13 @@ abbr pm "python manage.py"
 abbr ag "rg"
 abbr p "poetry"
 abbr find "fd"
+abbr f "fork ."
 
 abbr t "tig"
 abbr ts "tig status"
 abbr tl "tig log"
 
+alias er "cd $EVERREAL_ROOT"
 alias vim "nvim"
 alias wtr "curl -4 wttr.in"
 alias tx "tmuxinator"
