@@ -1,8 +1,5 @@
 local window = require "hs.window"
 local grid = require "hs.grid"
-local eventtap = require "hs.eventtap"
-local application = require "hs.application"
-local appfinder = require "hs.appfinder"
 
 window.animationDuration = 0
 grid.MARGINX = 0
@@ -93,19 +90,6 @@ local function adjustGrid(h, w) grid.adjustHeight(h) grid.adjustWidth(w) end
 local function increaseGrid() adjustGrid(1, 1) end
 local function decreaseGrid() adjustGrid(-1, -1) end
 
-local function launchOrSwitch(name, realName)
-    if (window.frontmostWindow() ~= null and window.frontmostWindow():application() == appfinder.appFromName(name)) then
-        eventtap.keyStroke({"cmd"}, "`")
-    else
-        local app = appfinder.appFromName(realName or name)
-        if (app == null) then
-          application.launchOrFocus(realName or name)
-        else
-          app:activate()
-        end
-    end
-end
-
 local function focus(name)
   local win = hs.window.find(name)
   if (win ~= null) then
@@ -138,8 +122,6 @@ return {
   adjustGrid = adjustGrid,
   increaseGrid = increaseGrid,
   decreaseGrid = decreaseGrid,
-  launchOrSwitch = launchOrSwitch,
-  launchOrFocus = application.launchOrFocus,
   pushToNextScreen = pushToNextScreen,
   pushWindowUp = grid.pushWindowUp,
   pushWindowDown = grid.pushWindowDown,

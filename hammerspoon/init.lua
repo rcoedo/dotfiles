@@ -1,32 +1,33 @@
 local window = require "window"
+local app = require "application"
 local spotify = require "spotify"
 local amphetamine = require "amphetamine"
 local Spacebar = require "modal/spacebar"
 
 -- Reload configuration
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", hs.reload):start()
+hs.application.enableSpotlightForNameSearches(true)
 hs.alert("Config loaded")
 
 local key = Spacebar.new {
    prefix = "cmd-return",
    bindings = {
-      {"i", "intellij", function() window.launchOrFocus("IntelliJ IDEA") end},
-      {"u", "android studio", function() window.launchOrFocus("Android Studio") end},
-      {"d", "ndb", function() window.focus("ndb") end},
-      {"o", "code", function() window.launchOrFocus("Visual Studio Code") end},
-      {"e", "emacs", function() window.launchOrFocus("Emacs.app") end},
-      {"b", "brave", function() window.launchOrFocus("Brave Browser") end},
-      {"r", "trello", function() window.launchOrFocus("Trello") end},
-      {"h", "hyper", function() window.launchOrFocus("Hyper") end},
-      {"t", "terminal", function() window.launchOrFocus("iTerm") end},
-      {"p", "postman", function() window.launchOrFocus("Postman") end},
-      {"c", "chrome", function() window.launchOrSwitch("Google Chrome") end},
+      {"i", "intellij", function() app.launchOrFocus("IntelliJ IDEA") end},
+      {"u", "android studio", function() app.launchOrFocus("Android Studio") end},
+      {"d", "DBeaver", function() window.focus("DBeaver") end},
+      {"o", "code", function() app.launchOrFocus("Visual Studio Code") end},
+      {"e", "emacs", function() app.launchOrFocus("Emacs.app") end},
+      {"b", "brave", function() app.launchOrFocus("Brave Browser") end},
+      {"f", "fork", function() app.launchOrFocus("Fork") end},
+      {"r", "trello", function() app.launchOrFocus("Trello") end},
+      {"a", "safari", function() app.launchOrFocus("Safari") end},
+      {"t", "terminal", function() app.launchOrFocus("iTerm") end},
+      {"c", "chrome", function() app.launchOrSwitch("Google Chrome") end},
       {"m", "messaging", {
-          {"w", "whatsapp", function() window.launchOrSwitch("WhatsApp") end},
-          {"d", "discord", function() window.launchOrSwitch("Discord") end},
-          {"t", "telegram", function() window.launchOrFocus("Telegram") end},
-          {"l", "slack", function() window.launchOrFocus("Slack") end},
-          {"r", "wire", function() window.launchOrFocus("Wire") end}
+          {"w", "whatsapp", function() app.launchOrSwitch("WhatsApp") end},
+          {"d", "discord", function() app.launchOrSwitch("Discord") end},
+          {"t", "telegram", function() app.launchOrFocus("Telegram") end},
+          {"l", "slack", function() app.launchOrFocus("Slack") end},
       }},
       {"s", "spotify mode", {
           {"p", "previous", spotify.previous, {modal = "stay"}},
