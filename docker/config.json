@@ -1,3 +1,8 @@
 {
-    "detachKeys": "ctrl-g"
+  "detachKeys": "ctrl-g",
+  "credsStore" : "desktop",
+  "experimental" : "disabled",
+  "auths" : {
+
+  }
 }
