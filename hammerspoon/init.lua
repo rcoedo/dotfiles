@@ -12,6 +12,7 @@ hs.alert("Config loaded")
 local key = Spacebar.new {
    prefix = "cmd-return",
    bindings = {
+      {"g", "g", function() app.launchOrFocus("IntelliJ IDEA") end},
       {"i", "intellij", function() app.launchOrFocus("IntelliJ IDEA") end},
       {"u", "android studio", function() app.launchOrFocus("Android Studio") end},
       {"d", "DBeaver", function() window.focus("DBeaver") end},
@@ -23,6 +24,7 @@ local key = Spacebar.new {
       {"a", "safari", function() app.launchOrFocus("Safari") end},
       {"t", "terminal", function() app.launchOrFocus("iTerm") end},
       {"c", "chrome", function() app.launchOrSwitch("Google Chrome") end},
+      {"z", "zoom", function() app.launchOrSwitch("zoom.us") end},
       {"m", "messaging", {
           {"w", "whatsapp", function() app.launchOrSwitch("WhatsApp") end},
           {"d", "discord", function() app.launchOrSwitch("Discord") end},
