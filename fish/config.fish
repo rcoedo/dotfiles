@@ -6,9 +6,10 @@ export GREP_OPTIONS="--color=auto"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_GITHUB_API=1
 export BREW_CELLAR="/usr/local/Cellar"
+fish_add_path /opt/homebrew/bin
 #export YARNPATH=$HOME/.config/yarn
-#export CARGO_PATH=$HOME/.cargo
-#__add_to_path $CARGO_PATH/bin
+export CARGO_PATH=$HOME/.cargo
+__add_to_path $CARGO_PATH/bin
 
 set -gx PATH $PATH
 
