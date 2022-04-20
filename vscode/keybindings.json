@@ -3,16 +3,17 @@
   //// Global actions /////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////
   {
-    "key": "cmd+f l",
-    "command": "search.action.clearSearchResults"
+    "key": "escape",
+    "command": "search.action.clearSearchResults",
+    "when": "hasSearchResult"
   },
   {
     "key": "cmd+]",
-    "command": "workbench.action.nextEditor"
+    "command": "workbench.action.openNextRecentlyUsedEditorInGroup"
   },
   {
     "key": "cmd+[",
-    "command": "workbench.action.previousEditor"
+    "command": "workbench.action.openPreviousRecentlyUsedEditorInGroup"
   },
   {
     "key": "space",
@@ -37,33 +38,18 @@
   /////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////////////////////
-  //// SideBar ////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////
-  {
-    "key": "tab",
-    "command": "workbench.action.focusActiveEditorGroup",
-    "when": "sideBarFocus"
-  },
-  {
-    "key": "escape",
-    "command": "workbench.action.toggleSidebarVisibility",
-    "when": "sideBarFocus"
-  },
-  /////////////////////////////////////////////////////////////////
-
-  /////////////////////////////////////////////////////////////////
   //// Search Viewlet /////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////
-  {
-    "key": "cmd+n",
-    "command": "search.action.focusNextSearchResult",
-    "when": "hasSearchResult && inSearchEditor"
-  },
-  {
-    "key": "cmd+p",
-    "command": "search.action.focusPreviousSearchResult",
-    "when": "hasSearchResult && inSearchEditor"
-  },
+  // {
+  //   "key": "cmd+n",
+  //   "command": "search.action.focusNextSearchResult",
+  //   "when": "hasSearchResult && inSearchEditor"
+  // },
+  // {
+  //   "key": "cmd+p",
+  //   "command": "search.action.focusPreviousSearchResult",
+  //   "when": "hasSearchResult && inSearchEditor"
+  // },
   /////////////////////////////////////////////////////////////////
 
   /////////////////////////////////////////////////////////////////
@@ -72,27 +58,27 @@
   {
     "key": "j",
     "command": "list.focusDown",
-    "when": "listFocus"
+    "when": "listFocus && !inputFocus"
   },
   {
     "key": "k",
     "command": "list.focusUp",
-    "when": "listFocus"
+    "when": "listFocus && !inputFocus"
   },
   {
     "key": "l",
     "command": "list.expand",
-    "when": "listFocus"
+    "when": "listFocus && !inputFocus"
   },
   {
     "key": "h",
     "command": "list.collapse",
-    "when": "listFocus"
+    "when": "listFocus && !inputFocus"
   },
   {
     "key": "enter",
     "command": "list.select",
-    "when": "listFocus"
+    "when": "listFocus && !inputFocus"
   },
   /////////////////////////////////////////////////////////////////
 
@@ -102,12 +88,12 @@
   {
     "key": "n",
     "command": "explorer.newFile",
-    "when": "filesExplorerFocus"
+    "when": "filesExplorerFocus && !inputFocus"
   },
   {
     "key": "d",
     "command": "explorer.newFolder",
-    "when": "filesExplorerFocus"
+    "when": "filesExplorerFocus && !inputFocus"
   },
   /////////////////////////////////////////////////////////////////
 
@@ -142,176 +128,188 @@
     "command": "workbench.action.debug.selectandstart"
   },
   {
-    "key": "cmd+n",
-    "command": "references-view.next",
-    "when": "reference-list.hasResult && references-view.canNavigate"
+    "key": "space",
+    "command": "vspacecode.space",
+    "when": "sideBarFocus && !inputFocus && !whichkeyActive"
   },
   {
-    "key": "f4",
-    "command": "-references-view.next",
-    "when": "reference-list.hasResult && references-view.canNavigate"
+    "key": "tab",
+    "command": "extension.vim_tab",
+    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && editorLangId != 'magit'"
   },
   {
-    "key": "cmd+p",
-    "command": "references-view.prev",
-    "when": "reference-list.hasResult && references-view.canNavigate"
+    "key": "tab",
+    "command": "-extension.vim_tab",
+    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
   },
   {
-    "key": "shift+f4",
-    "command": "-references-view.prev",
-    "when": "reference-list.hasResult && references-view.canNavigate"
+    "key": "x",
+    "command": "magit.discard-at-point",
+    "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
   },
   {
-    "key": "cmd+n",
-    "command": "search.action.focusNextSearchResult",
-    "when": "hasSearchResult || inSearchEditor"
+    "key": "k",
+    "command": "-magit.discard-at-point"
   },
   {
-    "key": "f4",
-    "command": "-search.action.focusNextSearchResult",
-    "when": "hasSearchResult || inSearchEditor"
+    "key": "-",
+    "command": "magit.reverse-at-point",
+    "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
   },
   {
-    "key": "cmd+p",
-    "command": "search.action.focusPreviousSearchResult",
-    "when": "hasSearchResult || inSearchEditor"
+    "key": "v",
+    "command": "-magit.reverse-at-point"
   },
   {
-    "key": "shift+f4",
-    "command": "-search.action.focusPreviousSearchResult",
-    "when": "hasSearchResult || inSearchEditor"
+    "key": "shift+-",
+    "command": "magit.reverting",
+    "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
   },
   {
-    "key": "cmd+n",
-    "command": "goToNextReference",
-    "when": "inReferenceSearchEditor || referenceSearchVisible"
+    "key": "shift+v",
+    "command": "-magit.reverting"
   },
   {
-    "key": "f4",
-    "command": "-goToNextReference",
-    "when": "inReferenceSearchEditor || referenceSearchVisible"
+    "key": "shift+o",
+    "command": "magit.resetting",
+    "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
   },
   {
-    "key": "cmd+p",
-    "command": "goToPreviousReference",
-    "when": "inReferenceSearchEditor || referenceSearchVisible"
+    "key": "shift+x",
+    "command": "-magit.resetting"
   },
   {
-    "key": "shift+f4",
-    "command": "-goToPreviousReference",
-    "when": "inReferenceSearchEditor || referenceSearchVisible"
-},
-{
-	"key": "space",
-	"command": "vspacecode.space",
-	"when": "sideBarFocus && !inputFocus && !whichkeyActive"
-},
-{
-	"key": "tab",
-	"command": "extension.vim_tab",
-	"when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && editorLangId != 'magit'"
-},
-{
-	"key": "tab",
-	"command": "-extension.vim_tab",
-	"when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
-},
-{
-	"key": "x",
-	"command": "magit.discard-at-point",
-	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
-},
-{
-	"key": "k",
-	"command": "-magit.discard-at-point"
-},
-{
-	"key": "-",
-	"command": "magit.reverse-at-point",
-	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
-},
-{
-	"key": "v",
-	"command": "-magit.reverse-at-point"
-},
-{
-	"key": "shift+-",
-	"command": "magit.reverting",
-	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
-},
-{
-	"key": "shift+v",
-	"command": "-magit.reverting"
-},
-{
-	"key": "shift+o",
-	"command": "magit.resetting",
-	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
-},
-{
-	"key": "shift+x",
-	"command": "-magit.resetting"
-},
-{
-	"key": "x",
-	"command": "-magit.reset-mixed"
-},
-{
-	"key": "ctrl+u x",
-	"command": "-magit.reset-hard"
-},
-{
-	"key": "y",
-	"command": "-magit.show-refs"
-},
-{
-	"key": "y",
-	"command": "vspacecode.showMagitRefMenu",
-	"when": "editorTextFocus && editorLangId == 'magit' && vim.mode == 'Normal'"
-},
-{
-	"key": "ctrl+j",
-	"command": "workbench.action.quickOpenSelectNext",
-	"when": "inQuickOpen"
-},
-{
-	"key": "ctrl+k",
-	"command": "workbench.action.quickOpenSelectPrevious",
-	"when": "inQuickOpen"
-},
-{
-	"key": "ctrl+j",
-	"command": "selectNextSuggestion",
-	"when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
-},
-{
-	"key": "ctrl+k",
-	"command": "selectPrevSuggestion",
-	"when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
-},
-{
-	"key": "ctrl+l",
-	"command": "acceptSelectedSuggestion",
-	"when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
-},
-{
-	"key": "ctrl+j",
-	"command": "showNextParameterHint",
-	"when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
-},
-{
-	"key": "ctrl+k",
-	"command": "showPrevParameterHint",
-	"when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
-},
-{
-	"key": "ctrl+h",
-	"command": "file-browser.stepOut",
-	"when": "inFileBrowser"
-},
-{
-	"key": "ctrl+l",
-	"command": "file-browser.stepIn",
-	"when": "inFileBrowser"
-},
+    "key": "x",
+    "command": "-magit.reset-mixed"
+  },
+  {
+    "key": "ctrl+u x",
+    "command": "-magit.reset-hard"
+  },
+  {
+    "key": "y",
+    "command": "-magit.show-refs"
+  },
+  {
+    "key": "y",
+    "command": "vspacecode.showMagitRefMenu",
+    "when": "editorTextFocus && editorLangId == 'magit' && vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenSelectNext",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.quickOpenSelectPrevious",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "acceptSelectedSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "showNextParameterHint",
+    "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "showPrevParameterHint",
+    "when": "editorFocus && parameterHintsMultipleSignatures && parameterHintsVisible"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "file-browser.stepOut",
+    "when": "inFileBrowser"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "file-browser.stepIn",
+    "when": "inFileBrowser"
+  },
+  {
+    "key": "ctrl+p",
+    "command": "-extension.vim_ctrl+p",
+    "when": "suggestWidgetVisible && vim.active && vim.use<C-p> && !inDebugRepl || vim.active && vim.use<C-p> && !inDebugRepl && vim.mode == 'CommandlineInProgress' || vim.active && vim.use<C-p> && !inDebugRepl && vim.mode == 'SearchInProgressMode'"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "-extension.vim_ctrl+n",
+    "when": "editorTextFocus && vim.active && vim.use<C-n> && !inDebugRepl || vim.active && vim.use<C-n> && !inDebugRepl && vim.mode == 'CommandlineInProgress' || vim.active && vim.use<C-n> && !inDebugRepl && vim.mode == 'SearchInProgressMode'"
+  }
 ]
+
+// Navigate search stuff
+// {
+//   "key": "cmd+n",
+//   "command": "references-view.next",
+//   "when": "reference-list.hasResult && references-view.canNavigate"
+// },
+// {
+//   "key": "f4",
+//   "command": "-references-view.next",
+//   "when": "reference-list.hasResult && references-view.canNavigate"
+// },
+// {
+//   "key": "cmd+p",
+//   "command": "references-view.prev",
+//   "when": "reference-list.hasResult && references-view.canNavigate"
+// },
+// {
+//   "key": "shift+f4",
+//   "command": "-references-view.prev",
+//   "when": "reference-list.hasResult && references-view.canNavigate"
+// },
+// {
+//   "key": "cmd+n",
+//   "command": "search.action.focusNextSearchResult",
+//   "when": "hasSearchResult || inSearchEditor"
+// },
+// {
+//   "key": "f4",
+//   "command": "-search.action.focusNextSearchResult",
+//   "when": "hasSearchResult || inSearchEditor"
+// },
+// {
+//   "key": "cmd+p",
+//   "command": "search.action.focusPreviousSearchResult",
+//   "when": "hasSearchResult || inSearchEditor"
+// },
+// {
+//   "key": "shift+f4",
+//   "command": "-search.action.focusPreviousSearchResult",
+//   "when": "hasSearchResult || inSearchEditor"
+// },
+// {
+//   "key": "cmd+n",
+//   "command": "goToNextReference",
+//   "when": "inReferenceSearchEditor || referenceSearchVisible"
+// },
+// {
+//   "key": "f4",
+//   "command": "-goToNextReference",
+//   "when": "inReferenceSearchEditor || referenceSearchVisible"
+// },
+// {
+//   "key": "cmd+p",
+//   "command": "goToPreviousReference",
+//   "when": "inReferenceSearchEditor || referenceSearchVisible"
+// },
+// {
+//   "key": "shift+f4",
+//   "command": "-goToPreviousReference",
+//   "when": "inReferenceSearchEditor || referenceSearchVisible"
+// },

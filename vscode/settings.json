@@ -1,101 +1,112 @@
 {
-    "editor.fontSize": 16,
-    "editor.fontFamily": "Operator Mono",
-    "vim.useCtrlKeys": true,
-    "vim.useSystemClipboard": true,
-    "vim.leader": ",",
-    "vim.enableNeovim": true,
-    "vim.hlsearch": true,
-    "vim.normalModeKeyBindingsNonRecursive": [
-      {
-        "before": ["<tab>"],
-        "after": ["<Esc>"],
-        "commands": [
-          {
-            "command": "workbench.action.navigateEditorGroups",
-            "args": []
-          }
-        ]
-      },
-      {
-        "before":["<backspace>"],
-        "after":[],
-        "commands": [
-            {
-                "command": ":nohl"
-            }
-        ]
-      },
+  "editor.fontSize": 14,
+  "editor.fontFamily": "Operator Mono",
+  "vim.useCtrlKeys": true,
+  "vim.useSystemClipboard": true,
+  "vim.leader": ",",
+  "vim.enableNeovim": true,
+  "vim.hlsearch": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<tab>"],
+      "after": ["<Esc>"],
+      "commands": [
         {
-            "before": ["<space>"],
-            "commands": ["vspacecode.space"]
-        },
-        {
-            "before": [","],
-            "commands": [
-                "vspacecode.space",
-                {
-                    "command": "whichkey.triggerKey",
-                    "args": "m"
-                }
-            ]
+          "command": "workbench.action.navigateEditorGroups",
+          "args": []
         }
-    ],
-    "vim.visualModeKeyBindingsNonRecursive": [
+      ]
+    },
+    {
+      "before": ["<backspace>"],
+      "after": [],
+      "commands": [
         {
-            "before": ["<space>"],
-            "commands": ["vspacecode.space"]
-        },
-        {
-            "before": [","],
-            "commands": [
-                "vspacecode.space",
-                {
-                    "command": "whichkey.triggerKey",
-                    "args": "m"
-                }
-            ]
+          "command": ":nohl"
         }
-    ],
-    "vspacecode.bindingOverrides": [
-      {
-        "keys": "p.s",
-        "name": "Search in project",
-        "type": "command",
-        "command": "workbench.view.search.focus",
-      },
-      {
-        "keys": "p.p",
-        "name": "Switch project",
-        "type": "command",
-        "command": "extension.ghqOpen",
-      },
-      {
-        "keys": "p.t",
-        "name": "Switch project",
-        "type": "command",
-        "command": "workbench.action.quickOpen",
-      },
-      {
-        "keys": "s.l",
-        "name": "Clear search results",
-        "type": "command",
-        "command": "search.action.clearSearchResults",
-      }
-    ],
-    "workbench.colorTheme": "Gruvbox Dark Medium",
-    "editor.formatOnSave": true,
-    "prettier.trailingComma": "all",
-    "prettier.printWidth": 120,
-    "javascript.validate.enable": false,
-    "terminal.integrated.commandsToSkipShell": [
-      "workbench.debug.action.toggleRepl"
-    ],
-    "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+      ]
     },
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
     },
-    "editor.renderWhitespace": "none"
-  }
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "command": "whichkey.triggerKey",
+          "args": "m"
+        }
+      ]
+    }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "command": "whichkey.triggerKey",
+          "args": "m"
+        }
+      ]
+    }
+  ],
+  "vspacecode.bindingOverrides": [
+    {
+      "keys": "p.s",
+      "name": "Search in project",
+      "type": "command",
+      "command": "workbench.view.search.focus"
+    },
+    {
+      "keys": "p.p",
+      "name": "Switch project",
+      "type": "command",
+      "command": "extension.ghqOpen"
+    },
+    {
+      "keys": "p.t",
+      "name": "Quick open",
+      "type": "command",
+      "command": "workbench.action.quickOpen"
+    },
+    {
+      "keys": "s.l",
+      "name": "Clear search results",
+      "type": "command",
+      "command": "search.action.clearSearchResults"
+    }
+  ],
+  "editor.formatOnSave": true,
+  "prettier.trailingComma": "all",
+  "prettier.printWidth": 120,
+  "javascript.validate.enable": false,
+  "terminal.integrated.commandsToSkipShell": ["workbench.debug.action.toggleRepl"],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.renderWhitespace": "none",
+  "workbench.colorTheme": "Gruvbox Dark Medium",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.minimap.enabled": false,
+  "rust.wait_to_build": 500,
+  "rust-analyzer.inlayHints.enable": false,
+  "markdown-pdf.displayHeaderFooter": false
+}
