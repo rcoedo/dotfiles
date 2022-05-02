@@ -3,8 +3,8 @@
 
 [user]
 	name = Roman Coedo
-	email = rcoedo@nibelheim.es
-    signinkey = 2E123C25D551D3DC
+    email = 6409659+rcoedo@users.noreply.github.com
+    signinkey = 6B2998BC
 
 [credential]
 	helper = osxkeychain
@@ -16,6 +16,9 @@
     ui = true
 
 [commit]
+    gpgsign = true
+
+[tag]
     gpgsign = true
 
 [core]
