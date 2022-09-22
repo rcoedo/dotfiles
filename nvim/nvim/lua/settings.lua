@@ -1,6 +1,6 @@
 vim.cmd [[
   syntax enable
-  colorscheme gruvbox
+  colorscheme monokai_ristretto
 
   filetype plugin indent on
   au FileType gitcommit set tw=72
@@ -55,3 +55,14 @@ vim.opt.laststatus = 2
 vim.opt.ttyfast = true
 vim.opt.mouse = 'a'
 vim.opt.clipboard = 'unnamed'
+
+require('lualine').setup {
+  options = { theme  = 'gruvbox' },
+}
+
+require("mason").setup()
+require("mason-lspconfig").setup {
+  ensure_installed = { "sumneko_lua", "rust_analyzer" }
+}
+
+require("telescope").load_extension "file_browser"

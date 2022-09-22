@@ -4,43 +4,20 @@ require("packer").startup(function(use)
 
     -- gruvbox theme
     use 'gruvbox-community/gruvbox'
+    use 'tanvirtin/monokai.nvim'
 
     -- nerdcommenter
     use 'preservim/nerdcommenter'
 
     use 'kyazdani42/nvim-web-devicons'
-    use 'ryanoasis/vim-devicons'
     use {
-       'hoob3rt/lualine.nvim',
-       requires = {'kyazdani42/nvim-web-devicons', opt = true},
-       config = function()
-          require'lualine'.setup {
-             options = {
-                theme = 'gruvbox'
-             }
-          }
-       end
+       'nvim-lualine/lualine.nvim',
+       requires = {'kyazdani42/nvim-web-devicons', opt = true}
     }
 
     -- nerdtree
-    use {
-       'preservim/nerdtree',
-       config = function()
-          vim.g.NERDTreeDirArrowExpandable = '▸'
-          vim.g.NERDTreeDirArrowCollapsible = '▾'
-          vim.g.NERDTreeIgnore = {'node_modules'}
-          vim.g.NERDTReeMinimalUI = 1
-
-          function open_nerd_tree()
-             local readable = vim.fn.filereadable(vim.fn.bufname(vim.fn.expand('%:p')))
-             if readable == 1 then
-                vim.cmd 'NERDTreeFind'
-             else
-                vim.cmd 'NERDTreeToggle'
-             end
-          end
-       end
-    }
+    use 'ryanoasis/vim-devicons'
+    use 'preservim/nerdtree'
 
     -- tpope stuff
     use 'tpope/vim-surround'
@@ -51,6 +28,7 @@ require("packer").startup(function(use)
     use 'tpope/vim-speeddating'
     use 'tpope/vim-fugitive'
 
+    -- others
     use 'terryma/vim-expand-region'
     use 'bronson/vim-trailing-whitespace'
 
@@ -74,6 +52,7 @@ require("packer").startup(function(use)
     use 'nvim-lua/popup.nvim'
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
+    use "nvim-telescope/telescope-file-browser.nvim"
 
     -- treesitter
     use 'p00f/nvim-ts-rainbow'
@@ -82,7 +61,7 @@ require("packer").startup(function(use)
        run =':TSUpdate',
        config = function()
           require'nvim-treesitter.configs'.setup {
-             ensure_installed = "maintained",
+             ensure_installed = { "javascript", "lua", "rust" },
              highlight = {
                 enable = true,
              },
@@ -96,12 +75,19 @@ require("packer").startup(function(use)
     }
     use 'nvim-treesitter/playground'
 
-    -- lsp
+    use "williamboman/mason.nvim"
+    use "williamboman/mason-lspconfig.nvim"
+    use "neovim/nvim-lspconfig"
     use {
-       'neovim/nvim-lspconfig',
-       config = function()
-          require'lspconfig'.tsserver.setup {}
-       end
+      "glepnir/lspsaga.nvim",
+      branch = "main",
+      config = function()
+        local saga = require("lspsaga")
+
+        saga.init_lsp_saga({
+          -- your configuration
+        })
+      end,
     }
 
     -- syntax stuff
