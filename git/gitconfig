@@ -6,14 +6,33 @@
     email = 6409659+rcoedo@users.noreply.github.com
     signinkey = 6B2998BC
 
-[credential]
-	helper = osxkeychain
-
 [color]
     diff = auto
     status = auto
     branch = auto
     ui = true
+
+[credential]
+    helper = "osxkeychain"
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    syntax-theme = gruvbox-dark
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
+
+[difftool]
+    prompt = false
+
+[difftool "difftastic"]
+    cmd = difft "$LOCAL" "$REMOTE"
 
 [commit]
     gpgsign = true
@@ -22,6 +41,7 @@
     gpgsign = true
 
 [core]
+    pager = delta
     excludesfile = /Users/rcoedo/.gitignore_global
     editor = nvim
 
@@ -38,6 +58,7 @@
     ai = !fish -c git-ai
     aliases = "!git config -l | grep alias | cut -c 7-"
     amend = commit --amend -C HEAD
+    an = amend --date=now
     ap = add -A --patch
     arc = "!git add . && git rebase --continue"
     assume = update-index --assume-unchanged
@@ -73,11 +94,13 @@
     reword = commit --amend
     ri = rebase -i
     riu = rebase -i @{u}
+    rh = "!git rebase -i HEAD~\"$1\" #"
     st = status -sb
     standup = log --since '1 day ago' --pretty=format:\"%C(yellow)%h %C(blue)%ar% %C(reset) %s%C(green) [%an]\" --date=short
     stu = stash -u
     unassume = update-index --no-assume-unchanged
     undo = reset --soft HEAD^
     week = log --since '7 day ago' --pretty=format:\"%C(yellow)%h %C(blue)%ar% %C(reset) %s%C(green) [%an]\" --date=short
+
 [init]
 	defaultBranch = main
