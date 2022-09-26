@@ -1,5 +1,5 @@
+jorgebucaran/fisher
 rcoedo/fuzzy-fish
-rcoedo/anyenv-fish
 edc/bass
 rcoedo/dir-abbr-fish
 rcoedo/direnv-fish
@@ -9,3 +9,4 @@ rcoedo/host-conf-fish
 rcoedo/kiex-fish
 rcoedo/prompt-fish
 rcoedo/utils-fish
+rcoedo/asdf-fish

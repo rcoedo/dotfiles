@@ -1,10 +1,18 @@
 export GHQ_ROOT="$HOME/Workspace/src"
+
 export GOPATH=$HOME/Workspace
+fish_add_path $GOPATH/bin
+
 export POETRY_PATH=$HOME/.poetry
+fish_add_path $POETRY_PATH/bin
 
-export EVERREAL_ROOT=$HOME/ER
-export GITLAB_TOKEN="GITLAB_TOKEN_PLACEHOLDER"
-export NPM_TOKEN="NPM_TOKEN_PLACEHOLDER"
+export VOLTA_HOME="$HOME/.volta"
+fish_add_path $VOLTA_HOME/bin
 
-__add_to_path $GOPATH/bin
-__add_to_path $POETRY_PATH/bin
+export CARGO_PATH=$HOME/.cargo
+fish_add_path $CARGO_PATH/bin
+
+fish_add_path /opt/homebrew/opt/mysql-client/bin
+
+export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+export PUPPETEER_EXECUTABLE_PATH=(which chromium)
