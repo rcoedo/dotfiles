@@ -5,6 +5,7 @@ export GIT_EDITOR="nvim"
 export GREP_OPTIONS="--color=auto"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_GITHUB_API=1
+export HOMEBREW_NO_ENV_HINTS=1
 
 fish_add_path /opt/homebrew/bin
 
