@@ -55,14 +55,10 @@ vim.opt.laststatus = 2
 vim.opt.ttyfast = true
 vim.opt.mouse = 'a'
 vim.opt.clipboard = 'unnamed'
+vim.opt.signcolumn = 'yes'
 
-require('lualine').setup {
-  options = { theme  = 'gruvbox' },
-}
-
-require("mason").setup()
-require("mason-lspconfig").setup {
-  ensure_installed = { "sumneko_lua", "rust_analyzer" }
-}
-
-require("telescope").load_extension "file_browser"
+local signs = { Error = '', Warning = '', Info = '', Hint = '' }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl= hl, numhl = hl })
+end

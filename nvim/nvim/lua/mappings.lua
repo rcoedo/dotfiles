@@ -3,15 +3,14 @@ vim.cmd [[
   nnoremap <leader>vc :source $MYVIMRC<cr>
 
   noremap <leader>bd :bd<cr>
-  noremap <leader>fff :lua open_nerd_tree()<cr>
+  noremap <leader>ft :lua open_nerd_tree()<cr>
   noremap <leader>ft :NERDTreeToggle<cr>
 
-  nmap <BS> :noh<cr>
+  nmap <leader>sh :noh<cr>
   nmap <tab> <c-w><c-w>
 
-  nmap <leader>ff :Telescope find_files<cr>
-  nmap <leader>fb :Telescope file_browser<cr>
-  nmap <leader>ss :Telescope live_grep<cr>
+  nmap <leader>pt :Telescope find_files<cr>
+  nmap <leader>ps :Telescope live_grep<cr>
   nmap <leader>bb :Telescope buffers<cr>
   nmap <leader>ht :Telescope help_tags<cr>
 
@@ -32,4 +31,7 @@ vim.cmd [[
   cnoremap <C-d> <Del>
   cnoremap <C-h> <BS>
   cnoremap <C-k> <C-f>D<C-c><C-c>:<Up>
+
+  " show hover doc
+  nnoremap <silent>K :Lspsaga hover_doc<CR>
 ]]

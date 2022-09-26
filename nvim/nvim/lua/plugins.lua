@@ -10,14 +10,18 @@ require("packer").startup(function(use)
     use 'preservim/nerdcommenter'
 
     use 'kyazdani42/nvim-web-devicons'
+    --use 'ryanoasis/vim-devicons'
     use {
-       'nvim-lualine/lualine.nvim',
-       requires = {'kyazdani42/nvim-web-devicons', opt = true}
+       'hoob3rt/lualine.nvim',
+       requires = {'kyazdani42/nvim-web-devicons', opt = true},
+       config = function()
+          require'lualine'.setup {
+             --options = {
+                --theme = 'powerline'
+             --}
+          }
+       end
     }
-
-    -- nerdtree
-    use 'ryanoasis/vim-devicons'
-    use 'preservim/nerdtree'
 
     -- tpope stuff
     use 'tpope/vim-surround'
@@ -28,9 +32,28 @@ require("packer").startup(function(use)
     use 'tpope/vim-speeddating'
     use 'tpope/vim-fugitive'
 
-    -- others
     use 'terryma/vim-expand-region'
     use 'bronson/vim-trailing-whitespace'
+
+    -- nerdtree
+    use {
+       'preservim/nerdtree',
+       config = function()
+          vim.g.NERDTreeDirArrowExpandable = '▸'
+          vim.g.NERDTreeDirArrowCollapsible = '▾'
+          vim.g.NERDTreeIgnore = {'node_modules'}
+          vim.g.NERDTReeMinimalUI = 1
+
+          function open_nerd_tree()
+             local readable = vim.fn.filereadable(vim.fn.bufname(vim.fn.expand('%:p')))
+             if readable == 1 then
+                vim.cmd 'NERDTreeFind'
+             else
+                vim.cmd 'NERDTreeToggle'
+             end
+          end
+       end
+    }
 
     -- completion
     use {
@@ -52,7 +75,6 @@ require("packer").startup(function(use)
     use 'nvim-lua/popup.nvim'
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
-    use "nvim-telescope/telescope-file-browser.nvim"
 
     -- treesitter
     use 'p00f/nvim-ts-rainbow'
@@ -61,7 +83,20 @@ require("packer").startup(function(use)
        run =':TSUpdate',
        config = function()
           require'nvim-treesitter.configs'.setup {
-             ensure_installed = { "javascript", "lua", "rust" },
+             ensure_installed = { 
+               "rust",
+               "fish",
+               "lua",
+               "javascript",
+               "typescript",
+               "tsx",
+               "toml",
+               "fish",
+               "json",
+               "yaml",
+               "html",
+               "scss"
+             },
              highlight = {
                 enable = true,
              },
@@ -75,19 +110,87 @@ require("packer").startup(function(use)
     }
     use 'nvim-treesitter/playground'
 
-    use "williamboman/mason.nvim"
-    use "williamboman/mason-lspconfig.nvim"
-    use "neovim/nvim-lspconfig"
+    -- lsp
     use {
-      "glepnir/lspsaga.nvim",
-      branch = "main",
+       'neovim/nvim-lspconfig',
+       config = function()
+         require'lspconfig'.tsserver.setup {}
+         vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+         vim.lsp.diagnostic.on_publish_diagnostics, {
+           underline = true,
+           -- This sets the spacing and the prefix, obviously.
+           virtual_text = {
+             spacing = 4,
+             prefix = ''
+           }
+         }
+         )
+       end
+    }
+
+    use {
+      'glepnir/lspsaga.nvim',
       config = function()
         local saga = require("lspsaga")
+        saga.init_lsp_saga {
+          border_style = "round",
+        }
+      end
+    }
 
-        saga.init_lsp_saga({
-          -- your configuration
+    use {
+      'fgheng/winbar.nvim',
+      config = function()
+        require('winbar').setup({
+          enabled = true,
+
+          show_file_path = true,
+          show_symbols = true,
+
+          colors = {
+            path = '', -- You can customize colors like #c946fd
+            file_name = '',
+            symbols = '',
+          },
+
+          icons = {
+            file_icon_default = '',
+            seperator = '>',
+            editor_state = '●',
+            lock_icon = '',
+          },
+
+          exclude_filetype = {
+            'help',
+            'startify',
+            'dashboard',
+            'packer',
+            'neogitstatus',
+            'NvimTree',
+            'Trouble',
+            'alpha',
+            'lir',
+            'Outline',
+            'spectre_panel',
+            'toggleterm',
+            'qf',
+          }
         })
-      end,
+      end
+    }
+
+    use {
+      "SmiteshP/nvim-navic",
+      requires = "neovim/nvim-lspconfig",
+      config = function()
+        local navic = require("nvim-navic")
+
+        require("lspconfig").clangd.setup {
+          on_attach = function(client, bufnr)
+            navic.attach(client, bufnr)
+          end
+        }
+      end
     }
 
     -- syntax stuff
