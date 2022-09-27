@@ -2,7 +2,7 @@ require("packer").startup(function(use)
     -- Packer
     use {'wbthomason/packer.nvim', opt = true}
 
-    -- gruvbox theme
+    -- themes
     use 'gruvbox-community/gruvbox'
     use 'tanvirtin/monokai.nvim'
 
@@ -10,9 +10,9 @@ require("packer").startup(function(use)
     use 'preservim/nerdcommenter'
 
     use 'kyazdani42/nvim-web-devicons'
-    --use 'ryanoasis/vim-devicons'
+
     use {
-       'hoob3rt/lualine.nvim',
+       'nvim-lualine/lualine.nvim',
        requires = {'kyazdani42/nvim-web-devicons', opt = true},
        config = function()
           require'lualine'.setup {
@@ -77,13 +77,12 @@ require("packer").startup(function(use)
     use 'nvim-telescope/telescope.nvim'
 
     -- treesitter
-    use 'p00f/nvim-ts-rainbow'
     use {
        'nvim-treesitter/nvim-treesitter',
        run =':TSUpdate',
        config = function()
           require'nvim-treesitter.configs'.setup {
-             ensure_installed = { 
+             ensure_installed = {
                "rust",
                "fish",
                "lua",
@@ -102,13 +101,14 @@ require("packer").startup(function(use)
              },
              rainbow = {
                 enable = true,
-                extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
-                max_file_lines = 1000, -- Do not enable for files with more than 1000 lines, int
+                extended_mode = true,
+                max_file_lines = 1000,
              }
           }
        end
     }
     use 'nvim-treesitter/playground'
+    use 'p00f/nvim-ts-rainbow'
 
     -- lsp
     use {
@@ -138,61 +138,6 @@ require("packer").startup(function(use)
       end
     }
 
-    use {
-      'fgheng/winbar.nvim',
-      config = function()
-        require('winbar').setup({
-          enabled = true,
-
-          show_file_path = true,
-          show_symbols = true,
-
-          colors = {
-            path = '', -- You can customize colors like #c946fd
-            file_name = '',
-            symbols = '',
-          },
-
-          icons = {
-            file_icon_default = '',
-            seperator = '>',
-            editor_state = '●',
-            lock_icon = '',
-          },
-
-          exclude_filetype = {
-            'help',
-            'startify',
-            'dashboard',
-            'packer',
-            'neogitstatus',
-            'NvimTree',
-            'Trouble',
-            'alpha',
-            'lir',
-            'Outline',
-            'spectre_panel',
-            'toggleterm',
-            'qf',
-          }
-        })
-      end
-    }
-
-    use {
-      "SmiteshP/nvim-navic",
-      requires = "neovim/nvim-lspconfig",
-      config = function()
-        local navic = require("nvim-navic")
-
-        require("lspconfig").clangd.setup {
-          on_attach = function(client, bufnr)
-            navic.attach(client, bufnr)
-          end
-        }
-      end
-    }
-
-    -- syntax stuff
+    -- syntax plugins
     use 'dag/vim-fish'
 end)

@@ -6,13 +6,14 @@ vim.cmd [[
   noremap <leader>ft :lua open_nerd_tree()<cr>
   noremap <leader>ft :NERDTreeToggle<cr>
 
-  nmap <leader>sh :noh<cr>
+  nmap <BS>:nohl<cr>
   nmap <tab> <c-w><c-w>
 
-  nmap <leader>pt :Telescope find_files<cr>
-  nmap <leader>ps :Telescope live_grep<cr>
-  nmap <leader>bb :Telescope buffers<cr>
-  nmap <leader>ht :Telescope help_tags<cr>
+  nmap <leader>f :Telescope find_files<cr>
+  nmap <leader>b :Telescope buffers<cr>
+  nmap <leader>h :Telescope help_tags<cr>
+  nmap <leader>ss :Telescope live_grep<cr>
+  nmap <leader>sd :Lspsaga hover_doc<cr>
 
   imap <C-b> <Left>
   imap <C-f> <Right>
