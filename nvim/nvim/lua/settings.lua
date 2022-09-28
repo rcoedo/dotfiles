@@ -1,4 +1,4 @@
-vim.cmd [[
+vim.cmd([[
   syntax enable
   colorscheme monokai_ristretto
 
@@ -7,12 +7,12 @@ vim.cmd [[
   au FileType javascript setlocal ts=2 sw=2 expandtab
   au FileType go setlocal ts=4 sw=4 expandtab
   au FileType lua setlocal ts=2 sw=2 expandtab
-]]
+]])
 
-vim.g.mapleader = ' '
+vim.g.mapleader = " "
 
-vim.opt.shell = 'sh'
-vim.opt.background = 'dark'
+vim.opt.shell = "sh"
+vim.opt.background = "dark"
 vim.opt.compatible = false
 vim.opt.errorbells = false
 vim.opt.visualbell = false
@@ -26,10 +26,10 @@ vim.opt.ruler = true
 vim.opt.cursorline = true
 vim.opt.so = 7
 vim.opt.wildmenu = true
-vim.opt.wildmode = 'list:longest'
-vim.opt.wildignore = { '*.o', '*~', '*.pyc' }
-vim.opt.wildignore = vim.opt.wildignore + { '*/node_modules/**'  }
-vim.opt.backspace = { 'eol', 'start', 'indent' }
+vim.opt.wildmode = "list:longest"
+vim.opt.wildignore = { "*.o", "*~", "*.pyc" }
+vim.opt.wildignore = vim.opt.wildignore + { "*/node_modules/**" }
+vim.opt.backspace = { "eol", "start", "indent" }
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
@@ -40,8 +40,8 @@ vim.opt.showmatch = true
 vim.opt.mat = 2
 vim.opt.tm = 500
 vim.opt.list = true
-vim.opt.listchars = { tab = '⋅›', trail = '⋅', nbsp = '⋅' }
-vim.opt.ffs= { 'unix', 'dos', 'mac' }
+vim.opt.listchars = { tab = "  ", trail = "⋅", nbsp = "⋅" }
+vim.opt.ffs = { "unix", "dos", "mac" }
 vim.opt.expandtab = true
 vim.opt.smarttab = true
 vim.opt.shiftwidth = 4
@@ -53,12 +53,12 @@ vim.opt.si = true
 vim.opt.wrap = true
 vim.opt.laststatus = 2
 vim.opt.ttyfast = true
-vim.opt.mouse = 'a'
-vim.opt.clipboard = 'unnamed'
-vim.opt.signcolumn = 'yes'
+vim.opt.mouse = "a"
+vim.opt.clipboard = "unnamed"
+vim.opt.signcolumn = "yes"
 
-local signs = { Error = '', Warning = '', Info = '', Hint = '' }
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl= hl, numhl = hl })
-end
+vim.diagnostic.config({
+	underline = true,
+	signs = false,
+	virtual_text = false,
+})
