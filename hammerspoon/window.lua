@@ -20,7 +20,6 @@ local function gridOp(op, cell)
     if (op.h ~= null) then
         cell.h = cell.h + op.h
     end
-    return cell
 end
 
 local function expandToRight(cell)  return gridOp({w = 1},         cell) end
@@ -35,56 +34,56 @@ local function shrinkToTop(cell)    return gridOp({h = -1}       , cell) end
 
 local function smartResizeRight(cell)
     if ((cell.x + cell.w >= grid.GRIDWIDTH) and (cell.w > 1)) then
-        return shrinkToRight(cell)
+        shrinkToRight(cell)
     elseif ((cell.x + cell.w < grid.GRIDWIDTH) and (cell.w < grid.GRIDWIDTH)) then
-        return expandToRight(cell)
+        expandToRight(cell)
     end
 end
 
 local function smartResizeLeft(cell)
     if (cell.x + cell.w >= grid.GRIDWIDTH) then
         if (cell.x > 0) then
-            return expandToLeft(cell)
+            expandToLeft(cell)
         else
-            return shrinkToLeft(cell)
+            shrinkToLeft(cell)
         end
     else
         if (cell.w > 1) then
-            return shrinkToLeft(cell)
+            shrinkToLeft(cell)
         elseif (cell.x > 0) then
-            return expandToLeft(cell)
+            expandToLeft(cell)
         end
     end
 end
 
 local function smartResizeDown(cell)
     if ((cell.y + cell.h >= grid.GRIDHEIGHT) and (cell.h > 1)) then
-        return shrinkToBottom(cell)
+        shrinkToBottom(cell)
     elseif ((cell.y + cell.h < grid.GRIDHEIGHT) and (cell.h < grid.GRIDHEIGHT)) then
-        return expandToBottom(cell)
+        expandToBottom(cell)
     end
 end
 
 local function smartResizeUp(cell)
     if (cell.y + cell.h >= grid.GRIDHEIGHT) then
         if (cell.y > 0) then
-            return expandToTop(cell)
+            expandToTop(cell)
         else
-            return shrinkToTop(cell)
+            shrinkToTop(cell)
         end
     else
         if (cell.h > 1) then
-            return shrinkToTop(cell)
+            shrinkToTop(cell)
         elseif (cell.y > 0) then
-            return expandToTop(cell)
+            expandToTop(cell)
         end
     end
 end
 
-local function smartResizeWindowRight() grid.adjustFocusedWindow(smartResizeRight) end
-local function smartResizeWindowLeft() grid.adjustFocusedWindow(smartResizeLeft) end
-local function smartResizeWindowUp() grid.adjustFocusedWindow(smartResizeUp) end
-local function smartResizeWindowDown() grid.adjustFocusedWindow(smartResizeDown) end
+local function smartResizeWindowRight() grid.adjustWindow(smartResizeRight) end
+local function smartResizeWindowLeft() grid.adjustWindow(smartResizeLeft) end
+local function smartResizeWindowUp() grid.adjustWindow(smartResizeUp) end
+local function smartResizeWindowDown() grid.adjustWindow(smartResizeDown) end
 
 local function adjustGrid(h, w) grid.adjustHeight(h) grid.adjustWidth(w) end
 local function increaseGrid() adjustGrid(1, 1) end
