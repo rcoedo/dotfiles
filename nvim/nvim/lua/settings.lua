@@ -1,6 +1,7 @@
+  --colorscheme monokaipro
 vim.cmd([[
   syntax enable
-  colorscheme monokai_ristretto
+  colorscheme tokyonight
 
   filetype plugin indent on
   au FileType gitcommit set tw=72
@@ -8,6 +9,11 @@ vim.cmd([[
   au FileType go setlocal ts=4 sw=4 expandtab
   au FileType lua setlocal ts=2 sw=2 expandtab
 ]])
+
+require("tokyonight").setup({
+  style = "night",
+  transparent = true,
+})
 
 vim.g.mapleader = " "
 
@@ -62,3 +68,4 @@ vim.diagnostic.config({
 	signs = false,
 	virtual_text = false,
 })
+

@@ -3,25 +3,29 @@ require("packer").startup(function(use)
 	use({ "wbthomason/packer.nvim", opt = true })
 
 	-- themes
-	use("gruvbox-community/gruvbox")
-	use("tanvirtin/monokai.nvim")
+  use {
+    "https://gitlab.com/__tpb/monokai-pro.nvim",
+    as = 'monokai-pro.nvim'
+  }
+  use 'folke/tokyonight.nvim'
 
 	-- nerdcommenter
 	use("preservim/nerdcommenter")
 
 	use("kyazdani42/nvim-web-devicons")
 
-	use({
-		"nvim-lualine/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons", opt = true },
-		config = function()
-			require("lualine").setup({
-				--options = {
-				--theme = 'powerline'
-				--}
-			})
-		end,
-	})
+  use({
+    "nvim-lualine/lualine.nvim",
+    requires = { "kyazdani42/nvim-web-devicons", "https://gitlab.com/__tpb/monokai-pro.nvim", opt = true },
+    config = function()
+      require("lualine").setup({
+        options = {
+          --theme = "monokaipro"
+          theme = "tokyonight"
+        }
+      })
+    end,
+  })
 
 	-- tpope stuff
 	use("tpope/vim-surround")
