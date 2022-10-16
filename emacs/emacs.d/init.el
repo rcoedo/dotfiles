@@ -22,6 +22,7 @@
 
 ;; Load helpers
 (load "~/.emacs.d/helpers.el")
+(load "~/.emacs.d/tokyo-theme.el")
 
 ;; The first thing we do is load our environment
 (use-package exec-path-from-shell
@@ -35,7 +36,7 @@
 ;; Theme
 (use-package gruvbox-theme
   :init
-  (set-frame-font (font-spec :family "FiraCode NF" :size 14))
+  (set-frame-font (font-spec :family "JetBrainsMono NF" :size 13))
   (set-face-italic 'font-lock-comment-face t)
   (setq-default line-spacing 3)
   :config
@@ -432,9 +433,6 @@
 (put 'erase-buffer 'disabled nil)                       ;; Allow the use of erase-buffer
 (transient-mark-mode)                                   ;; Show the mark as selected
 (global-auto-revert-mode)                               ;; Reload buffers when they change outside emacs
-(menu-bar-mode -1)                                      ;; Hide menu bar
-(scroll-bar-mode -1)                                    ;; Hide scroll bar
-(tool-bar-mode -1)                                      ;; Hide tool bar
 
 (setq-default c-basic-offset 4
               truncate-lines nil
@@ -454,6 +452,7 @@
  ;; MacOS specific configuration
 (when (memq window-system '(mac ns))
   (setq ns-use-native-fullscreen nil
+        ns-use-fullscreen-animation nil
         system-uses-terminfo nil
         ring-bell-function 'ignore))
 ;;
