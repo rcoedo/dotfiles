@@ -1,19 +1,51 @@
 local wezterm = require("wezterm")
+local act = wezterm.action
 
 local config = {
-  --color_scheme = "MonokaiPro (Gogh)",
-  color_scheme = "tokyonight",
-  font = wezterm.font('JetBrains Mono', { weight = "Medium" }),
-  font_size = 14,
-  window_decorations = "RESIZE",
-  hide_tab_bar_if_only_one_tab = true,
-  send_composed_key_when_right_alt_is_pressed = false,
-  --window_padding = {
-    --left = 0,
-    --right = 0,
-    --top = 0,
-    --bottom = 0,
-    --},
-  }
+	color_scheme = "tokyonight",
+	font = wezterm.font("JetBrainsMono NF", { weight = "Medium" }),
+	font_size = 14,
+	window_decorations = "RESIZE",
+	hide_tab_bar_if_only_one_tab = true,
+	enable_tab_bar = false,
+	--tab_bar_at_bottom = true,
+	send_composed_key_when_right_alt_is_pressed = false,
+	leader = { key = ",", mods = "CTRL", timeout_milliseconds = 1000 },
+	keys = {
+		{
+			key = ".",
+			mods = "CTRL|LEADER",
+			action = act.ActivateKeyTable({
+				name = "pane_mode",
+				one_shot = false,
+			}),
+		},
+		{ key = ",", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Next") },
+		{ key = "0", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) },
+		{ key = "3", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+		{ key = "2", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+		{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+		{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+		{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+		{ key = "[", mods = "SUPER", action = act.ActivateTabRelative(-1) },
+		{ key = "]", mods = "SUPER", action = act.ActivateTabRelative(1) },
+		{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
+		{ key = "f", mods = "LEADER", action = act.Search({ CaseSensitiveString = "" }) },
+		{ key = "Backspace", mods = "LEADER", action = act.ClearSelection },
+	},
+	key_tables = {
+		pane_mode = {
+			{ key = "Escape", action = "ClearKeyTableStack" },
+			{ key = "0", action = act.CloseCurrentPane({ confirm = false }) },
+			{ key = "3", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+			{ key = "2", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+			{ key = "h", action = act.ActivatePaneDirection("Left") },
+			{ key = "j", action = act.ActivatePaneDirection("Down") },
+			{ key = "k", action = act.ActivatePaneDirection("Up") },
+			{ key = "l", action = act.ActivatePaneDirection("Right") },
+		},
+	},
+}
 
 return config
