@@ -1,4 +1,4 @@
-;;; init.el -- -*- lexical-binding: t -*-
+;; init.el -- -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -7,6 +7,7 @@
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -22,6 +23,12 @@
 
 ;; Load helpers
 (load "~/.emacs.d/helpers.el")
+(load "~/.emacs.d/ghq.el")
+
+;; Split window behavior
+(setq split-height-threshold  4
+      split-width-threshold   160
+      split-window-preferred-function #'rcoedo-split-window-sensibly)
 
 ;; The first thing we do is load our environment
 (use-package exec-path-from-shell
@@ -32,15 +39,13 @@
   :config
   (exec-path-from-shell-initialize))
 
-;; Theme
-;; (use-package gruvbox-theme
-;;   :init
-;;   (set-frame-font (font-spec :family "JetBrainsMono NF" :size 13))
-;;   (set-face-italic 'font-lock-comment-face t)
-;;   (setq-default line-spacing 3)
-;;   :config
-;;   (load-theme 'gruvbox t))
-;;
+(use-package all-the-icons
+  :ensure t)
+
+(use-package all-the-icons-dired
+  :ensure all-the-icons
+  :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 
 (use-package doom-themes
   :ensure t
@@ -53,10 +58,10 @@
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
+  ;; (doom-themes-neotree-config)
   ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  (doom-themes-treemacs-config)
+  ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  ;; (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
@@ -82,8 +87,15 @@
                       "\e"  (kbd "C-g"))
 
   (general-define-key
-   "s-t" nil
-   "s-p" nil)
+   "s-t"  nil
+   "s-p"  nil
+   "M-]" 'rcoedo-next-non-emacs-buffer
+   "M-[" 'rcoedo-previous-non-emacs-buffer
+   "M-g" 'consult-ghq-list
+   "M-b" 'consult-buffer
+   "M-x" 'execute-extended-command
+   "M-d" 'dired-jump
+   "M-p" 'consult-projectile)
 
   (general-define-key
    "\C-x2" 'rcoedo-split-below-other-window
@@ -96,8 +108,9 @@
     "<up>"    nil)
 
   (nmap
-    "C-p"   nil
-    "<tab>" 'other-window)
+    "C-p"       nil
+    "\C-x C-x" 'other-window
+    "<tab>"    'other-window)
 
   (imap
     "C-a" 'beginning-of-line
@@ -144,105 +157,180 @@
   :config
   (sml/setup))
 
-(use-package helm
-  :demand
+; Vertical Interactive Completion package
+(use-package vertico
+  :straight (vertico :files (:defaults "extensions/*"))
   :general
-  ("C-x C-f" 'helm-find-files)
-  (nmap "C-j" 'helm-resume)
+  (:keymaps 'vertico-map
+            "C-l"   #'vertico-directory-delete-word)
+  :init
+  (vertico-mode)
+  :config
+  (setq vertico-count 40
+        vertico-resize "grow-only"))
+
+; Helm-like completion style
+(use-package orderless
+  :custom
+  (completion-styles '(substring orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+; Show vertico margin annotations
+(use-package marginalia
+  :after vertico
+  :init
+  (marginalia-mode))
+
+(use-package consult
+  :general
   (rcoedo-leader-key
-    "."       'helm-resume
-    "fy"      'helm-show-kill-ring
-    "ff"      'helm-find-files
-    "bb"      'helm-mini
-    "x"       'helm-M-x)
-  (:keymaps 'helm-map
-            "<tab>"  'helm-execute-persistent-action
-            "TAB"  'helm-execute-persistent-action)
-  (:keymaps 'helm-buffer-map
-            "<C-backspace>" 'rcoedo-helm-kill-buffers
-            "<C-return>"    'rcoedo-helm-switch-buffer-right
-            "<C-S-return>"  'rcoedo-helm-switch-to-buffer-below)
-  (:keymaps 'helm-find-files-map
-            "<C-return>"   'rcoedo-helm-find-file-right
-            "<C-S-return>" 'rcoedo-helm-find-file-below)
-  :init
-  (setq helm-exit-idle-delay 0)
-  :config
-  (helm-mode)
-  (helm-autoresize-mode)
-  (add-to-list 'helm-find-files-actions '("rc.Find file right" . rcoedo-find-file-right) :append)
-  (add-to-list 'helm-find-files-actions '("rc.Find file below" . rcoedo-find-file-below) :append)
+    "bb"      'consult-buffer))
 
-  (add-to-list 'helm-type-buffer-actions '("rc.Find buffer right" . rcoedo-switch-to-buffer-right) :append)
-  (add-to-list 'helm-type-buffer-actions '("rc.Find buffer below" . rcoedo-switch-to-buffer-below) :append))
-
-(use-package helm-projectile
-  :general
-  (:keymaps 'helm-projectile-find-file-map
-            "<C-return>" 'rcoedo-helm-find-file-right
-            "<C-S-return>" 'rcoedo-helm-find-file-below)
-  :config
-  (helm-projectile-toggle 1)
-  (add-to-list 'helm-projectile-file-actions '("rc.Find file right" . rcoedo-find-file-right) t)
-  (add-to-list 'helm-projectile-file-actions '("rc.Find file below" . rcoedo-find-file-below) t))
-
-(use-package helm-ag
-  :general
-  (:keymaps 'helm-ag-map
-            "<C-return>"   'rcoedo-helm-ag-find-file-right
-            "<C-S-return>" 'rcoedo-helm-ag-find-file-below)
-  :config
-  (add-to-list 'helm-ag--actions '("rc.Ag Find file right" . rcoedo-helm-ag-find-file-right) t)
-  (add-to-list 'helm-ag--actions '("rc.Ag Find file below" . rcoedo-helm-ag-find-file-below) t))
-
-(use-package ghq)
-
-(use-package company
-  :after general
-  :demand
-  :general
-  (:keymaps 'company-active-map
-            "M-n"   nil
-            "M-p"   nil
-            "C-n"  'company-select-next
-            "C-p"  'company-select-previous)
-  :init
-  (setq company-idle-delay 0
-        company-dabbrev-downcase nil)
-  :config
-  (global-company-mode))
-
-(use-package projectile
-  :demand
+(use-package consult-projectile
+  :demand t
+;;:straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
   :general
   (rcoedo-leader-key
     "p" 'projectile-command-map)
   (:keymaps 'projectile-command-map
-            "t" 'helm-projectile
-            "p" 'helm-ghq-list
-            "s" 'helm-projectile-ag)
-  :init
-  (setq projectile-enable-caching t
-        projectile-switch-project-action 'projectile-dired
-        projectile-ignored-project-function #'(lambda (project-root) 'true)
-        projectile-completion-system 'helm
-        projectile-project-root-files ())
+            "f" 'consult-projectile-find-file
+            "s" 'consult-ripgrep
+            "d" 'projectile-dired
+            "p" 'consult-projectile-switch-project
+            "b" 'consult-projectile-switch-to-buffer)
   :config
+  (setq projectile-enable-caching t
+        projectile-require-project-root t
+        projectile-switch-project-action 'projectile-dired
+        projectile-project-root-files ())
   (projectile-global-mode))
 
-(use-package swiper
-  :general
-  (nmap "/" 'swiper)
+(use-package embark
+  :bind
+  (("<C-return>" . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
-  (setq swiper-goto-start-of-match t))
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
 
-(use-package ivy
-  :init
-  (setq ivy-use-virtual-buffers t
-        ivy-height 25))
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  ;; :after (embark consult)
+  ;; :demand t ; only necessary if you have the hook below
+  ;; ;; if you want to have consult previews as you move around an
+  ;; ;; auto-updating embark collect buffer
+  ;; :hook
+  ;; (embark-collect-mode . consult-preview-at-point-mode)
+  )
+
+;; (use-package helm
+;;   :demand
+;;   :general
+;;   ("C-x C-f" 'helm-find-files)
+;;   (nmap "C-j" 'helm-resume)
+;;   (rcoedo-leader-key
+;;     "."       'helm-resume
+;;     "fy"      'helm-show-kill-ring
+;;     "ff"      'helm-find-files
+;;     "bb"      'helm-mini
+;;     "x"       'helm-M-x)
+;;   (:keymaps 'helm-map
+;;             "<tab>"  'helm-execute-persistent-action
+;;             "TAB"  'helm-execute-persistent-action)
+;;   (:keymaps 'helm-buffer-map
+;;             "<C-backspace>" 'rcoedo-helm-kill-buffers
+;;             "<C-return>"    'rcoedo-helm-switch-buffer-right
+;;             "<C-S-return>"  'rcoedo-helm-switch-to-buffer-below)
+;;   (:keymaps 'helm-find-files-map
+;;             "<C-return>"   'rcoedo-helm-find-file-right
+;;             "<C-S-return>" 'rcoedo-helm-find-file-below)
+;;   :init
+;;   (setq helm-exit-idle-delay 0)
+;;   :config
+;;   (helm-mode)
+;;   (helm-autoresize-mode)
+;;   (add-to-list 'helm-find-files-actions '("rc.Find file right" . rcoedo-find-file-right) :append)
+;;   (add-to-list 'helm-find-files-actions '("rc.Find file below" . rcoedo-find-file-below) :append)
+
+;;   (add-to-list 'helm-type-buffer-actions '("rc.Find buffer right" . rcoedo-switch-to-buffer-right) :append)
+;;   (add-to-list 'helm-type-buffer-actions '("rc.Find buffer below" . rcoedo-switch-to-buffer-below) :append))
+
+;; (use-package helm-projectile
+;;   :general
+;;   (:keymaps 'helm-projectile-find-file-map
+;;             "<C-return>" 'rcoedo-helm-find-file-right
+;;             "<C-S-return>" 'rcoedo-helm-find-file-below)
+;;   :config
+;;   (helm-projectile-toggle 1)
+;;   (add-to-list 'helm-projectile-file-actions '("rc.Find file right" . rcoedo-find-file-right) t)
+;;   (add-to-list 'helm-projectile-file-actions '("rc.Find file below" . rcoedo-find-file-below) t))
+
+;; (use-package helm-ag
+;;   :general
+;;   (:keymaps 'helm-ag-map
+;;             "<C-return>"   'rcoedo-helm-ag-find-file-right
+;;             "<C-S-return>" 'rcoedo-helm-ag-find-file-below)
+;;   :config
+;;   (add-to-list 'helm-ag--actions '("rc.Ag Find file right" . rcoedo-helm-ag-find-file-right) t)
+;;   (add-to-list 'helm-ag--actions '("rc.Ag Find file below" . rcoedo-helm-ag-find-file-below) t))
+
+;; (use-package ghq)
+
+;; (use-package company
+;;   :after general
+;;   :demand
+;;   :general
+;;   (:keymaps 'company-active-map
+;;             "M-n"   nil
+;;             "M-p"   nil
+;;             "C-n"  'company-select-next
+;;             "C-p"  'company-select-previous)
+;;   :init
+;;   (setq company-idle-delay 0
+;;         company-dabbrev-downcase nil)
+;;   :config
+;;   (global-company-mode))
+
+;; (use-package projectile
+;;   :demand
+;;   :general
+;;   (rcoedo-leader-key
+;;     "p" 'projectile-command-map)
+;;   (:keymaps 'projectile-command-map
+;;             "t" 'helm-projectile
+;;             "p" 'helm-ghq-list
+;;             "s" 'helm-projectile-ag)
+;;   :init
+;;   (setq projectile-enable-caching t
+;;         projectile-switch-project-action 'projectile-dired
+;;         projectile-ignored-project-function #'(lambda (project-root) 'true)
+;;         projectile-completion-system 'helm
+;;         projectile-project-root-files ())
+;;   :config
+;;   (projectile-global-mode))
+
+;; (use-package swiper
+;;   :general
+;;   (nmap "/" 'swiper)
+;;   :init
+;;   (setq swiper-goto-start-of-match t))
+
+;; (use-package ivy
+;;   :init
+;;   (setq ivy-use-virtual-buffers t
+;;         ivy-height 25))
 
 (use-package undo-tree
   :config
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
   (global-undo-tree-mode))
 
 (use-package evil
@@ -339,21 +427,28 @@
   (:keymaps 'eww-mode-map :states  'normal
             "q" 'quit-window))
 
+(use-package dired-subtree)
 (use-package dired
   :straight nil
   :general
   (rcoedo-leader-key
     "jd"      'dired-jump)
   (:keymaps 'dired-mode-map
-            "M-s" nil
-            "<SPC>" nil)
+            "<SPC>" nil
+            "M-s" nil)
+  (:keymaps 'dired-mode-map
+            :states  'normal
+            "i" 'dired-subtree-insert
+            ";" 'dired-subtree-remove)
   :init
   (setq dired-use-ls-dired nil))
 
 (use-package markdown-mode
   :mode "\\.md\\'"
   :general
-  (nmap "<C-return>" 'markdown-table-align))
+  (:keymaps 'markdown-mode-map
+            "M-p" nil
+            "a" 'markdown-table-align))
 
 (use-package tex-mode
   :mode (("\\.tex$'" . latex-mode)))
@@ -470,6 +565,7 @@
 (when (memq window-system '(mac ns))
   (setq ns-use-native-fullscreen nil
         ns-use-fullscreen-animation nil
+        mac-command-modifier 'meta
         system-uses-terminfo nil
         ring-bell-function 'ignore))
 ;;
