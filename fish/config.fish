@@ -35,6 +35,7 @@ abbr jk "jekyll"
 abbr tree "tree --gitignore"
 abbr ls "exa"
 abbr ll "exa -la"
+abbr lkc "ssh-add --apple-load-keychain"
 
 abbr t "tig"
 abbr ts "tig status"
