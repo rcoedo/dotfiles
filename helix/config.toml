@@ -1,0 +1,8 @@
+theme = "tokyonight"
+
+[keys.normal]
+"tab" = "rotate_view"
+g = { j = { n = "jump_forward", p = "jump_backward" } }
+
+[editor.cursor-shape]
+insert = 'bar'
