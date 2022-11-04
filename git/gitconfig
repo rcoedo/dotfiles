@@ -3,8 +3,8 @@
 
 [user]
 	name = Roman Coedo
-    email = 6409659+rcoedo@users.noreply.github.com
-    signinkey = 6B2998BC
+	email = 6409659+rcoedo@users.noreply.github.com
+    signinkey =
 
 [color]
     diff = auto
@@ -20,7 +20,7 @@
 
 [delta]
     navigate = true  # use n and N to move between diff sections
-    syntax-theme = gruvbox-dark
+    syntax-theme = base16
 
 [merge]
     conflictstyle = diff3
@@ -43,7 +43,8 @@
 [core]
     pager = delta
     excludesfile = /Users/rcoedo/.gitignore_global
-    editor = nvim
+	editor = hx
+    sshCommand = ssh -i ~/.ssh/id_rcoedo
 
 [help]
     autocorrect = 1
