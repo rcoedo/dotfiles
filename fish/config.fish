@@ -1,10 +1,12 @@
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
-export EDITOR="/opt/homebrew/bin/nvim"
-export GIT_EDITOR="nvim"
+export EDITOR=hx
+export GIT_EDITOR=$EDITOR
+export TIG_EDITOR=nvim
 export GREP_OPTIONS="--color=auto"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_GITHUB_API=1
+export HOMEBREW_NO_ENV_HINTS=1
 export FZF_DEFAULT_OPTS='
     --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7
 	--color=fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff
@@ -18,6 +20,7 @@ set -gx PATH $PATH
 
 abbr hm "history --merge"
 abbr g "git"
+abbr p "pnpm"
 abbr dc "docker compose"
 abbr d "docker"
 abbr mk "mkdir -p"
@@ -30,30 +33,22 @@ abbr ag "rg"
 abbr find "fd"
 abbr f "fork"
 abbr r "ranger"
-abbr ws "webstorm"
+abbr w "webstorm"
 abbr jk "jekyll"
 abbr tree "tree --gitignore"
+abbr ef "exec fish"
 abbr ls "exa"
 abbr ll "exa -la"
 abbr lkc "ssh-add --apple-load-keychain"
-
+abbr lg "lazygit"
+abbr ld "lazydocker"
 abbr t "tig"
-abbr ts "tig status"
-abbr tl "tig log"
+abbr cat "bat"
 
 alias vim "nvim"
 alias wtr "curl -4 wttr.in"
-alias tx "tmuxinator"
-alias miex "iex -S mix"
-alias ta "tmux attach-session"
 alias gg "__ghq_get"
-alias ibrew "__fuzzy_brew"
-alias icask "__fuzzy_cask"
-alias ik "__fuzzy_kill"
-alias icd "__fuzzy_cd"
-alias bat "bat --theme=zenburn"
+alias bat "bat --theme=base16"
 alias ncdu "ncdu --color dark -rr -x"
-alias yd "ydiff -s"
-alias db "nodevtools"
 alias https "http --default-scheme=https --verify=no"
 alias n "nnn -e"
