@@ -13,22 +13,7 @@ local config = {
 	send_composed_key_when_right_alt_is_pressed = false,
 	leader = { key = ",", mods = "CTRL", timeout_milliseconds = 1000 },
 	keys = {
-		{
-			key = ".",
-			mods = "LEADER|SUPER",
-			action = act.ActivateKeyTable({
-				name = "pane_mode",
-				one_shot = false,
-			}),
-		},
-		{ key = 'l', mods = 'LEADER', action = act.ShowLauncher },
-		{ key = 't', mods = 'LEADER', action = act.ShowTabNavigator },
-		{ key = ",", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Next") },
-		{ key = "0", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) },
-		{ key = "3", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-		{ key = "2", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-		{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
-		{ key = "Backspace", mods = "LEADER", action = act.ClearSelection },
+		-- Regular bindings
 		{ key = "h", mods = "SUPER", action = act.ActivatePaneDirection("Left") },
 		{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
 		{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
@@ -36,21 +21,17 @@ local config = {
 		{ key = "[", mods = "SUPER", action = act.ActivateTabRelative(-1) },
 		{ key = "]", mods = "SUPER", action = act.ActivateTabRelative(1) },
 		{ key = "/", mods = "SUPER", action = act.Search({ CaseSensitiveString = "" }) },
-		{ key = '.', mods = 'SUPER', action = act.TogglePaneZoomState },
-		{ key = 'p', mods = 'SUPER', action = act.ShowLauncher },
-		{ key = 'g', mods = 'SUPER', action = act.ShowTabNavigator },
-	},
-	key_tables = {
-		pane_mode = {
-			{ key = "Escape", action = "ClearKeyTableStack" },
-			{ key = "0", action = act.CloseCurrentPane({ confirm = false }) },
-			{ key = "3", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-			{ key = "2", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-			{ key = "h", action = act.ActivatePaneDirection("Left") },
-			{ key = "j", action = act.ActivatePaneDirection("Down") },
-			{ key = "k", action = act.ActivatePaneDirection("Up") },
-			{ key = "l", action = act.ActivatePaneDirection("Right") },
-		},
+		{ key = ".", mods = "SUPER", action = act.TogglePaneZoomState },
+
+		-- Leader bindings
+		{ key = ",", mods = "CTRL|LEADER", action = act.ActivatePaneDirection("Next") },
+		{ key = "0", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) },
+		{ key = "2", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ key = "3", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+		{ key = "l", mods = "LEADER", action = act.ShowLauncher },
+		{ key = "t", mods = "LEADER", action = act.ShowTabNavigator },
+		{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
+		{ key = "Backspace", mods = "LEADER", action = act.ClearSelection },
 	},
 }
 
