@@ -1,9 +1,10 @@
 function fish_user_key_bindings
   bind \eb 'prevd; commandline -f repaint'
   bind \eu 'cd ..; commandline -f repaint'
-  bind \cr '__fuzzy_history; commandline -f repaint'
-  bind \eo '__fuzzy_lsof; commandline -f repaint'
-  bind \ep '__fuzzy_ps; commandline -f repaint'
-  bind \ec '__fuzzy_rcd; commandline -f repaint'
-  bind \ew '__fuzzy_ghq; commandline -f repaint'
+  bind \ei '__fuzzy_package_json_script'
+  bind \cr '__fuzzy_history'
+  bind \eo '__fuzzy_lsof'
+  bind \ep '__fuzzy_ps'
+  bind \ec '__fuzzy_rcd'
+  bind \ew '__fuzzy_ghq'
 end
