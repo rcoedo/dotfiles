@@ -13,7 +13,7 @@ map("n", "<a-l>", "<c-w>l", { noremap = false })
 -- Emacs style insert mode bindings
 map("i", "<c-b>", "<left>", { noremap = false })
 map("i", "<c-f>", "<right>", { noremap = false })
-map("i", "<c-a>", "<esc>0i", { noremap = false })
+map("i", "<c-a>", "<home>", { noremap = false })
 map("i", "<c-e>", "<end>", { noremap = false })
 map("i", "<c-d>", "<del>", { noremap = false })
 map("i", "<c-h>", "<bs>", { noremap = false })
