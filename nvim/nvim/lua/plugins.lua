@@ -1,33 +1,32 @@
+vim.cmd([[packadd packer.nvim]])
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
+
 require("packer").startup(function(use)
 	-- Packer
-	use({ "wbthomason/packer.nvim", opt = true })
+	use({ "wbthomason/packer.nvim" })
 
 	-- themes
-  use {
-    "https://gitlab.com/__tpb/monokai-pro.nvim",
-    as = 'monokai-pro.nvim'
-  }
-  use 'folke/tokyonight.nvim'
-
-	-- nerdcommenter
-	use("preservim/nerdcommenter")
-
+	use("folke/tokyonight.nvim")
 	use("kyazdani42/nvim-web-devicons")
+	use({
+		"nvim-lualine/lualine.nvim",
+		requires = { "kyazdani42/nvim-web-devicons" },
+		config = function()
+			require("lualine").setup({
+				options = {
+					theme = "tokyonight",
+				},
+			})
+		end,
+	})
 
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons", "https://gitlab.com/__tpb/monokai-pro.nvim", opt = true },
-    config = function()
-      require("lualine").setup({
-        options = {
-          --theme = "monokaipro"
-          theme = "tokyonight"
-        }
-      })
-    end,
-  })
-
-	-- tpope stuff
+	-- tpope & edit stuff
+	use("tpope/vim-commentary")
 	use("tpope/vim-surround")
 	use("tpope/vim-repeat")
 	use("tpope/vim-vinegar")
@@ -35,16 +34,6 @@ require("packer").startup(function(use)
 	use("tpope/vim-endwise")
 	use("tpope/vim-speeddating")
 	use("tpope/vim-fugitive")
-
-	use("terryma/vim-expand-region")
-	use("bronson/vim-trailing-whitespace")
-
-	use({
-		"windwp/nvim-autopairs",
-		config = function()
-			require("nvim-autopairs").setup({})
-		end,
-	})
 
 	use({
 		"windwp/nvim-ts-autotag",
@@ -99,26 +88,24 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	-- completion
+	-- telescope
 	use({
-		"hrsh7th/nvim-compe",
+		"nvim-telescope/telescope.nvim",
+		requires = { "nvim-lua/plenary.nvim" },
 		config = function()
-			vim.o.completeopt = "menuone,noselect"
-			require("compe").setup({
-				enabled = true,
-				source = {
-					path = true,
-					buffer = true,
-					nvim_lsp = true,
+			local actions = require("telescope.actions")
+			local telescope = require("telescope")
+			telescope.setup({
+				defaults = {
+					mappings = {
+						i = {
+							["<esc>"] = actions.close,
+						},
+					},
 				},
 			})
 		end,
 	})
-
-	-- telescope
-	use("nvim-lua/popup.nvim")
-	use("nvim-lua/plenary.nvim")
-	use("nvim-telescope/telescope.nvim")
 
 	-- treesitter
 	use({
@@ -140,6 +127,9 @@ require("packer").startup(function(use)
 					"html",
 					"scss",
 				},
+				indent = {
+					enable = false,
+				},
 				highlight = {
 					enable = true,
 				},
@@ -151,69 +141,154 @@ require("packer").startup(function(use)
 			})
 		end,
 	})
-	use("nvim-treesitter/playground")
 	use("p00f/nvim-ts-rainbow")
-
-	-- lsp
-	use({
-		"neovim/nvim-lspconfig",
-		config = function()
-			--for type, icon in pairs({ Error = '', Warning = '', Info = '', Hint = '' }) do
-			--local hl = "DiagnosticSign" .. type
-			--vim.fn.sign_define(hl, { text = icon, texthl= hl, numhl = hl })
-			--end
-			require("lspconfig").tsserver.setup({})
-			vim.lsp.handlers["textDocument/publishDiagnostics"] =
-				vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-					underline = true,
-					virtual_text = false,
-					signs = false,
-					c, --virtual_text = {
-					--spacing = 4,
-					--prefix = ''
-					--}
-				})
-		end,
-	})
+	use("HerringtonDarkholme/yats.vim")
+	-- use("nvim-treesitter/playground")
 
 	use({
-		"jose-elias-alvarez/null-ls.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
+		"windwp/nvim-autopairs",
+		wants = "nvim-treesitter",
+		module = { "nvim-autopairs.completion.cmp", "nvim-autopairs" },
 		config = function()
-			--local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-			require("null-ls").setup({
-				sources = {
-					require("null-ls").builtins.formatting.prettierd,
-					require("null-ls").builtins.formatting.stylua,
-					require("null-ls").builtins.diagnostics.eslint,
-					require("null-ls").builtins.completion.spell,
-				},
-				--on_attach = function(client, bufnr)
-				--if client.supports_method("textDocument/formatting") then
-				--vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-				--vim.api.nvim_create_autocmd("BufWritePre", {
-				--group = augroup,
-				--buffer = bufnr,
-				--callback = function()
-				--vim.lsp.buf.format({ bufnr = bufnr })
-				--end,
-				--})
-				--end
-				--end,
+			require("nvim-autopairs").setup({
+				map_cr = true,
 			})
 		end,
 	})
 
-	--use {
-	--'MunifTanjim/prettier.nvim',
-	--requires = { "jose-elias-alvarez/null-ls.nvim" },
-	--config = function()
-	--require("prettier").setup()
-	--end
-	--}
-
+	-- Completion
 	use({
-		"williamboman/mason.nvim",
+		"hrsh7th/nvim-cmp",
+		requires = {
+			-- other cmp plugins
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			-- snippets
+			"hrsh7th/cmp-vsnip",
+			"hrsh7th/vim-vsnip",
+			"onsails/lspkind.nvim",
+			"windwp/nvim-autopairs",
+		},
+		config = function()
+			local cmp = require("cmp")
+			if not cmp then
+				return
+			end
+
+			local lspkind = require("lspkind")
+
+			local mapping_helpers = {
+				fallback = function(fallback)
+					fallback()
+				end,
+				do_or_complete = function(fn)
+					return function()
+						if cmp.visible() then
+							fn()
+						else
+							cmp.complete()
+						end
+					end
+				end,
+			}
+
+			cmp.setup({
+				performance = {
+					trigger_debounce_time = 500,
+				},
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
+				snippet = {
+					expand = function(args)
+						vim.fn["vsnip#anonymous"](args.body)
+					end,
+				},
+				mapping = cmp.mapping.preset.insert({
+					["<C-u>"] = cmp.mapping.scroll_docs(-4),
+					["<C-d>"] = cmp.mapping.scroll_docs(4),
+					["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+					["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+					["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+					["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+					["<CR>"] = cmp.mapping.confirm({ select = false }),
+					-- Toggle completion
+					["<C-Space>"] = cmp.mapping(function()
+						if cmp.visible() then
+							cmp.close()
+						else
+							cmp.complete()
+						end
+					end),
+				}),
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "vsnip" },
+				}),
+				formatting = {
+					fields = { "kind", "abbr", "menu" },
+					format = function(entry, vim_item)
+						local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+						local strings = vim.split(kind.kind, "%s", { trimempty = true })
+						kind.kind = " " .. strings[1] .. " "
+						kind.menu = "        " .. strings[2] --.. " (" .. entry.source.name .. ")"
+						return kind
+					end,
+				},
+				window = {
+					documentation = vim.tbl_deep_extend("force", cmp.config.window.bordered(), {
+						max_height = 15,
+						max_width = 70,
+					}),
+					completion = vim.tbl_deep_extend("force", cmp.config.window.bordered(), {
+						winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+						col_offset = -3,
+					}),
+				},
+			})
+
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				completion = {
+					completeopt = "menu,menuone,noselect",
+				},
+				sources = {
+					{ name = "buffer" },
+				},
+			})
+
+			cmp.setup.cmdline(":", {
+				mapping = {
+					["<C-p>"] = cmp.mapping(mapping_helpers.fallback, { "i", "c" }),
+					["<C-n>"] = cmp.mapping(mapping_helpers.fallback, { "i", "c" }),
+					["<S-Tab>"] = cmp.mapping(mapping_helpers.do_or_complete(cmp.select_prev_item), { "i", "c" }),
+					["<Tab>"] = cmp.mapping(mapping_helpers.do_or_complete(cmp.select_next_item), { "i", "c" }),
+				},
+				completion = {
+					completeopt = "menu,menuone,noselect",
+				},
+				sources = cmp.config.sources({
+					{ name = "path" },
+				}, {
+					{ name = "cmdline" },
+				}),
+			})
+
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
+		end,
+	})
+
+	-- LSP
+	use({
+		"williamboman/mason-lspconfig.nvim",
+		requires = {
+			"williamboman/mason.nvim",
+			"neovim/nvim-lspconfig",
+			"hrsh7th/cmp-nvim-lsp",
+		},
 		config = function()
 			require("mason").setup({
 				ui = {
@@ -224,31 +299,79 @@ require("packer").startup(function(use)
 					},
 				},
 			})
-		end,
-	})
 
-	use({
-		"folke/trouble.nvim",
-		requires = "kyazdani42/nvim-web-devicons",
-		config = function()
-			require("trouble").setup({
-				-- your configuration comes here
-				-- or leave it empty to use the default settings
-				-- refer to the configuration section below
+			local lsp_options = {
+				flags = { debounce_text_changes = 150 },
+				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+			}
+
+			local mason_lspconfig = require("mason-lspconfig")
+
+			mason_lspconfig.setup_handlers({
+				function(server_name)
+					require("lspconfig")[server_name].setup(lsp_options)
+				end,
+				["sumneko_lua"] = function()
+					require("lspconfig").sumneko_lua.setup(vim.tbl_deep_extend("force", lsp_options, {
+						settings = {
+							Lua = {
+								diagnostics = {
+									-- Get the language server to recognize the 'vim' global
+									globals = { "vim" },
+								},
+								workspace = {
+									-- Make the server aware of Neovim runtime files
+									library = vim.api.nvim_get_runtime_file("", true),
+								},
+							},
+						},
+					}))
+				end,
+			})
+
+			mason_lspconfig.setup({
+				ensure_installed = { "tsserver", "sumneko_lua", "html", "cssls", "jsonls" },
 			})
 		end,
 	})
 
 	use({
-		"glepnir/lspsaga.nvim",
+		"jose-elias-alvarez/null-ls.nvim",
+		requires = { "lukas-reineke/lsp-format.nvim" },
 		config = function()
-			require("lspsaga").init_lsp_saga({
-				border_style = "rounded",
-				code_action_lightbulb = { enable = false },
+			local null_ls = require("null-ls")
+			---@diagnostic disable-next-line: redundant-parameter
+			null_ls.setup({
+				on_attach = require("lsp-format").on_attach,
+				sources = {
+					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.formatting.stylua,
+					null_ls.builtins.diagnostics.eslint,
+					-- null_ls.builtins.completion.spell,
+				},
 			})
 		end,
 	})
 
-	-- syntax plugins
-	use("dag/vim-fish")
+	use({
+		"folke/which-key.nvim",
+		config = function()
+			require("which-key").setup({
+				window = {
+					border = "single",
+					padding = { 0, 0, 0, 0 },
+				},
+			})
+		end,
+	})
+
+	-- use({
+	-- 	"glepnir/lspsaga.nvim",
+	-- 	config = function()
+	-- 		require("lspsaga").init_lsp_saga({
+	-- 			border_style = "rounded",
+	-- 			code_action_lightbulb = { enable = false },
+	-- 		})
+	-- 	end,
+	-- })
 end)

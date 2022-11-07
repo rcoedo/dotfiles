@@ -1,21 +1,22 @@
-  --colorscheme monokaipro
+require("tokyonight").setup({
+	style = "night",
+	styles = {
+		floats = "normal",
+		sidebars = "normal",
+	},
+	on_colors = function(colors)
+		colors.border = colors.blue0
+	end,
+})
+
 vim.cmd([[
   syntax enable
   colorscheme tokyonight
 
   filetype plugin indent on
   au FileType gitcommit set tw=72
-  au FileType javascript setlocal ts=2 sw=2 expandtab
   au FileType go setlocal ts=4 sw=4 expandtab
-  au FileType lua setlocal ts=2 sw=2 expandtab
 ]])
-
-require("tokyonight").setup({
-  style = "night",
-  transparent = true,
-})
-
-vim.g.mapleader = " "
 
 vim.opt.shell = "sh"
 vim.opt.background = "dark"
@@ -44,28 +45,54 @@ vim.opt.lazyredraw = true
 vim.opt.magic = true
 vim.opt.showmatch = true
 vim.opt.mat = 2
-vim.opt.tm = 500
+vim.opt.tm = 200
 vim.opt.list = true
 vim.opt.listchars = { tab = "  ", trail = "⋅", nbsp = "⋅" }
 vim.opt.ffs = { "unix", "dos", "mac" }
 vim.opt.expandtab = true
 vim.opt.smarttab = true
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
 vim.opt.lbr = true
 vim.opt.tw = 120
-vim.opt.ai = true
-vim.opt.si = true
+vim.opt.autoindent = false
+vim.opt.smartindent = false
 vim.opt.wrap = true
-vim.opt.laststatus = 2
 vim.opt.ttyfast = true
 vim.opt.mouse = "a"
 vim.opt.clipboard = "unnamed"
 vim.opt.signcolumn = "yes"
+vim.opt.pumheight = 12
+vim.opt.laststatus = 3
+-- vim.opt.splitkeep = "screen"
+
+local sign = function(opts)
+	vim.fn.sign_define(opts.name, {
+		texthl = opts.name,
+		text = opts.text,
+		numhl = "",
+	})
+end
+
+sign({ name = "DiagnosticSignError", text = "✘" })
+sign({ name = "DiagnosticSignWarn", text = "▲" })
+sign({ name = "DiagnosticSignHint", text = "⚑" })
+sign({ name = "DiagnosticSignInfo", text = "" })
 
 vim.diagnostic.config({
-	underline = true,
-	signs = false,
 	virtual_text = false,
+	signs = true,
+	update_in_insert = false,
+	underline = true,
+	severity_sort = true,
+	float = {
+		focusable = false,
+		border = "rounded",
+		source = "always",
+		header = "",
+		prefix = "",
+	},
 })
 
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
