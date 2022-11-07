@@ -5,6 +5,7 @@ local config = {
 	color_scheme = "tokyonight",
 	font = wezterm.font("JetBrainsMono NF", { weight = "Regular" }),
 	font_size = 13,
+	audible_bell = "Disabled",
 	window_decorations = "RESIZE",
 	use_fancy_tab_bar = false,
 	hide_tab_bar_if_only_one_tab = true,
@@ -20,6 +21,8 @@ local config = {
 		{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
 		{ key = "[", mods = "SUPER", action = act.ActivateTabRelative(-1) },
 		{ key = "]", mods = "SUPER", action = act.ActivateTabRelative(1) },
+		{ key = "u", mods = "SUPER", action = act.ScrollByPage(-0.5) },
+		{ key = "d", mods = "SUPER", action = act.ScrollByPage(0.5) },
 		{ key = "/", mods = "SUPER", action = act.Search({ CaseSensitiveString = "" }) },
 		{ key = ".", mods = "SUPER", action = act.TogglePaneZoomState },
 
