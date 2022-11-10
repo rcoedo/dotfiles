@@ -3,6 +3,7 @@ local map = vim.api.nvim_set_keymap
 
 map("n", "<tab>", "<c-w><c-w>", { noremap = false })
 map("n", "<bs>", "<cmd>nohl<cr>", { noremap = false })
+map("n", ",", "<leader>,", { noremap = false })
 map("n", "<a-h>", "<c-w>h", { noremap = false })
 map("n", "<a-j>", "<c-w>j", { noremap = false })
 map("n", "<a-k>", "<c-w>k", { noremap = false })
@@ -58,6 +59,15 @@ wk.register({
 	["<leader>pr"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 	["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
 	-- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
+
+	-- Show
+	["<leader>s"] = { name = "+Show" },
+	["<leader>sd"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
+	["<leader>sh"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
+	["<leader>ss"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
+
+	["<leader>sv"] = { name = "+Show Vim" },
+	["<leader>svh"] = { "<cmd>Telescope help<cr>", "Show Vim help" },
 
 	-- Refactor
 	["<leader>r"] = { name = "+Refactor" },
