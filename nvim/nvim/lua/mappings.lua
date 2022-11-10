@@ -1,9 +1,7 @@
 vim.g.mapleader = " "
 local map = vim.api.nvim_set_keymap
 
-map("n", ",", "<leader>", { noremap = false })
 map("n", "<tab>", "<c-w><c-w>", { noremap = false })
-map("n", "<leader><leader>", "<c-w><c-w>", { noremap = false })
 map("n", "<bs>", "<cmd>nohl<cr>", { noremap = false })
 map("n", "<a-h>", "<c-w>h", { noremap = false })
 map("n", "<a-j>", "<c-w>j", { noremap = false })
@@ -43,13 +41,13 @@ wk.register({
 	["<leader>/"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
 	["<leader>f"] = { "<cmd>Telescope find_files<cr>", "Pick file" },
 	["<leader>d"] = { "<cmd>Telescope diagnostics<cr>", "Pick diagnostic" },
-	["<leader>b"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
+	["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
 	["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
 	["<leader>t"] = { "<cmd>lua open_nerd_tree()<cr>", "Toggle file tree", noremap = false },
-	["<leader>,"] = { "<c-w><c-w>", "Next window" },
 	["<leader>0"] = { "<cmd>close<cr>", "Close window" },
 	["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
 	["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
+	["<leader><leader>"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 
 	-- Pick table
 	["<leader>p"] = { name = "+Pick" },
@@ -57,6 +55,7 @@ wk.register({
 	["<leader>pb"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
 	["<leader>pd"] = { "<cmd>Telescope diagnostics<cr>", "Pick diagnostic" },
 	["<leader>pf"] = { "<cmd>Telescope find_files<cr>", "Pick file" },
+	["<leader>pr"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 	["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
 	-- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
 
@@ -91,5 +90,5 @@ wk.register({
 	["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next diagnostic" },
 
 	-- Ignored
-	["<leader><leader>"] = "which_key_ignore",
+	-- ["<leader><leader>"] = "which_key_ignore",
 })
