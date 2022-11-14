@@ -1,60 +1,63 @@
 vim.g.mapleader = " "
-local map = vim.api.nvim_set_keymap
+local map = vim.keymap.set
 
-map("n", "<tab>", "<c-w><c-w>", { noremap = false })
-map("n", "<bs>", "<cmd>nohl<cr>", { noremap = false })
-map("n", ",", "<leader>,", { noremap = false })
-map("n", "<a-h>", "<c-w>h", { noremap = false })
-map("n", "<a-j>", "<c-w>j", { noremap = false })
-map("n", "<a-k>", "<c-w>k", { noremap = false })
-map("n", "<a-l>", "<c-w>l", { noremap = false })
+local noremap_opts = { noremap = true }
+local opts = { noremap = false }
+
+map("n", "<tab>", "<c-w><c-w>", opts)
+map("n", "<bs>", "<cmd>nohl<cr>", opts)
+map("n", "-", "<cmd>Telescope file_browser path=%:p:h<cr>", opts)
+map("n", "<a-h>", "<c-w>h", opts)
+map("n", "<a-j>", "<c-w>j", opts)
+map("n", "<a-k>", "<c-w>k", opts)
+map("n", "<a-l>", "<c-w>l", opts)
 
 -- Emacs style insert mode bindings
-map("i", "<c-b>", "<left>", { noremap = false })
-map("i", "<c-f>", "<right>", { noremap = false })
-map("i", "<c-a>", "<home>", { noremap = false })
-map("i", "<c-e>", "<end>", { noremap = false })
-map("i", "<c-d>", "<del>", { noremap = false })
-map("i", "<c-h>", "<bs>", { noremap = false })
-map("i", "<c-k>", "<esc>lDa", { noremap = false })
+map("i", "<c-b>", "<left>", opts)
+map("i", "<c-f>", "<right>", opts)
+map("i", "<c-a>", "<home>", opts)
+map("i", "<c-e>", "<end>", opts)
+map("i", "<c-d>", "<del>", opts)
+map("i", "<c-h>", "<bs>", opts)
+map("i", "<c-k>", "<esc>lDa", opts)
+
 -- Emacs style command mode bindings
-map("c", "<c-p>", "<up>", { noremap = false })
-map("c", "<c-n>", "<down>", { noremap = false })
-map("c", "<c-b>", "<left>", { noremap = false })
-map("c", "<c-f>", "<right>", { noremap = false })
-map("c", "<c-a>", "<home>", { noremap = false })
-map("c", "<c-e>", "<end>", { noremap = false })
-map("c", "<c-d>", "<del>", { noremap = true })
-map("c", "<c-h>", "<bs>", { noremap = true })
-map("c", "<c-k>", "<c-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<cr>", { noremap = true })
+map("c", "<c-p>", "<up>", opts)
+map("c", "<c-n>", "<down>", opts)
+map("c", "<c-b>", "<left>", opts)
+map("c", "<c-f>", "<right>", opts)
+map("c", "<c-a>", "<home>", opts)
+map("c", "<c-e>", "<end>", opts)
+map("c", "<c-d>", "<del>", noremap_opts)
+map("c", "<c-h>", "<bs>", noremap_opts)
+map("c", "<c-k>", "<c-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<cr>", noremap_opts)
 
--- nmap <leader>ld :Lspsaga hover_doc<cr>
--- nmap <leader>lp :Lspsaga peek_definition<cr>
--- nmap <leader>ls :Lspsaga lsp_finder<cr>
--- nmap <leader>les :Lspsaga show_line_diagnostics<cr>
--- nmap <leader>len :Lspsaga diagnostic_jump_next<cr>
--- nmap <leader>lep :Lspsaga diagnostic_jump_prev<cr>
--- nmap <leader>a :Lspsaga code_action<cr>
+map("n", "*", "<Plug>(asterisk-z*)", { noremap = false })
+map("n", "#", "<Plug>(asterisk-z#)", { noremap = false })
+map("n", "g*", "<Plug>(asterisk-gz*)", { noremap = false })
+map("n", "g#", "<Plug>(asterisk-gz#)", { noremap = false })
 
-local wk = require("which-key")
-wk.register({
+local normal_mappings = {
 	-- Quick mappings
-	["<leader>/"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
 	["<leader>f"] = { "<cmd>Telescope find_files<cr>", "Pick file" },
-	["<leader>d"] = { "<cmd>Telescope diagnostics<cr>", "Pick diagnostic" },
+	["<leader>g"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
+	["<leader>d"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
+	["<leader>D"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
 	["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
 	["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
-	["<leader>t"] = { "<cmd>lua open_nerd_tree()<cr>", "Toggle file tree", noremap = false },
+	["<leader>t"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "File tree" },
 	["<leader>0"] = { "<cmd>close<cr>", "Close window" },
 	["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
 	["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
+	["<leader>/"] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Live search current buffer" },
 	["<leader><leader>"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 
 	-- Pick table
 	["<leader>p"] = { name = "+Pick" },
-	["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
 	["<leader>pb"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
-	["<leader>pd"] = { "<cmd>Telescope diagnostics<cr>", "Pick diagnostic" },
+	["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
+	["<leader>pd"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
+	["<leader>pD"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
 	["<leader>pf"] = { "<cmd>Telescope find_files<cr>", "Pick file" },
 	["<leader>pr"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 	["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
@@ -65,9 +68,8 @@ wk.register({
 	["<leader>sd"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
 	["<leader>sh"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
 	["<leader>ss"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
-
-	["<leader>sv"] = { name = "+Show Vim" },
-	["<leader>svh"] = { "<cmd>Telescope help<cr>", "Show Vim help" },
+	["<leader>st"] = { "<cmd>Telescope help_tags<cr>", "Show help tags" },
+	["<leader>sn"] = { "<cmd>Telescope notify<cr>", "Show notification history" },
 
 	-- Refactor
 	["<leader>r"] = { name = "+Refactor" },
@@ -78,6 +80,7 @@ wk.register({
 	["<leader>x"] = { name = "+Close" },
 	["<leader>xu"] = { "<cmd>bd<cr>", "Close buffer" },
 	["<leader>xi"] = { "<cmd>close<cr>", "Close window" },
+	["<leader>xt"] = { "<cmd>tabclose<cr>", "Close tab" },
 
 	-- Go table
 	["gl"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
@@ -92,13 +95,22 @@ wk.register({
 	-- Previous table
 	["["] = { name = "+Previous" },
 	["[b"] = { "<cmd>bp<cr>", "Previous buffer" },
+	["[t"] = { "<cmd>tabprevious<cr>", "Previous tab" },
 	["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous diagnostic" },
 
 	-- Next table
 	["]"] = { name = "+Next" },
 	["]b"] = { "<cmd>bn<cr>", "Next buffer" },
+	["]t"] = { "<cmd>tabnext<cr>", "Next tab" },
 	["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next diagnostic" },
+}
 
-	-- Ignored
-	-- ["<leader><leader>"] = "which_key_ignore",
-})
+local visual_mappings = {
+	["<leader>/"] = { '"zy:Telescope current_buffer_fuzzy_find default_text=<C-r>z<cr>', "Live search current buffer" },
+	["<leader>g"] = { '"zy:Telescope live_grep default_text=<C-r>z<cr>', "Live search" },
+	["<leader>f"] = { '"zy:Telescope find_files default_text=<C-r>z<cr>', "Search file" },
+}
+
+local wk = require("which-key")
+wk.register(normal_mappings, { mode = "n" })
+wk.register(visual_mappings, { mode = "v" })

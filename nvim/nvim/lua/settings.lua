@@ -34,8 +34,7 @@ vim.opt.cursorline = true
 vim.opt.so = 7
 vim.opt.wildmenu = true
 vim.opt.wildmode = "list:longest"
-vim.opt.wildignore = { "*.o", "*~", "*.pyc" }
-vim.opt.wildignore = vim.opt.wildignore + { "*/node_modules/**" }
+vim.opt.wildignore = { "*.o", "*~", "*.pyc", "*/node_modules/**" }
 vim.opt.backspace = { "eol", "start", "indent" }
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -64,7 +63,11 @@ vim.opt.clipboard = "unnamed"
 vim.opt.signcolumn = "yes"
 vim.opt.pumheight = 12
 vim.opt.laststatus = 3
--- vim.opt.splitkeep = "screen"
+vim.opt.termguicolors = true
+-- vim.opt.cmdheight = 0
+vim.opt.splitkeep = "screen"
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 local sign = function(opts)
 	vim.fn.sign_define(opts.name, {

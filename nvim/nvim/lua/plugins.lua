@@ -29,20 +29,45 @@ require("packer").startup(function(use)
 	use("tpope/vim-commentary")
 	use("tpope/vim-surround")
 	use("tpope/vim-repeat")
-	use("tpope/vim-vinegar")
+	-- use("tpope/vim-vinegar")
 	use("tpope/vim-ragtag")
 	use("tpope/vim-endwise")
-	use("tpope/vim-speeddating")
+	-- use("tpope/vim-speeddating")
 	use("tpope/vim-fugitive")
+	use("wellle/targets.vim")
 
 	use({
-		"windwp/nvim-ts-autotag",
+		"nat-418/boole.nvim",
 		config = function()
-			require("nvim-treesitter.configs").setup({
-				autotag = {
-					enable = true,
+			require("boole").setup({
+				mappings = {
+					increment = "<C-a>",
+					decrement = "<C-x>",
+				},
+				allow_caps_additions = {
+					{ "enable", "disable" },
+					{ "enabled", "disabled" },
 				},
 			})
+		end,
+	})
+
+	use({
+		"ggandor/leap.nvim",
+		config = function()
+			require("leap").add_default_mappings()
+		end,
+	})
+
+	use({
+		"rapan931/lasterisk.nvim",
+		config = function()
+			vim.keymap.set("n", "*", function()
+				require("lasterisk").search()
+			end)
+			vim.keymap.set({ "n", "x" }, "g*", function()
+				require("lasterisk").search({ is_whole = false })
+			end)
 		end,
 	})
 
@@ -68,42 +93,122 @@ require("packer").startup(function(use)
 		end,
 	})
 
-	-- nerdtree
-	use({
-		"preservim/nerdtree",
-		config = function()
-			vim.g.NERDTreeDirArrowExpandable = "▸"
-			vim.g.NERDTreeDirArrowCollapsible = "▾"
-			vim.g.NERDTreeIgnore = { "node_modules" }
-			vim.g.NERDTReeMinimalUI = 1
-
-			function open_nerd_tree()
-				local readable = vim.fn.filereadable(vim.fn.bufname(vim.fn.expand("%:p")))
-				if readable == 1 then
-					vim.cmd("NERDTreeFind")
-				else
-					vim.cmd("NERDTreeToggle")
-				end
-			end
-		end,
-	})
-
 	-- telescope
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use({
 		"nvim-telescope/telescope.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope-fzf-native.nvim",
+			"nvim-telescope/telescope-file-browser.nvim",
+			"rcarriga/nvim-notify",
+		},
 		config = function()
-			local actions = require("telescope.actions")
 			local telescope = require("telescope")
+			local actions = require("telescope.actions")
+
 			telescope.setup({
 				defaults = {
+					prompt_prefix = "~ ",
+					selection_caret = "  ",
 					mappings = {
 						i = {
+							["<c-u>"] = false,
+							["<c-d>"] = false,
+							["<left>"] = false,
+							["<down>"] = false,
+							["<up>"] = false,
+							["<right>"] = false,
+							["<pageup>"] = false,
+							["<pagedown>"] = false,
+							["<tab>"] = false,
+							["<s-tab>"] = false,
+							["<c-v>"] = false,
+							["<c-x>"] = false,
+							["<c-l>"] = false,
+							["<c-c>"] = false,
+							["<a-q>"] = false,
+							["<c-q>"] = false,
 							["<esc>"] = actions.close,
+							["<c-b>"] = actions.preview_scrolling_up,
+							["<c-f>"] = actions.preview_scrolling_down,
+							["<c-space>"] = actions.toggle_selection,
+							["<c-cr>"] = actions.select_vertical,
+							["<c-s-cr>"] = actions.select_horizontal,
+						},
+					},
+				},
+				layout_strategy = "flex",
+				pickers = {
+					diagnostics = {
+						theme = "dropdown",
+						-- previewer = false,
+						layout_config = {
+							width = 0.75,
+						},
+					},
+					buffers = {
+						theme = "dropdown",
+						mappings = {
+							i = {
+								["<c-d>"] = actions.delete_buffer,
+							},
+						},
+					},
+					current_buffer_fuzzy_find = {
+						theme = "ivy",
+						sorting_strategy = "ascending",
+						previewer = false,
+					},
+					find_files = {
+						theme = "ivy",
+						previewer = false,
+					},
+				},
+				extensions = {
+					fzf = {
+						fuzzy = true,
+						override_generic_sorter = true,
+						override_file_sorter = true,
+					},
+					notify = {
+						theme = "dropdown",
+					},
+					file_browser = {
+						theme = "ivy",
+						previewer = false,
+						grouped = true,
+						hijack_netrw = true,
+						hide_parent_dir = true,
+						mappings = {
+							i = {
+								["<c-j>"] = telescope.extensions.file_browser.actions.create_from_prompt,
+								["<c-l>"] = telescope.extensions.file_browser.actions.goto_parent_dir,
+								["<tab>"] = actions.select_default,
+							},
 						},
 					},
 				},
 			})
+
+			telescope.load_extension("fzf")
+			telescope.load_extension("notify")
+			telescope.load_extension("file_browser")
+		end,
+	})
+
+	use({
+		"stevearc/dressing.nvim",
+		config = function()
+			require("dressing").setup({})
+		end,
+	})
+
+	use({
+		"rcarriga/nvim-notify",
+		config = function()
+			require("notify").setup()
+			vim.notify = require("notify")
 		end,
 	})
 
@@ -111,6 +216,7 @@ require("packer").startup(function(use)
 	use({
 		"nvim-treesitter/nvim-treesitter",
 		run = ":TSUpdate",
+		requires = { "nvim-treesitter/nvim-treesitter-textobjects", "p00f/nvim-ts-rainbow" },
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
@@ -121,16 +227,18 @@ require("packer").startup(function(use)
 					"typescript",
 					"tsx",
 					"toml",
-					"fish",
 					"json",
 					"yaml",
 					"html",
 					"scss",
 				},
 				indent = {
-					enable = false,
+					enable = true,
 				},
 				highlight = {
+					enable = true,
+				},
+				autotag = {
 					enable = true,
 				},
 				rainbow = {
@@ -138,20 +246,62 @@ require("packer").startup(function(use)
 					extended_mode = true,
 					max_file_lines = 1000,
 				},
+				textobjects = {
+					select = {
+						enable = true,
+
+						-- Automatically jump forward to textobj, similar to targets.vim
+						lookahead = true,
+
+						keymaps = {
+							-- You can use the capture groups defined in textobjects.scm
+							["af"] = { query = "@function.outer", desc = "@function.outer" },
+							["if"] = { query = "@function.inner", desc = "@function.inner" },
+							["ac"] = { query = "@class.outer", desc = "@class.outer" },
+							["ic"] = { query = "@class.inner", desc = "@class.inner" },
+							["ao"] = { query = "@conditional.outer", desc = "@conditional.outer" },
+							["io"] = { query = "@conditional.inner", desc = "@conditional.inner" },
+							["al"] = { query = "@loop.outer", desc = "@loop.outer" },
+							["il"] = { query = "@loop.inner", desc = "@loop.inner" },
+						},
+						-- You can choose the select mode (default is charwise 'v')
+						--
+						-- Can also be a function which gets passed a table with the keys
+						-- * query_string: eg '@function.inner'
+						-- * method: eg 'v' or 'o'
+						-- and should return the mode ('v', 'V', or '<c-v>') or a table
+						-- mapping query_strings to modes.
+						selection_modes = {
+							["@parameter.outer"] = "v", -- charwise
+							["@function.outer"] = "V", -- linewise
+							["@class.outer"] = "<c-v>", -- blockwise
+						},
+						-- If you set this to `true` (default is `false`) then any textobject is
+						-- extended to include preceding or succeeding whitespace. Succeeding
+						-- whitespace has priority in order to act similarly to eg the built-in
+						-- `ap`.
+						--
+						-- Can also be a function which gets passed a table with the keys
+						-- * query_string: eg '@function.inner'
+						-- * selection_mode: eg 'v'
+						-- and should return true of false
+						include_surrounding_whitespace = true,
+					},
+				},
 			})
 		end,
 	})
-	use("p00f/nvim-ts-rainbow")
+	-- Better indentation for .tsx
 	use("HerringtonDarkholme/yats.vim")
-	-- use("nvim-treesitter/playground")
+	-- Better fish support
+	use("dag/vim-fish")
 
+	use("windwp/nvim-ts-autotag")
 	use({
 		"windwp/nvim-autopairs",
-		wants = "nvim-treesitter",
-		module = { "nvim-autopairs.completion.cmp", "nvim-autopairs" },
 		config = function()
 			require("nvim-autopairs").setup({
-				map_cr = true,
+				check_ts = true,
 			})
 		end,
 	})
@@ -169,7 +319,6 @@ require("packer").startup(function(use)
 			"hrsh7th/cmp-vsnip",
 			"hrsh7th/vim-vsnip",
 			"onsails/lspkind.nvim",
-			"windwp/nvim-autopairs",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -275,9 +424,6 @@ require("packer").startup(function(use)
 					{ name = "cmdline" },
 				}),
 			})
-
-			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
 		end,
 	})
 
@@ -330,23 +476,28 @@ require("packer").startup(function(use)
 			})
 
 			mason_lspconfig.setup({
-				ensure_installed = { "tsserver", "sumneko_lua", "html", "cssls", "jsonls" },
+				ensure_installed = { "vimls", "tsserver", "sumneko_lua", "html", "cssls", "jsonls" },
 			})
 		end,
 	})
 
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
+		-- format on save
 		requires = { "lukas-reineke/lsp-format.nvim" },
 		config = function()
 			local null_ls = require("null-ls")
+			local js_options = {
+				prefer_local = "node_modules/.bin",
+			}
 			---@diagnostic disable-next-line: redundant-parameter
 			null_ls.setup({
 				on_attach = require("lsp-format").on_attach,
 				sources = {
-					null_ls.builtins.formatting.prettier,
 					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.diagnostics.eslint,
+					null_ls.builtins.formatting.prettier.with(js_options),
+					null_ls.builtins.diagnostics.eslint.with(js_options),
+					null_ls.builtins.diagnostics.stylelint.with(js_options),
 					-- null_ls.builtins.completion.spell,
 				},
 			})
