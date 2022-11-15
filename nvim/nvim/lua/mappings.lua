@@ -37,15 +37,20 @@ map("n", "#", "<Plug>(asterisk-z#)", { noremap = false })
 map("n", "g*", "<Plug>(asterisk-gz*)", { noremap = false })
 map("n", "g#", "<Plug>(asterisk-gz#)", { noremap = false })
 
+vim.keymap.set({ "n", "v", "o" }, "zf", "<Plug>(leap-forward-to)", { desc = "Leap forward to" })
+vim.keymap.set({ "n", "v", "o" }, "zF", "<Plug>(leap-backward-to)", { desc = "Leap backward to" })
+vim.keymap.set({ "n", "v", "o" }, "zt", "<Plug>(leap-forward-till)", { desc = "Leap forward until" })
+vim.keymap.set({ "n", "v", "o" }, "zT", "<Plug>(leap-backward-till)", { desc = "Leap backward until" })
+
 local normal_mappings = {
 	-- Quick mappings
-	["<leader>f"] = { "<cmd>Telescope find_files<cr>", "Pick file" },
+	["<leader>f"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
+	["<leader>t"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
 	["<leader>g"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
 	["<leader>d"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
 	["<leader>D"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
 	["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
 	["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
-	["<leader>t"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "File tree" },
 	["<leader>0"] = { "<cmd>close<cr>", "Close window" },
 	["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
 	["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
@@ -58,7 +63,8 @@ local normal_mappings = {
 	["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
 	["<leader>pd"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
 	["<leader>pD"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
-	["<leader>pf"] = { "<cmd>Telescope find_files<cr>", "Pick file" },
+	["<leader>pt"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
+	["<leader>pf"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
 	["<leader>pr"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 	["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
 	-- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
@@ -77,15 +83,15 @@ local normal_mappings = {
 	["<leader>rf"] = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
 
 	-- Close table
-	["<leader>x"] = { name = "+Close" },
-	["<leader>xu"] = { "<cmd>bd<cr>", "Close buffer" },
-	["<leader>xi"] = { "<cmd>close<cr>", "Close window" },
-	["<leader>xt"] = { "<cmd>tabclose<cr>", "Close tab" },
+	["<leader>q"] = { name = "+Quit" },
+	["<leader>qu"] = { "<cmd>bd<cr>", "Close buffer" },
+	["<leader>qU"] = { "<cmd>bd!<cr>", "Close buffer!" },
+	["<leader>qi"] = { "<cmd>close<cr>", "Close window" },
+	["<leader>qI"] = { "<cmd>close!<cr>", "Close window!" },
+	["<leader>qt"] = { "<cmd>tabclose<cr>", "Close tab" },
+	["<leader>qT"] = { "<cmd>tabclose!<cr>", "Close tab!" },
 
 	-- Go table
-	["gl"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
-	["gk"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
-	["gK"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
 	["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
 	["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "Go to declaration" },
 	["gi"] = { "<cmd>lua vim.lsp.buf.implementation()<cr>", "Go to implementation" },
@@ -111,6 +117,14 @@ local visual_mappings = {
 	["<leader>f"] = { '"zy:Telescope find_files default_text=<C-r>z<cr>', "Search file" },
 }
 
+local motion_mappings = {
+	["<leader>f"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
+	["<leader>F"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
+	["<leader>t"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
+	["<leader>T"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
+}
+
 local wk = require("which-key")
 wk.register(normal_mappings, { mode = "n" })
 wk.register(visual_mappings, { mode = "v" })
+wk.register(motion_mappings, { mode = "o" })

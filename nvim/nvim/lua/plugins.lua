@@ -55,7 +55,9 @@ require("packer").startup(function(use)
 	use({
 		"ggandor/leap.nvim",
 		config = function()
-			require("leap").add_default_mappings()
+			local leap = require("leap")
+			leap.opts.case_sensitive = true
+			leap.opts.max_highlighted_traversal_targets = 0
 		end,
 	})
 
@@ -495,9 +497,13 @@ require("packer").startup(function(use)
 				on_attach = require("lsp-format").on_attach,
 				sources = {
 					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.prettier.with(js_options),
-					null_ls.builtins.diagnostics.eslint.with(js_options),
-					null_ls.builtins.diagnostics.stylelint.with(js_options),
+					null_ls.builtins.formatting.prettier.with({
+						prefer_local = "node_modules/.bin",
+					}),
+					null_ls.builtins.diagnostics.eslint.with({ only_local = "node_modules/.bin" }),
+					null_ls.builtins.diagnostics.stylelint.with({
+						prefer_local = "node_modules/.bin",
+					}),
 					-- null_ls.builtins.completion.spell,
 				},
 			})
