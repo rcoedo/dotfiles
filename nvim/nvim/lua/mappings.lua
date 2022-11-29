@@ -100,13 +100,13 @@ local normal_mappings = {
 
 	-- Previous table
 	["["] = { name = "+Previous" },
-	["[b"] = { "<cmd>bp<cr>", "Previous buffer" },
+	["[b"] = { "<Plug>(buf-surf-back)", "Previous buffer" },
 	["[t"] = { "<cmd>tabprevious<cr>", "Previous tab" },
 	["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous diagnostic" },
 
 	-- Next table
 	["]"] = { name = "+Next" },
-	["]b"] = { "<cmd>bn<cr>", "Next buffer" },
+	["]b"] = { "<Plug>(buf-surf-forward)", "Next buffer" },
 	["]t"] = { "<cmd>tabnext<cr>", "Next tab" },
 	["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next diagnostic" },
 }
@@ -115,6 +115,10 @@ local visual_mappings = {
 	["<leader>/"] = { '"zy:Telescope current_buffer_fuzzy_find default_text=<C-r>z<cr>', "Live search current buffer" },
 	["<leader>g"] = { '"zy:Telescope live_grep default_text=<C-r>z<cr>', "Live search" },
 	["<leader>f"] = { '"zy:Telescope find_files default_text=<C-r>z<cr>', "Search file" },
+
+	-- Edit
+	["<leader>e"] = { name = "+Edit" },
+	["<leader>es"] = { ":sort<cr>", "Sort" },
 }
 
 local motion_mappings = {

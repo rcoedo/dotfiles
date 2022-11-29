@@ -35,6 +35,7 @@ require("packer").startup(function(use)
 	-- use("tpope/vim-speeddating")
 	use("tpope/vim-fugitive")
 	use("wellle/targets.vim")
+	use("ton/vim-bufsurf")
 
 	use({
 		"nat-418/boole.nvim",
