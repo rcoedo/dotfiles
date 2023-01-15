@@ -490,9 +490,6 @@ require("packer").startup(function(use)
 		requires = { "lukas-reineke/lsp-format.nvim" },
 		config = function()
 			local null_ls = require("null-ls")
-			local js_options = {
-				prefer_local = "node_modules/.bin",
-			}
 			---@diagnostic disable-next-line: redundant-parameter
 			null_ls.setup({
 				on_attach = require("lsp-format").on_attach,

@@ -97,6 +97,10 @@ local normal_mappings = {
 	["gi"] = { "<cmd>lua vim.lsp.buf.implementation()<cr>", "Go to implementation" },
 	["go"] = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Go to type definition" },
 	["gr"] = { "<cmd>lua vim.lsp.buf.references()<cr>", "Go to references" },
+	["gj"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
+	["gJ"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
+	["gk"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
+	["gK"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
 
 	-- Previous table
 	["["] = { name = "+Previous" },
