@@ -1,14 +1,3 @@
-require("tokyonight").setup({
-	style = "night",
-	styles = {
-		floats = "normal",
-		sidebars = "normal",
-	},
-	on_colors = function(colors)
-		colors.border = colors.blue0
-	end,
-})
-
 vim.cmd([[
   syntax enable
   colorscheme tokyonight

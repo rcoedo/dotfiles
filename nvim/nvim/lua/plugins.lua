@@ -1,21 +1,42 @@
-vim.cmd([[packadd packer.nvim]])
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]])
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
+vim.opt.termguicolors = true
 
-require("packer").startup(function(use)
+require("lazy").setup({
 	-- Packer
-	use({ "wbthomason/packer.nvim" })
+	{ "wbthomason/packer.nvim" },
 
 	-- themes
-	use("folke/tokyonight.nvim")
-	use("kyazdani42/nvim-web-devicons")
-	use({
+	{
+		"folke/tokyonight.nvim",
+		lazy = true,
+		config = function()
+			require("tokyonight").setup({
+				style = "night",
+				styles = {
+					floats = "normal",
+					sidebars = "normal",
+				},
+				on_colors = function(colors)
+					colors.border = colors.blue0
+				end,
+			})
+		end,
+	},
+	"kyazdani42/nvim-web-devicons",
+	{
 		"nvim-lualine/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons" },
+		dependencies = { "kyazdani42/nvim-web-devicons", "folke/tokyonight.nvim" },
 		config = function()
 			require("lualine").setup({
 				options = {
@@ -23,21 +44,21 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
+	},
 
 	-- tpope & edit stuff
-	use("tpope/vim-commentary")
-	use("tpope/vim-surround")
-	use("tpope/vim-repeat")
-	-- use("tpope/vim-vinegar")
-	use("tpope/vim-ragtag")
-	use("tpope/vim-endwise")
-	-- use("tpope/vim-speeddating")
-	use("tpope/vim-fugitive")
-	use("wellle/targets.vim")
-	use("ton/vim-bufsurf")
+	"tpope/vim-commentary",
+	"tpope/vim-surround",
+	"tpope/vim-repeat",
+	-- "tpope/vim-vinegar",
+	"tpope/vim-ragtag",
+	"tpope/vim-endwise",
+	-- "tpope/vim-speeddating",
+	"tpope/vim-fugitive",
+	"wellle/targets.vim",
+	"ton/vim-bufsurf",
 
-	use({
+	{
 		"nat-418/boole.nvim",
 		config = function()
 			require("boole").setup({
@@ -51,18 +72,18 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"ggandor/leap.nvim",
 		config = function()
 			local leap = require("leap")
 			leap.opts.case_sensitive = true
 			leap.opts.max_highlighted_traversal_targets = 0
 		end,
-	})
+	},
 
-	use({
+	{
 		"rapan931/lasterisk.nvim",
 		config = function()
 			vim.keymap.set("n", "*", function()
@@ -72,16 +93,16 @@ require("packer").startup(function(use)
 				require("lasterisk").search({ is_whole = false })
 			end)
 		end,
-	})
+	},
 
-	use({
+	{
 		"norcalli/nvim-colorizer.lua",
 		config = function()
 			require("colorizer").setup()
 		end,
-	})
+	},
 
-	use({
+	{
 		"lewis6991/gitsigns.nvim",
 		config = function()
 			require("gitsigns").setup({
@@ -94,13 +115,13 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
+	},
 
+	{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 	-- telescope
-	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-	use({
+	{
 		"nvim-telescope/telescope.nvim",
-		requires = {
+		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-fzf-native.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
@@ -198,28 +219,27 @@ require("packer").startup(function(use)
 			telescope.load_extension("notify")
 			telescope.load_extension("file_browser")
 		end,
-	})
+	},
 
-	use({
+	{
 		"stevearc/dressing.nvim",
 		config = function()
 			require("dressing").setup({})
 		end,
-	})
+	},
 
-	use({
+	{
 		"rcarriga/nvim-notify",
 		config = function()
 			require("notify").setup()
 			vim.notify = require("notify")
 		end,
-	})
+	},
 
 	-- treesitter
-	use({
+	{
 		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
-		requires = { "nvim-treesitter/nvim-treesitter-textobjects", "p00f/nvim-ts-rainbow" },
+		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", "p00f/nvim-ts-rainbow" },
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
@@ -293,26 +313,26 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
+	},
 	-- Better indentation for .tsx
-	use("HerringtonDarkholme/yats.vim")
+	"HerringtonDarkholme/yats.vim",
 	-- Better fish support
-	use("dag/vim-fish")
+	"dag/vim-fish",
 
-	use("windwp/nvim-ts-autotag")
-	use({
+	"windwp/nvim-ts-autotag",
+	{
 		"windwp/nvim-autopairs",
 		config = function()
 			require("nvim-autopairs").setup({
 				check_ts = true,
 			})
 		end,
-	})
+	},
 
 	-- Completion
-	use({
+	{
 		"hrsh7th/nvim-cmp",
-		requires = {
+		dependencies = {
 			-- other cmp plugins
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
@@ -428,12 +448,12 @@ require("packer").startup(function(use)
 				}),
 			})
 		end,
-	})
+	},
 
 	-- LSP
-	use({
+	{
 		"williamboman/mason-lspconfig.nvim",
-		requires = {
+		dependencies = {
 			"williamboman/mason.nvim",
 			"neovim/nvim-lspconfig",
 			"hrsh7th/cmp-nvim-lsp",
@@ -460,17 +480,26 @@ require("packer").startup(function(use)
 				function(server_name)
 					require("lspconfig")[server_name].setup(lsp_options)
 				end,
-				["sumneko_lua"] = function()
-					require("lspconfig").sumneko_lua.setup(vim.tbl_deep_extend("force", lsp_options, {
+				["lua_ls"] = function()
+					require("lspconfig").lua_ls.setup(vim.tbl_deep_extend("force", lsp_options, {
 						settings = {
 							Lua = {
+								runtime = {
+									-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+									version = "LuaJIT",
+								},
 								diagnostics = {
-									-- Get the language server to recognize the 'vim' global
+									-- Get the language server to recognize the `vim` global
 									globals = { "vim" },
 								},
 								workspace = {
 									-- Make the server aware of Neovim runtime files
 									library = vim.api.nvim_get_runtime_file("", true),
+									checkThirdParty = false,
+								},
+								-- Do not send telemetry data containing a randomized but unique identifier
+								telemetry = {
+									enable = false,
 								},
 							},
 						},
@@ -479,15 +508,15 @@ require("packer").startup(function(use)
 			})
 
 			mason_lspconfig.setup({
-				ensure_installed = { "vimls", "tsserver", "sumneko_lua", "html", "cssls", "jsonls" },
+				ensure_installed = { "vimls", "tsserver", "lua_ls", "html", "cssls", "jsonls" },
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"jose-elias-alvarez/null-ls.nvim",
 		-- format on save
-		requires = { "lukas-reineke/lsp-format.nvim" },
+		dependencies = { "lukas-reineke/lsp-format.nvim" },
 		config = function()
 			local null_ls = require("null-ls")
 			---@diagnostic disable-next-line: redundant-parameter
@@ -506,9 +535,9 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"folke/which-key.nvim",
 		config = function()
 			require("which-key").setup({
@@ -518,9 +547,9 @@ require("packer").startup(function(use)
 				},
 			})
 		end,
-	})
+	},
 
-	-- use({
+	-- {
 	-- 	"glepnir/lspsaga.nvim",
 	-- 	config = function()
 	-- 		require("lspsaga").init_lsp_saga({
@@ -528,5 +557,5 @@ require("packer").startup(function(use)
 	-- 			code_action_lightbulb = { enable = false },
 	-- 		})
 	-- 	end,
-	-- })
-end)
+	-- },
+})
