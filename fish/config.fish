@@ -51,6 +51,7 @@ abbr t "tig"
 abbr cf "vim ~/.config/fish/config.fish"
 
 alias vim "nvim"
+alias nv "neovide --frame none"
 alias wtr "curl -4 wttr.in"
 alias gg "__ghq_get"
 alias bat "bat --theme=base16"
