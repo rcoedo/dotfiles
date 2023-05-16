@@ -5,6 +5,7 @@ vim.cmd([[
   filetype plugin indent on
   au FileType gitcommit set tw=72
   au FileType go setlocal ts=4 sw=4 expandtab
+  au BufRead,BufNewFile *.swcrc set filetype=json
 ]])
 
 vim.opt.shell = "sh"
