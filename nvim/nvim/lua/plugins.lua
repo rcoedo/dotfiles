@@ -13,9 +13,6 @@ vim.opt.rtp:prepend(lazypath)
 vim.opt.termguicolors = true
 
 require("lazy").setup({
-	-- Packer
-	{ "wbthomason/packer.nvim" },
-
 	-- themes
 	{
 		"folke/tokyonight.nvim",
@@ -49,6 +46,7 @@ require("lazy").setup({
 	-- tpope & edit stuff
 	"tpope/vim-commentary",
 	"tpope/vim-surround",
+	"tpope/vim-abolish",
 	"tpope/vim-repeat",
 	-- "tpope/vim-vinegar",
 	"tpope/vim-ragtag",
@@ -58,21 +56,29 @@ require("lazy").setup({
 	"wellle/targets.vim",
 	"ton/vim-bufsurf",
 
+	-- {
+	-- 	"airblade/vim-rooter",
+	-- 	config = function()
+	-- 		vim.g.rooter_cd_cmd = "lcd"
+	-- 	end,
+	-- },
+
 	{
-		"nat-418/boole.nvim",
+		"notjedi/nvim-rooter.lua",
 		config = function()
-			require("boole").setup({
-				mappings = {
-					increment = "<C-a>",
-					decrement = "<C-x>",
-				},
-				allow_caps_additions = {
-					{ "enable", "disable" },
-					{ "enabled", "disabled" },
-				},
-			})
+			require("nvim-rooter").setup()
 		end,
 	},
+
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	config = function()
+	-- 		require("copilot").setup({
+	-- 			suggestion = { enabled = true },
+	-- 			panel = { enabled = false },
+	-- 		})
+	-- 	end,
+	-- },
 
 	{
 		"ggandor/leap.nvim",
@@ -83,15 +89,37 @@ require("lazy").setup({
 		end,
 	},
 
+	-- {
+	-- 	"rapan931/lasterisk.nvim",
+	-- 	config = function()
+	-- 		vim.keymap.set("n", "*", function()
+	-- 			require("lasterisk").search()
+	-- 		end)
+	-- 		vim.keymap.set({ "n", "x" }, "g*", function()
+	-- 			require("lasterisk").search({ is_whole = false })
+	-- 		end)
+	-- 	end,
+	-- },
+	--
+	-- {
+	-- 	"mrjones2014/smart-splits.nvim",
+	-- 	lazy = false,
+	-- 	version = ">=1.0.0",
+	-- 	config = function()
+	-- 		require("smart-splits").setup({
+	-- 			at_edge = "stop",
+	-- 		})
+	-- 	end,
+	-- },
+
 	{
-		"rapan931/lasterisk.nvim",
+		"nvim-tree/nvim-tree.lua",
+		version = "*",
+		dependencies = {
+			"kyazdani42/nvim-web-devicons",
+		},
 		config = function()
-			vim.keymap.set("n", "*", function()
-				require("lasterisk").search()
-			end)
-			vim.keymap.set({ "n", "x" }, "g*", function()
-				require("lasterisk").search({ is_whole = false })
-			end)
+			require("nvim-tree").setup({})
 		end,
 	},
 
@@ -125,6 +153,7 @@ require("lazy").setup({
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-fzf-native.nvim",
 			"nvim-telescope/telescope-file-browser.nvim",
+			"rcoedo/telescope-ghq.nvim",
 			"rcarriga/nvim-notify",
 		},
 		config = function()
@@ -154,11 +183,13 @@ require("lazy").setup({
 							["<a-q>"] = false,
 							["<c-q>"] = false,
 							["<esc>"] = actions.close,
+							["<c-bs>"] = actions.delete_buffer,
 							["<c-b>"] = actions.preview_scrolling_up,
 							["<c-f>"] = actions.preview_scrolling_down,
 							["<c-space>"] = actions.toggle_selection,
 							["<c-cr>"] = actions.select_vertical,
 							["<c-s-cr>"] = actions.select_horizontal,
+							["<C-i>"] = "which_key",
 						},
 					},
 				},
@@ -168,7 +199,7 @@ require("lazy").setup({
 						theme = "dropdown",
 						-- previewer = false,
 						layout_config = {
-							width = 0.75,
+							width = 1,
 						},
 					},
 					buffers = {
@@ -176,6 +207,7 @@ require("lazy").setup({
 						mappings = {
 							i = {
 								["<c-d>"] = actions.delete_buffer,
+								["<c-bs>"] = actions.delete_buffer,
 							},
 						},
 					},
@@ -208,9 +240,13 @@ require("lazy").setup({
 							i = {
 								["<c-j>"] = telescope.extensions.file_browser.actions.create_from_prompt,
 								["<c-l>"] = telescope.extensions.file_browser.actions.goto_parent_dir,
+								["<c-bs>"] = telescope.extensions.file_browser.actions.remove,
 								["<tab>"] = actions.select_default,
 							},
 						},
+					},
+					ghq = {
+						theme = "ivy",
 					},
 				},
 			})
@@ -218,6 +254,7 @@ require("lazy").setup({
 			telescope.load_extension("fzf")
 			telescope.load_extension("notify")
 			telescope.load_extension("file_browser")
+			telescope.load_extension("ghq")
 		end,
 	},
 
@@ -239,13 +276,14 @@ require("lazy").setup({
 	-- treesitter
 	{
 		"nvim-treesitter/nvim-treesitter",
-		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", "p00f/nvim-ts-rainbow" },
+		dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", "HiPhish/nvim-ts-rainbow2" },
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"rust",
 					"fish",
 					"lua",
+					"bash",
 					"javascript",
 					"typescript",
 					"tsx",
@@ -266,16 +304,14 @@ require("lazy").setup({
 				},
 				rainbow = {
 					enable = true,
-					extended_mode = true,
-					max_file_lines = 1000,
+					query = "rainbow-parens",
+					strategy = require("ts-rainbow").strategy.global,
 				},
 				textobjects = {
 					select = {
 						enable = true,
-
 						-- Automatically jump forward to textobj, similar to targets.vim
 						lookahead = true,
-
 						keymaps = {
 							-- You can use the capture groups defined in textobjects.scm
 							["af"] = { query = "@function.outer", desc = "@function.outer" },
@@ -316,8 +352,9 @@ require("lazy").setup({
 	},
 	-- Better indentation for .tsx
 	"HerringtonDarkholme/yats.vim",
-	-- Better fish support
-	"dag/vim-fish",
+
+	-- Edgedb (no treesitter support as of April 2023)
+	"edgedb/edgedb-vim",
 
 	"windwp/nvim-ts-autotag",
 	{
@@ -342,6 +379,7 @@ require("lazy").setup({
 			"hrsh7th/cmp-vsnip",
 			"hrsh7th/vim-vsnip",
 			"onsails/lspkind.nvim",
+			-- "zbirenbaum/copilot-cmp",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -350,6 +388,14 @@ require("lazy").setup({
 			end
 
 			local lspkind = require("lspkind")
+			lspkind.init({
+				symbol_map = {
+					TypeParameter = "",
+					-- Copilot = "",
+				},
+			})
+
+			-- require("copilot_cmp").setup()
 
 			local mapping_helpers = {
 				fallback = function(fallback)
@@ -381,13 +427,13 @@ require("lazy").setup({
 				mapping = cmp.mapping.preset.insert({
 					["<C-u>"] = cmp.mapping.scroll_docs(-4),
 					["<C-d>"] = cmp.mapping.scroll_docs(4),
-					["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-					["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+					-- ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+					-- ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
 					["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
 					["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-					["<CR>"] = cmp.mapping.confirm({ select = false }),
+					["<CR>"] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }),
 					-- Toggle completion
-					["<C-Space>"] = cmp.mapping(function()
+					["<c-space>"] = cmp.mapping(function()
 						if cmp.visible() then
 							cmp.close()
 						else
@@ -396,8 +442,9 @@ require("lazy").setup({
 					end),
 				}),
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "vsnip" },
+					-- { name = "copilot", group_index = 2 },
+					{ name = "nvim_lsp", group_index = 2 },
+					{ name = "vsnip", group_index = 2 },
 				}),
 				formatting = {
 					fields = { "kind", "abbr", "menu" },
@@ -408,6 +455,23 @@ require("lazy").setup({
 						kind.menu = "        " .. strings[2] --.. " (" .. entry.source.name .. ")"
 						return kind
 					end,
+				},
+				sorting = {
+					priority_weight = 2,
+					comparators = {
+						-- require("copilot_cmp.comparators").prioritize,
+						-- Below is the default comparitor list and order for nvim-cmp
+						cmp.config.compare.offset,
+						-- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+						cmp.config.compare.exact,
+						cmp.config.compare.score,
+						cmp.config.compare.recently_used,
+						cmp.config.compare.locality,
+						cmp.config.compare.kind,
+						cmp.config.compare.sort_text,
+						cmp.config.compare.length,
+						cmp.config.compare.order,
+					},
 				},
 				window = {
 					documentation = vim.tbl_deep_extend("force", cmp.config.window.bordered(), {
@@ -435,8 +499,14 @@ require("lazy").setup({
 				mapping = {
 					["<C-p>"] = cmp.mapping(mapping_helpers.fallback, { "i", "c" }),
 					["<C-n>"] = cmp.mapping(mapping_helpers.fallback, { "i", "c" }),
-					["<S-Tab>"] = cmp.mapping(mapping_helpers.do_or_complete(cmp.select_prev_item), { "i", "c" }),
-					["<Tab>"] = cmp.mapping(mapping_helpers.do_or_complete(cmp.select_next_item), { "i", "c" }),
+					["<S-Tab>"] = cmp.mapping(mapping_helpers.do_or_complete(cmp.select_prev_item), {
+						"i",
+						"c",
+					}),
+					["<Tab>"] = cmp.mapping(mapping_helpers.do_or_complete(cmp.select_next_item), {
+						"i",
+						"c",
+					}),
 				},
 				completion = {
 					completeopt = "menu,menuone,noselect",
@@ -456,10 +526,17 @@ require("lazy").setup({
 		dependencies = {
 			"williamboman/mason.nvim",
 			"neovim/nvim-lspconfig",
+			"jose-elias-alvarez/null-ls.nvim",
 			"hrsh7th/cmp-nvim-lsp",
 		},
 		config = function()
-			require("mason").setup({
+			local lspconfig = require("lspconfig")
+			local mason = require("mason")
+			local mason_lspconfig = require("mason-lspconfig")
+			local null_ls = require("null-ls")
+			local cmp_nvim_lsp = require("cmp_nvim_lsp")
+
+			mason.setup({
 				ui = {
 					icons = {
 						package_installed = "✓",
@@ -469,69 +546,108 @@ require("lazy").setup({
 				},
 			})
 
-			local lsp_options = {
+			local default_options = {
 				flags = { debounce_text_changes = 150 },
-				capabilities = require("cmp_nvim_lsp").default_capabilities(),
+				capabilities = cmp_nvim_lsp.default_capabilities(),
 			}
 
-			local mason_lspconfig = require("mason-lspconfig")
-
-			mason_lspconfig.setup_handlers({
-				function(server_name)
-					require("lspconfig")[server_name].setup(lsp_options)
-				end,
-				["lua_ls"] = function()
-					require("lspconfig").lua_ls.setup(vim.tbl_deep_extend("force", lsp_options, {
-						settings = {
-							Lua = {
-								runtime = {
-									-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-									version = "LuaJIT",
-								},
-								diagnostics = {
-									-- Get the language server to recognize the `vim` global
-									globals = { "vim" },
-								},
-								workspace = {
-									-- Make the server aware of Neovim runtime files
-									library = vim.api.nvim_get_runtime_file("", true),
-									checkThirdParty = false,
-								},
-								-- Do not send telemetry data containing a randomized but unique identifier
-								telemetry = {
-									enable = false,
-								},
+			local option_overrides = {
+				["tsserver"] = {
+					single_file_support = false,
+					root_dir = lspconfig.util.root_pattern("package.json"),
+				},
+				["denols"] = {
+					root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+				},
+				["jsonls"] = {
+					init_options = {
+						provideFormatter = false,
+					},
+				},
+				["lua_ls"] = {
+					settings = {
+						Lua = {
+							runtime = {
+								version = "LuaJIT",
+							},
+							diagnostics = {
+								globals = { "vim" },
+							},
+							workspace = {
+								library = vim.api.nvim_get_runtime_file("", true),
+								checkThirdParty = false,
+							},
+							telemetry = {
+								enable = false,
 							},
 						},
-					}))
-				end,
-			})
+					},
+				},
+				["null-ls"] = {
+					on_attach = function(attached_client, bufnr)
+						if attached_client.supports_method("textDocument/formatting") then
+							local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+							vim.api.nvim_create_autocmd("BufWritePre", {
+								group = augroup,
+								buffer = bufnr,
+								callback = function()
+									vim.lsp.buf.format({
+										bufnr = bufnr,
+										filter = function(client)
+											return client.name == "null-ls"
+										end,
+									})
+								end,
+							})
+						end
+					end,
+					sources = {
+						-- fish
+						null_ls.builtins.diagnostics.fish,
+						null_ls.builtins.formatting.fish_indent,
+						-- prisma
+						-- null_ls.builtins.formatting.prismafmt,
+						-- lua
+						null_ls.builtins.formatting.stylua,
+						-- bash
+						null_ls.builtins.formatting.shfmt,
+						null_ls.builtins.code_actions.shellcheck,
+						-- css
+						null_ls.builtins.diagnostics.stylelint.with({ only_local = "node_modules/.bin" }),
+						-- js/ts
+						null_ls.builtins.formatting.rome.with({ extra_filetypes = { "jsonc" } }),
+						-- null_ls.builtins.code_actions.eslint.with({ only_local = "node_modules/.bin" }),
+						-- null_ls.builtins.diagnostics.eslint.with({ only_local = "node_modules/.bin" }),
+						-- null_ls.builtins.formatting.prettier.with({ only_local = "node_modules/.bin" }),
+						-- null_ls.builtins.completion.spell,
+					},
+				},
+			}
+
+			local function get_lsp_options(server_name)
+				return option_overrides[server_name]
+						and vim.tbl_deep_extend("force", default_options, option_overrides[server_name])
+					or default_options
+			end
+
+			null_ls.setup(get_lsp_options("null-ls"))
 
 			mason_lspconfig.setup({
-				ensure_installed = { "vimls", "tsserver", "lua_ls", "html", "cssls", "jsonls" },
-			})
-		end,
-	},
-
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		-- format on save
-		dependencies = { "lukas-reineke/lsp-format.nvim" },
-		config = function()
-			local null_ls = require("null-ls")
-			---@diagnostic disable-next-line: redundant-parameter
-			null_ls.setup({
-				on_attach = require("lsp-format").on_attach,
-				sources = {
-					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.prettier.with({
-						prefer_local = "node_modules/.bin",
-					}),
-					null_ls.builtins.diagnostics.eslint.with({ only_local = "node_modules/.bin" }),
-					null_ls.builtins.diagnostics.stylelint.with({
-						prefer_local = "node_modules/.bin",
-					}),
-					-- null_ls.builtins.completion.spell,
+				ensure_installed = {
+					"vimls",
+					"tsserver",
+					"lua_ls",
+					"html",
+					"cssls",
+					"rome",
+					"jsonls",
+					"bashls",
+					"denols",
+				},
+				handlers = {
+					function(server_name)
+						lspconfig[server_name].setup(get_lsp_options(server_name))
+					end,
 				},
 			})
 		end,
@@ -548,14 +664,4 @@ require("lazy").setup({
 			})
 		end,
 	},
-
-	-- {
-	-- 	"glepnir/lspsaga.nvim",
-	-- 	config = function()
-	-- 		require("lspsaga").init_lsp_saga({
-	-- 			border_style = "rounded",
-	-- 			code_action_lightbulb = { enable = false },
-	-- 		})
-	-- 	end,
-	-- },
 })

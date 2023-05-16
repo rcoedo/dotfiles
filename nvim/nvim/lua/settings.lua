@@ -8,6 +8,9 @@ vim.cmd([[
   au BufRead,BufNewFile *.swcrc set filetype=json
 ]])
 
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "CursorHold" }, { command = "checktime" })
+
 vim.opt.shell = "sh"
 vim.opt.background = "dark"
 vim.opt.compatible = false
@@ -17,7 +20,6 @@ vim.opt.backup = false
 vim.opt.wb = false
 vim.opt.swapfile = false
 vim.opt.history = 1000
-vim.opt.autoread = true
 vim.opt.number = true
 vim.opt.ruler = true
 vim.opt.cursorline = true
@@ -58,6 +60,13 @@ vim.opt.termguicolors = true
 vim.opt.splitkeep = "screen"
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+
+vim.g.markdown_fenced_languages = {
+	"ts=typescript",
+	"lua",
+	"js",
+	"python",
+}
 
 local sign = function(opts)
 	vim.fn.sign_define(opts.name, {

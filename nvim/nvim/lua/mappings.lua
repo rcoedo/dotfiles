@@ -7,10 +7,27 @@ local opts = { noremap = false }
 map("n", "<tab>", "<c-w><c-w>", opts)
 map("n", "<bs>", "<cmd>nohl<cr>", opts)
 map("n", "-", "<cmd>Telescope file_browser path=%:p:h<cr>", opts)
+
 map("n", "<a-h>", "<c-w>h", opts)
 map("n", "<a-j>", "<c-w>j", opts)
 map("n", "<a-k>", "<c-w>k", opts)
 map("n", "<a-l>", "<c-w>l", opts)
+
+-- map("n", "<a-h>", require("smart-splits").move_cursor_left, opts)
+-- map("n", "<a-j>", require("smart-splits").move_cursor_down, opts)
+-- map("n", "<a-k>", require("smart-splits").move_cursor_up, opts)
+-- map("n", "<a-l>", require("smart-splits").move_cursor_right, opts)
+
+-- -- moving between splits
+-- vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+-- vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+-- vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+-- vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+-- -- swapping buffers between windows
+-- vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
+-- vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
+-- vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
+-- vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 
 -- Emacs style insert mode bindings
 map("i", "<c-b>", "<left>", opts)
@@ -32,10 +49,10 @@ map("c", "<c-d>", "<del>", noremap_opts)
 map("c", "<c-h>", "<bs>", noremap_opts)
 map("c", "<c-k>", "<c-\\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<cr>", noremap_opts)
 
-map("n", "*", "<Plug>(asterisk-z*)", { noremap = false })
-map("n", "#", "<Plug>(asterisk-z#)", { noremap = false })
-map("n", "g*", "<Plug>(asterisk-gz*)", { noremap = false })
-map("n", "g#", "<Plug>(asterisk-gz#)", { noremap = false })
+-- map("n", "*", "<Plug>(asterisk-z*)", { noremap = false })
+-- map("n", "#", "<Plug>(asterisk-z#)", { noremap = false })
+-- map("n", "g*", "<Plug>(asterisk-gz*)", { noremap = false })
+-- map("n", "g#", "<Plug>(asterisk-gz#)", { noremap = false })
 
 vim.keymap.set({ "n", "v", "o" }, "zf", "<Plug>(leap-forward-to)", { desc = "Leap forward to" })
 vim.keymap.set({ "n", "v", "o" }, "zF", "<Plug>(leap-backward-to)", { desc = "Leap backward to" })
@@ -51,6 +68,7 @@ local normal_mappings = {
 	["<leader>D"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
 	["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
 	["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
+	["<leader>o"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
 	["<leader>0"] = { "<cmd>close<cr>", "Close window" },
 	["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
 	["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
@@ -59,13 +77,13 @@ local normal_mappings = {
 
 	-- Pick table
 	["<leader>p"] = { name = "+Pick" },
-	["<leader>pb"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
+	["<leader>pu"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
 	["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
 	["<leader>pd"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
 	["<leader>pD"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
 	["<leader>pt"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
 	["<leader>pf"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
-	["<leader>pr"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
+	["<leader>po"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
 	["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
 	-- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
 
@@ -74,6 +92,9 @@ local normal_mappings = {
 	["<leader>sd"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
 	["<leader>sh"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
 	["<leader>ss"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
+	["<leader>su"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Show usages" },
+	["<leader>sc"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Show outgoing calls" },
+	["<leader>sr"] = { "<cmd>Telescope lsp_references<cr>", "Show references" },
 	["<leader>st"] = { "<cmd>Telescope help_tags<cr>", "Show help tags" },
 	["<leader>sn"] = { "<cmd>Telescope notify<cr>", "Show notification history" },
 
@@ -92,11 +113,11 @@ local normal_mappings = {
 	["<leader>qT"] = { "<cmd>tabclose!<cr>", "Close tab!" },
 
 	-- Go table
-	["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
+	-- ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
+	["gd"] = { "<cmd>Telescope lsp_definitions<cr>", "Go to definition" },
 	["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "Go to declaration" },
-	["gi"] = { "<cmd>lua vim.lsp.buf.implementation()<cr>", "Go to implementation" },
+	["gi"] = { "<cmd>Telescope lsp_implementations<cr>", "Go to implementation" },
 	["go"] = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Go to type definition" },
-	["gr"] = { "<cmd>lua vim.lsp.buf.references()<cr>", "Go to references" },
 	["gj"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
 	["gJ"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
 	["gk"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
