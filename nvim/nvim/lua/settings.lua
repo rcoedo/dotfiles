@@ -1,3 +1,7 @@
+if vim.g.neovide then
+  vim.g.neovide_input_macos_alt_is_meta = true
+end
+
 vim.cmd([[
   syntax enable
   colorscheme tokyonight
@@ -8,9 +12,9 @@ vim.cmd([[
   au BufRead,BufNewFile *.swcrc set filetype=json
 ]])
 
-vim.opt.autoread = true
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "CursorHold" }, { command = "checktime" })
+vim.cmd([[autocmd BufWritePre * lua vim.lsp.buf.format({ async = false })]])
 
+vim.opt.autoread = true
 vim.opt.shell = "sh"
 vim.opt.background = "dark"
 vim.opt.compatible = false
@@ -62,18 +66,18 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.g.markdown_fenced_languages = {
-	"ts=typescript",
-	"lua",
-	"js",
-	"python",
+  "ts=typescript",
+  "lua",
+  "js",
+  "python",
 }
 
 local sign = function(opts)
-	vim.fn.sign_define(opts.name, {
-		texthl = opts.name,
-		text = opts.text,
-		numhl = "",
-	})
+  vim.fn.sign_define(opts.name, {
+    texthl = opts.name,
+    text = opts.text,
+    numhl = "",
+  })
 end
 
 sign({ name = "DiagnosticSignError", text = "✘" })
@@ -82,18 +86,18 @@ sign({ name = "DiagnosticSignHint", text = "⚑" })
 sign({ name = "DiagnosticSignInfo", text = "" })
 
 vim.diagnostic.config({
-	virtual_text = false,
-	signs = true,
-	update_in_insert = false,
-	underline = true,
-	severity_sort = true,
-	float = {
-		focusable = false,
-		border = "rounded",
-		source = "always",
-		header = "",
-		prefix = "",
-	},
+  virtual_text = false,
+  signs = true,
+  update_in_insert = false,
+  underline = true,
+  severity_sort = true,
+  float = {
+    focusable = false,
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
 })
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })

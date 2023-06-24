@@ -60,97 +60,97 @@ vim.keymap.set({ "n", "v", "o" }, "zt", "<Plug>(leap-forward-till)", { desc = "L
 vim.keymap.set({ "n", "v", "o" }, "zT", "<Plug>(leap-backward-till)", { desc = "Leap backward until" })
 
 local normal_mappings = {
-	-- Quick mappings
-	["<leader>f"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
-	["<leader>t"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
-	["<leader>g"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
-	["<leader>d"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
-	["<leader>D"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
-	["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
-	["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
-	["<leader>o"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
-	["<leader>0"] = { "<cmd>close<cr>", "Close window" },
-	["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
-	["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
-	["<leader>/"] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Live search current buffer" },
-	["<leader><leader>"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
+  -- Quick mappings
+  ["<leader>f"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
+  ["<leader>t"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
+  ["<leader>g"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
+  ["<leader>d"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
+  ["<leader>D"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
+  ["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
+  ["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
+  ["<leader>o"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
+  ["<leader>0"] = { "<cmd>close<cr>", "Close window" },
+  ["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
+  ["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
+  ["<leader>/"] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Live search current buffer" },
+  ["<leader><leader>"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
 
-	-- Pick table
-	["<leader>p"] = { name = "+Pick" },
-	["<leader>pu"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
-	["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
-	["<leader>pd"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
-	["<leader>pD"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
-	["<leader>pt"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
-	["<leader>pf"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
-	["<leader>po"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
-	["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
-	-- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
+  -- Pick table
+  ["<leader>p"] = { name = "+Pick" },
+  ["<leader>pu"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
+  ["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
+  ["<leader>pd"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
+  ["<leader>pD"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
+  ["<leader>pt"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
+  ["<leader>pf"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
+  ["<leader>po"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
+  ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
+  -- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
 
-	-- Show
-	["<leader>s"] = { name = "+Show" },
-	["<leader>sd"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
-	["<leader>sh"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
-	["<leader>ss"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
-	["<leader>su"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Show usages" },
-	["<leader>sc"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Show outgoing calls" },
-	["<leader>sr"] = { "<cmd>Telescope lsp_references<cr>", "Show references" },
-	["<leader>st"] = { "<cmd>Telescope help_tags<cr>", "Show help tags" },
-	["<leader>sn"] = { "<cmd>Telescope notify<cr>", "Show notification history" },
+  -- Show
+  ["<leader>s"] = { name = "+Show" },
+  ["<leader>sd"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
+  ["<leader>sh"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
+  ["<leader>ss"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
+  ["<leader>su"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Show usages" },
+  ["<leader>sc"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Show outgoing calls" },
+  ["<leader>sr"] = { "<cmd>Telescope lsp_references<cr>", "Show references" },
+  ["<leader>st"] = { "<cmd>Telescope help_tags<cr>", "Show help tags" },
+  ["<leader>sn"] = { "<cmd>Telescope notify<cr>", "Show notification history" },
 
-	-- Refactor
-	["<leader>r"] = { name = "+Refactor" },
-	["<leader>rr"] = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
-	["<leader>rf"] = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
+  -- Refactor
+  ["<leader>r"] = { name = "+Refactor" },
+  ["<leader>rr"] = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
+  ["<leader>rf"] = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
 
-	-- Close table
-	["<leader>q"] = { name = "+Quit" },
-	["<leader>qu"] = { "<cmd>bd<cr>", "Close buffer" },
-	["<leader>qU"] = { "<cmd>bd!<cr>", "Close buffer!" },
-	["<leader>qi"] = { "<cmd>close<cr>", "Close window" },
-	["<leader>qI"] = { "<cmd>close!<cr>", "Close window!" },
-	["<leader>qt"] = { "<cmd>tabclose<cr>", "Close tab" },
-	["<leader>qT"] = { "<cmd>tabclose!<cr>", "Close tab!" },
+  -- Close table
+  ["<leader>q"] = { name = "+Quit" },
+  ["<leader>qu"] = { "<cmd>bd<cr>", "Close buffer" },
+  ["<leader>qU"] = { "<cmd>bd!<cr>", "Close buffer!" },
+  ["<leader>qi"] = { "<cmd>close<cr>", "Close window" },
+  ["<leader>qI"] = { "<cmd>close!<cr>", "Close window!" },
+  ["<leader>qt"] = { "<cmd>tabclose<cr>", "Close tab" },
+  ["<leader>qT"] = { "<cmd>tabclose!<cr>", "Close tab!" },
 
-	-- Go table
-	-- ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
-	["gd"] = { "<cmd>Telescope lsp_definitions<cr>", "Go to definition" },
-	["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "Go to declaration" },
-	["gi"] = { "<cmd>Telescope lsp_implementations<cr>", "Go to implementation" },
-	["go"] = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Go to type definition" },
-	["gj"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
-	["gJ"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
-	["gk"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
-	["gK"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
+  -- Go table
+  -- ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
+  ["gd"] = { "<cmd>Telescope lsp_definitions<cr>", "Go to definition" },
+  ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "Go to declaration" },
+  ["gi"] = { "<cmd>Telescope lsp_implementations<cr>", "Go to implementation" },
+  ["go"] = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Go to type definition" },
+  ["gj"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
+  ["gJ"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
+  ["gk"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
+  ["gK"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
 
-	-- Previous table
-	["["] = { name = "+Previous" },
-	["[b"] = { "<Plug>(buf-surf-back)", "Previous buffer" },
-	["[t"] = { "<cmd>tabprevious<cr>", "Previous tab" },
-	["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous diagnostic" },
+  -- Previous table
+  ["["] = { name = "+Previous" },
+  ["[b"] = { "<Plug>(buf-surf-back)", "Previous buffer" },
+  ["[t"] = { "<cmd>tabprevious<cr>", "Previous tab" },
+  ["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous diagnostic" },
 
-	-- Next table
-	["]"] = { name = "+Next" },
-	["]b"] = { "<Plug>(buf-surf-forward)", "Next buffer" },
-	["]t"] = { "<cmd>tabnext<cr>", "Next tab" },
-	["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next diagnostic" },
+  -- Next table
+  ["]"] = { name = "+Next" },
+  ["]b"] = { "<Plug>(buf-surf-forward)", "Next buffer" },
+  ["]t"] = { "<cmd>tabnext<cr>", "Next tab" },
+  ["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next diagnostic" },
 }
 
 local visual_mappings = {
-	["<leader>/"] = { '"zy:Telescope current_buffer_fuzzy_find default_text=<C-r>z<cr>', "Live search current buffer" },
-	["<leader>g"] = { '"zy:Telescope live_grep default_text=<C-r>z<cr>', "Live search" },
-	["<leader>f"] = { '"zy:Telescope find_files default_text=<C-r>z<cr>', "Search file" },
+  ["<leader>/"] = { '"zy:Telescope current_buffer_fuzzy_find default_text=<C-r>z<cr>', "Live search current buffer" },
+  ["<leader>g"] = { '"zy:Telescope live_grep default_text=<C-r>z<cr>', "Live search" },
+  ["<leader>f"] = { '"zy:Telescope find_files default_text=<C-r>z<cr>', "Search file" },
 
-	-- Edit
-	["<leader>e"] = { name = "+Edit" },
-	["<leader>es"] = { ":sort<cr>", "Sort" },
+  -- Edit
+  ["<leader>e"] = { name = "+Edit" },
+  ["<leader>es"] = { ":sort<cr>", "Sort" },
 }
 
 local motion_mappings = {
-	["<leader>f"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
-	["<leader>F"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
-	["<leader>t"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
-	["<leader>T"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
+  ["<leader>f"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
+  ["<leader>F"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
+  ["<leader>t"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
+  ["<leader>T"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
 }
 
 local wk = require("which-key")
