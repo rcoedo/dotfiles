@@ -112,6 +112,10 @@ local normal_mappings = {
   ["<leader>qt"] = { "<cmd>tabclose<cr>", "Close tab" },
   ["<leader>qT"] = { "<cmd>tabclose!<cr>", "Close tab!" },
 
+  -- Delete table
+  ["<leader>x"] = { name = "+Delete" },
+  ["<leader>xu"] = { "<cmd>lua require('lib').confirm_and_delete_buffer()<cr>", "Delete buffer" },
+
   -- Go table
   -- ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
   ["gd"] = { "<cmd>Telescope lsp_definitions<cr>", "Go to definition" },

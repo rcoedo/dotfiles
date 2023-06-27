@@ -255,7 +255,6 @@ require("lazy").setup({
           },
         },
       })
-
       telescope.load_extension("fzf")
       telescope.load_extension("notify")
       telescope.load_extension("file_browser")
@@ -297,6 +296,7 @@ require("lazy").setup({
           "yaml",
           "html",
           "scss",
+          "markdown",
         },
         indent = {
           enable = true,
@@ -526,6 +526,23 @@ require("lazy").setup({
     end,
   },
 
+  {
+
+    "williamboman/mason.nvim",
+    config = function()
+      local mason = require("mason")
+      mason.setup({
+        ui = {
+          icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗",
+          },
+        },
+      })
+    end,
+  },
+
   -- LSP
   {
     "williamboman/mason-lspconfig.nvim",
@@ -552,12 +569,31 @@ require("lazy").setup({
         },
       })
 
+      -- local function auto_on_buffer_save(callback)
+      --   return function(augroup, client, bufnr)
+      --     if client.supports_method("textDocument/formatting") then
+      --       vim.api.nvim_create_autocmd("BufWritePre", {
+      --         group = "Buffer",
+      --         buffer = bufnr,
+      --         callback = function()
+      --           callback(client, bufnr)
+      --           -- vim.lsp.buf.format({ async = false })
+      --           -- vim.lsp.buf.code_action({ context = { only = { "source.organizeImports.rome" } }, apply = true })
+      --         end,
+      --       })
+      --     end
+      --   end
+      -- end
+
+      -- local auto_format_on_save = auto_on_buffer_save(function()
+      --   vim.lsp.buf.format({ async = false })
+      -- end)
+
       local default_options = {
         flags = { debounce_text_changes = 150 },
         capabilities = cmp_nvim_lsp.default_capabilities(),
       }
 
-      -- local LspActions = vim.api.nvim_create_augroup("LspFormatting", {})
       local option_overrides = {
         ["tsserver"] = {
           single_file_support = false,
@@ -572,16 +608,29 @@ require("lazy").setup({
           },
         },
         ["rome"] = {
-          -- on_attach = function(_, bufnr)
-          -- vim.api.nvim_clear_autocmds({ group = LspActions, buffer = bufnr })
-          -- vim.api.nvim_create_autocmd("BufWritePre", {
-          --   group = LspActions,
-          --   buffer = bufnr,
-          --   callback = function()
-          --     vim.lsp.buf.code_action({ context = { only = { "source.organizeImports.rome" } }, apply = true })
-          --   end,
-          -- })
-          -- end
+          -- on_attach = function( client, bufnr)
+          --   local augroup = vim.api.nvim_create_augroup("RomeOnSave", {})
+          --   auto_format_on_save(augroup, client, bufnr)
+          -- end,
+        },
+        ["rust-analyzer"] = {
+          assist = {
+            importEnforceGranularity = true,
+            importPrefix = "crate",
+          },
+          cargo = {
+            allFeatures = true,
+          },
+          checkOnSave = {
+            command = "clippy",
+          },
+          inlayHints = { locationLinks = false },
+          diagnostics = {
+            enable = true,
+            experimental = {
+              enable = true,
+            },
+          },
         },
         ["lua_ls"] = {
           settings = {
@@ -603,6 +652,9 @@ require("lazy").setup({
           },
         },
         ["null-ls"] = {
+          -- on_attach = function(client, bufnr)
+          -- auto_format_on_save(client, bufnr)
+          -- end,
           -- on_attach = function(attached_client, bufnr)
           --   if attached_client.supports_method("textDocument/formatting") then
           --   	local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -669,14 +721,18 @@ require("lazy").setup({
 
       mason_lspconfig.setup({
         ensure_installed = {
-          "vimls",
-          "tsserver",
-          "lua_ls",
-          "html",
-          "cssls",
-          "rome",
-          "jsonls",
           "bashls",
+          "cssls",
+          "html",
+          "jsonls",
+          "lua_ls",
+          "marksman",
+          "rome",
+          "taplo",
+          "rust_analyzer",
+          -- "rustfmt",
+          "tsserver",
+          "vimls",
           -- "denols",
         },
         handlers = {
