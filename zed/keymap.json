@@ -1,0 +1,22 @@
+[
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "tab": ["workspace::SendKeystrokes", "ctrl-w ctrl-w"],
+
+      "[ d": "editor::GoToPrevDiagnostic",
+      "] d": "editor::GoToDiagnostic",
+
+      "[ b": "pane::GoBack",
+      "] b": "pane::GoForward",
+
+      "[ t": "pane::ActivatePrevItem",
+      "] t": "pane::ActivateNextItem",
+
+      "space t": "file_finder::Toggle",
+      "space s h": "editor::Hover",
+      "space r r": "editor::Rename",
+      "space a": "editor::ToggleCodeActions"
+    }
+  }
+]

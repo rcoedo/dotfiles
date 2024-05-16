@@ -1,0 +1,29 @@
+{
+  "base_keymap": "Atom",
+  "theme": "Ayu Dark",
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "features": {
+    "copilot": false
+  },
+  "buffer_font_size": 16,
+  "autosave": "on_focus_change",
+  "diagnostics": { "include_warnings": true },
+  "tab_bar": {
+    "show_nav_history_buttons": false
+  },
+  "language_overrides": {
+    "Python": {
+      "format_on_save": {
+        "external": {
+          "command": "ruff",
+          "arguments": ["format", "-"]
+        }
+      }
+    }
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  }
+}
