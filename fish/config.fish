@@ -8,7 +8,6 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_GITHUB_API=1
 export HOMEBREW_NO_ENV_HINTS=1
 export RIPGREP_CONFIG_PATH=$HOME/.config/ripgrep/ripgreprc
-
 export FZF_DEFAULT_OPTS="
   --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7 \
   --color=fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff \
@@ -22,19 +21,18 @@ export FZF_DEFAULT_OPTS="
 
 fish_add_path /opt/homebrew/bin
 
-set -x GPG_TTY (tty)
-set -gx PATH $PATH
+# set -gx PATH $PATH
 
 # Project
-abbr p --function __project_manager
-abbr r --function __project_run
+# abbr p --function __project_manager
+# abbr r --function __project_run
 
 # Other abreviatures
 abbr hm "history --merge"
 abbr g git
 abbr dc "docker compose"
 abbr d docker
-abbr mk "mkdir -p"
+abbr mkdir "mkdir -p"
 abbr rf "rm -rf"
 abbr y yarn
 abbr bb "cd $GHQ_ROOT/bitbucket.org/rcoedo"
@@ -46,10 +44,10 @@ abbr f fork
 abbr rr ranger
 abbr w webstorm
 abbr jk jekyll
-abbr tree "exa --tree --git-ignore"
+abbr tree "eza --tree --git-ignore"
 abbr ef "exec fish"
-abbr ls exa
-abbr ll "exa -la"
+abbr ls eza
+abbr ll "eza -la"
 abbr lkc "ssh-add --apple-load-keychain"
 abbr lg lazygit
 abbr ld lazydocker
@@ -57,6 +55,11 @@ abbr t tig
 abbr cf "vim ~/.config/fish/config.fish"
 abbr n deno
 abbr nt "deno task"
+abbr mk "microk8s kubectl"
+abbr mh "microk8s helm"
+abbr w "wezterm cli"
+abbr b bun
+abbr p pnpm
 
 alias vim nvim
 alias v "neovide --frame none"

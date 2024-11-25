@@ -600,18 +600,20 @@ require("lazy").setup({
           root_dir = lspconfig.util.root_pattern("package.json"),
         },
         ["denols"] = {
-          root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+          root_dir = lspconfig.util.root_pattern("deno.json"),
         },
         ["jsonls"] = {
           init_options = {
             provideFormatter = false,
           },
         },
-        ["rome"] = {
+        ["biome"] = {
           -- on_attach = function( client, bufnr)
           --   local augroup = vim.api.nvim_create_augroup("RomeOnSave", {})
           --   auto_format_on_save(augroup, client, bufnr)
           -- end,
+          root_dir = lspconfig.util.root_pattern("biome.json", "biome.jsonc"),
+          single_file_support = false,
         },
         ["rust-analyzer"] = {
           assist = {
@@ -700,6 +702,7 @@ require("lazy").setup({
             null_ls.builtins.diagnostics.stylelint.with({ only_local = "node_modules/.bin" }),
             -- js/ts
             -- null_ls.builtins.formatting.rome.with({
+            --   command = { "biome" },
             --   extra_filetypes = { "jsonc" },
             --   only_local = "node_modules/.bin",
             -- }),
@@ -727,13 +730,13 @@ require("lazy").setup({
           "jsonls",
           "lua_ls",
           "marksman",
-          "rome",
           "taplo",
           "rust_analyzer",
+          "biome",
           -- "rustfmt",
           "tsserver",
           "vimls",
-          -- "denols",
+          "denols",
         },
         handlers = {
           function(server_name)
