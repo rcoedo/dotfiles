@@ -1,0 +1,548 @@
+From c707d75609a20d61a6690d1a4addb3aad65312a1 Mon Sep 17 00:00:00 2001
+From: Roman Coedo <roman.coedo@maze.design>
+Date: Wed, 27 Aug 2025 10:12:20 +0200
+Subject: [PATCH] fix: nvim
+
+---
+ nvim/nvim/lazy-lock.json   |  78 +++++++-------
+ nvim/nvim/lua/mappings.lua | 209 +++++++++++++++++++------------------
+ nvim/nvim/lua/plugins.lua  |  94 ++++++++++++-----
+ 3 files changed, 213 insertions(+), 168 deletions(-)
+
+diff --git a/nvim/nvim/lazy-lock.json b/nvim/nvim/lazy-lock.json
+index c366c76..0c26940 100644
+--- a/nvim/nvim/lazy-lock.json
++++ b/nvim/nvim/lazy-lock.json
+@@ -1,47 +1,45 @@
+ {
+-  "boole.nvim": { "branch": "main", "commit": "f4f9996f91159e54b8f1893b20e2e599c91bc1bd" },
+   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
+-  "cmp-cmdline": { "branch": "main", "commit": "8fcc934a52af96120fe26358985c10c035984b53" },
+-  "cmp-nvim-lsp": { "branch": "main", "commit": "0e6b2ed705ddcff9738ec4ea838141654f12eeef" },
++  "cmp-cmdline": { "branch": "main", "commit": "d250c63aa13ead745e3a40f61fdd3470efde3923" },
++  "cmp-nvim-lsp": { "branch": "main", "commit": "99290b3ec1322070bcfb9e846450a46f6efa50f0" },
+   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
+   "cmp-vsnip": { "branch": "main", "commit": "989a8a73c44e926199bfd05fa7a516d51f2d2752" },
+-  "dressing.nvim": { "branch": "master", "commit": "db716a0f1279f79a886c0e0b6ab3c3d5ffdb42fe" },
+-  "gitsigns.nvim": { "branch": "main", "commit": "f388995990aba04cfdc7c3ab870c33e280601109" },
+-  "lasterisk.nvim": { "branch": "main", "commit": "bbcfcaeca50f686e338a03386e41645fc3305f44" },
+-  "lazy.nvim": { "branch": "main", "commit": "f2cc9ef6acc7367c001b7507c82cab3ab7c29cae" },
+-  "leap.nvim": { "branch": "main", "commit": "9a69febb2e5a4f5f5a55dd2d7173098fde917bc5" },
+-  "lsp-format.nvim": { "branch": "master", "commit": "ca0df5c8544e51517209ea7b86ecc522c98d4f0a" },
+-  "lspkind.nvim": { "branch": "master", "commit": "c68b3a003483cf382428a43035079f78474cd11e" },
+-  "lualine.nvim": { "branch": "master", "commit": "e99d733e0213ceb8f548ae6551b04ae32e590c80" },
+-  "mason-lspconfig.nvim": { "branch": "main", "commit": "93e58e100f37ef4fb0f897deeed20599dae9d128" },
+-  "mason.nvim": { "branch": "main", "commit": "4546dec8b56bc56bc1d81e717e4a935bc7cd6477" },
+-  "null-ls.nvim": { "branch": "main", "commit": "a82aa08c0063843926947f3688b0e61fd71db680" },
+-  "nvim-autopairs": { "branch": "master", "commit": "bde7a1b4534e0a4c2451a738379cd628ba65eba7" },
+-  "nvim-cmp": { "branch": "main", "commit": "8202df9561b90102b41dbc1ad71945534ef4ea39" },
+-  "nvim-colorizer.lua": { "branch": "master", "commit": "36c610a9717cc9ec426a07c8e6bf3b3abcb139d6" },
+-  "nvim-lspconfig": { "branch": "master", "commit": "f0d9150fe8486d0f74757ed9d8987bfc33c7ff44" },
+-  "nvim-notify": { "branch": "master", "commit": "bdd647f61a05c9b8a57c83b78341a0690e9c29d7" },
+-  "nvim-treesitter": { "branch": "master", "commit": "8b6f08165bca8545405ce86eedb1d5be882cd5f7" },
+-  "nvim-treesitter-textobjects": { "branch": "master", "commit": "2f3583001e2bf793480f38cf0d055571787b0259" },
+-  "nvim-ts-autotag": { "branch": "main", "commit": "fdefe46c6807441460f11f11a167a2baf8e4534b" },
+-  "nvim-ts-rainbow": { "branch": "master", "commit": "ef95c15a935f97c65a80e48e12fe72d49aacf9b9" },
+-  "nvim-web-devicons": { "branch": "master", "commit": "5f79ca760e1f95fee55f3553f040a51dc1c4d953" },
+-  "packer.nvim": { "branch": "master", "commit": "1d0cf98a561f7fd654c970c49f917d74fafe1530" },
+-  "plenary.nvim": { "branch": "master", "commit": "253d34830709d690f013daf2853a9d21ad7accab" },
+-  "targets.vim": { "branch": "master", "commit": "8d6ff2984cdfaebe5b7a6eee8f226a6dd1226f2d" },
+-  "telescope-file-browser.nvim": { "branch": "master", "commit": "6eb6bb45b7a9bed94a464a3e1dadfe870459628c" },
+-  "telescope-fzf-native.nvim": { "branch": "main", "commit": "580b6c48651cabb63455e97d7e131ed557b8c7e2" },
+-  "telescope.nvim": { "branch": "master", "commit": "f40e3e2304c633411ddf266075f7db5184b1db02" },
+-  "tokyonight.nvim": { "branch": "main", "commit": "a0abe53df53616d13da327636cb0bcac3ea7f5af" },
++  "dressing.nvim": { "branch": "master", "commit": "56ef6a969a4990d938c5fed40c370f65e125fc97" },
++  "gitsigns.nvim": { "branch": "main", "commit": "d8918f06624dd53b9a82bd0e29c31bcfd541b40d" },
++  "lazy.nvim": { "branch": "main", "commit": "d8f26efd456190241afd1b0f5235fe6fdba13d4a" },
++  "lspkind.nvim": { "branch": "master", "commit": "d79a1c3299ad0ef94e255d045bed9fa26025dab6" },
++  "lualine.nvim": { "branch": "master", "commit": "2a5bae925481f999263d6f5ed8361baef8df4f83" },
++  "mason-lspconfig.nvim": { "branch": "main", "commit": "e942edf5c85b6a2ab74059ea566cac5b3e1514a4" },
++  "mason.nvim": { "branch": "main", "commit": "e2f7f9044ec30067bc11800a9e266664b88cda22" },
++  "null-ls.nvim": { "branch": "main", "commit": "0010ea927ab7c09ef0ce9bf28c2b573fc302f5a7" },
++  "nvim-autopairs": { "branch": "master", "commit": "3d02855468f94bf435db41b661b58ec4f48a06b7" },
++  "nvim-cmp": { "branch": "main", "commit": "12509903a5723a876abd65953109f926f4634c30" },
++  "nvim-colorizer.lua": { "branch": "master", "commit": "a065833f35a3a7cc3ef137ac88b5381da2ba302e" },
++  "nvim-lspconfig": { "branch": "master", "commit": "e5bf88e5ea1c4cea5ea96b1e970cb264f7a401a1" },
++  "nvim-notify": { "branch": "master", "commit": "22f29093eae7785773ee9d543f8750348b1a195c" },
++  "nvim-rooter.lua": { "branch": "main", "commit": "7689d05e8ab95acb4b24785253d913c0aae18be9" },
++  "nvim-tree.lua": { "branch": "master", "commit": "d529a99f88e0dff02e0aa275db2f595cd252a2c8" },
++  "nvim-treesitter": { "branch": "master", "commit": "61a385d74f822dcd1d223f42f1267d1317aaa2d0" },
++  "nvim-treesitter-textobjects": { "branch": "master", "commit": "ad8f0a472148c3e0ae9851e26a722ee4e29b1595" },
++  "nvim-ts-autotag": { "branch": "main", "commit": "1cca23c9da708047922d3895a71032bc0449c52d" },
++  "nvim-web-devicons": { "branch": "master", "commit": "1c9136332840edee0c593f2f4f89598c8ed97f5f" },
++  "plenary.nvim": { "branch": "master", "commit": "3707cdb1e43f5cea73afb6037e6494e7ce847a66" },
++  "rainbow-delimiters.nvim": { "branch": "master", "commit": "85b80abaa09cbbc039e3095b2f515b3cf8cadd11" },
++  "targets.vim": { "branch": "master", "commit": "6325416da8f89992b005db3e4517aaef0242602e" },
++  "telescope-file-browser.nvim": { "branch": "master", "commit": "626998e5c1b71c130d8bc6cf7abb6709b98287bb" },
++  "telescope-fzf-native.nvim": { "branch": "main", "commit": "dae2eac9d91464448b584c7949a31df8faefec56" },
++  "telescope-ghq.nvim": { "branch": "main", "commit": "76555efe12be75126dc9b06482890dda4fb8f42b" },
++  "telescope.nvim": { "branch": "master", "commit": "415af52339215926d705cccc08145f3782c4d132" },
++  "tokyonight.nvim": { "branch": "main", "commit": "c3ab53c3f544e4a04f2a05d43451fd9bedff51b4" },
++  "vim-abolish": { "branch": "master", "commit": "dcbfe065297d31823561ba787f51056c147aa682" },
+   "vim-bufsurf": { "branch": "master", "commit": "e6dbc7ad66c7e436e5eb20d304464e378bd7f28c" },
+-  "vim-commentary": { "branch": "master", "commit": "e87cd90dc09c2a203e13af9704bd0ef79303d755" },
+-  "vim-endwise": { "branch": "master", "commit": "43301cf9a0fafd78cec7c2e5b9c0e2cfd9436e8a" },
+-  "vim-fish": { "branch": "master", "commit": "50b95cbbcd09c046121367d49039710e9dc9c15f" },
+-  "vim-fugitive": { "branch": "master", "commit": "62f42f013d866139fa23068ac2651b3f7e05a56f" },
++  "vim-commentary": { "branch": "master", "commit": "64a654ef4a20db1727938338310209b6a63f60c9" },
++  "vim-endwise": { "branch": "master", "commit": "f6a32fbe4d4e511d446ac189e926f8e24f69cc1e" },
++  "vim-fugitive": { "branch": "master", "commit": "d74a7cff4cfcf84f83cc7eccfa365488f3bbabc2" },
+   "vim-ragtag": { "branch": "master", "commit": "51b313e8a2e3a44f37b9d625bc0d461e9066b7e9" },
+-  "vim-repeat": { "branch": "master", "commit": "24afe922e6a05891756ecf331f39a1f6743d3d5a" },
++  "vim-repeat": { "branch": "master", "commit": "65846025c15494983dafe5e3b46c8f88ab2e9635" },
+   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
+-  "vim-vsnip": { "branch": "master", "commit": "8dde8c0ef10bb1afdbb301e2bd7eb1c153dd558e" },
+-  "which-key.nvim": { "branch": "main", "commit": "5224c261825263f46f6771f1b644cae33cd06995" },
+-  "yats.vim": { "branch": "master", "commit": "4bf3879055847e675335f1c3050bd2dd11700c7e" }
+-}
+\ No newline at end of file
++  "vim-vsnip": { "branch": "master", "commit": "02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9" },
++  "which-key.nvim": { "branch": "main", "commit": "6cebd86917df559a88de0f806b2989799c6e6423" },
++  "yats.vim": { "branch": "master", "commit": "b325c449a2db4d9ee38aa441afa850a815982e8b" }
++}
+diff --git a/nvim/nvim/lua/mappings.lua b/nvim/nvim/lua/mappings.lua
+index bdbef05..417e3bf 100644
+--- a/nvim/nvim/lua/mappings.lua
++++ b/nvim/nvim/lua/mappings.lua
+@@ -59,105 +59,112 @@ vim.keymap.set({ "n", "v", "o" }, "zF", "<Plug>(leap-backward-to)", { desc = "Le
+ vim.keymap.set({ "n", "v", "o" }, "zt", "<Plug>(leap-forward-till)", { desc = "Leap forward until" })
+ vim.keymap.set({ "n", "v", "o" }, "zT", "<Plug>(leap-backward-till)", { desc = "Leap backward until" })
+ 
+-local normal_mappings = {
+-  -- Quick mappings
+-  ["<leader>f"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
+-  ["<leader>t"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
+-  ["<leader>g"] = { "<cmd>Telescope live_grep<cr>", "Live search" },
+-  ["<leader>d"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
+-  ["<leader>D"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
+-  ["<leader>u"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
+-  ["<leader>a"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
+-  ["<leader>o"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
+-  ["<leader>0"] = { "<cmd>close<cr>", "Close window" },
+-  ["<leader>2"] = { "<cmd>split<cr>", "Split horizontally" },
+-  ["<leader>3"] = { "<cmd>vsplit<cr>", "Split vertically" },
+-  ["<leader>/"] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Live search current buffer" },
+-  ["<leader><leader>"] = { "<cmd>Telescope resume<cr>", "Pick resume" },
+-
+-  -- Pick table
+-  ["<leader>p"] = { name = "+Pick" },
+-  ["<leader>pu"] = { "<cmd>Telescope buffers<cr>", "Pick buffer" },
+-  ["<leader>pc"] = { "<cmd>Telescope commands<cr>", "Pick command" },
+-  ["<leader>pd"] = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Pick diagnostic" },
+-  ["<leader>pD"] = { "<cmd>Telescope diagnostics<cr>", "Pick workspace diagnostic" },
+-  ["<leader>pt"] = { "<cmd>Telescope find_files<cr>", "Pick fuzzy file" },
+-  ["<leader>pf"] = { "<cmd>Telescope file_browser path=%:p:h<cr>", "Pick file" },
+-  ["<leader>po"] = { "<cmd>Telescope ghq<cr>", "Pick project" },
+-  ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Pick code action" },
+-  -- ["<leader>pa"] = { "<cmd>lua vim.lsp.buf.range_code_action()<cr>", "Pick code action" },
+-
+-  -- Show
+-  ["<leader>s"] = { name = "+Show" },
+-  ["<leader>sd"] = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Show diagnostic" },
+-  ["<leader>sh"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
+-  ["<leader>ss"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature" },
+-  ["<leader>su"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Show usages" },
+-  ["<leader>sc"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Show outgoing calls" },
+-  ["<leader>sr"] = { "<cmd>Telescope lsp_references<cr>", "Show references" },
+-  ["<leader>st"] = { "<cmd>Telescope help_tags<cr>", "Show help tags" },
+-  ["<leader>sn"] = { "<cmd>Telescope notify<cr>", "Show notification history" },
+-
+-  -- Refactor
+-  ["<leader>r"] = { name = "+Refactor" },
+-  ["<leader>rr"] = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
+-  ["<leader>rf"] = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
+-
+-  -- Close table
+-  ["<leader>q"] = { name = "+Quit" },
+-  ["<leader>qu"] = { "<cmd>bd<cr>", "Close buffer" },
+-  ["<leader>qU"] = { "<cmd>bd!<cr>", "Close buffer!" },
+-  ["<leader>qi"] = { "<cmd>close<cr>", "Close window" },
+-  ["<leader>qI"] = { "<cmd>close!<cr>", "Close window!" },
+-  ["<leader>qt"] = { "<cmd>tabclose<cr>", "Close tab" },
+-  ["<leader>qT"] = { "<cmd>tabclose!<cr>", "Close tab!" },
+-
+-  -- Delete table
+-  ["<leader>x"] = { name = "+Delete" },
+-  ["<leader>xu"] = { "<cmd>lua require('lib').confirm_and_delete_buffer()<cr>", "Delete buffer" },
+-
+-  -- Go table
+-  -- ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Go to definition" },
+-  ["gd"] = { "<cmd>Telescope lsp_definitions<cr>", "Go to definition" },
+-  ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "Go to declaration" },
+-  ["gi"] = { "<cmd>Telescope lsp_implementations<cr>", "Go to implementation" },
+-  ["go"] = { "<cmd>lua vim.lsp.buf.type_definition()<cr>", "Go to type definition" },
+-  ["gj"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
+-  ["gJ"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
+-  ["gk"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
+-  ["gK"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
+-
+-  -- Previous table
+-  ["["] = { name = "+Previous" },
+-  ["[b"] = { "<Plug>(buf-surf-back)", "Previous buffer" },
+-  ["[t"] = { "<cmd>tabprevious<cr>", "Previous tab" },
+-  ["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Previous diagnostic" },
+-
+-  -- Next table
+-  ["]"] = { name = "+Next" },
+-  ["]b"] = { "<Plug>(buf-surf-forward)", "Next buffer" },
+-  ["]t"] = { "<cmd>tabnext<cr>", "Next tab" },
+-  ["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next diagnostic" },
+-}
+-
+-local visual_mappings = {
+-  ["<leader>/"] = { '"zy:Telescope current_buffer_fuzzy_find default_text=<C-r>z<cr>', "Live search current buffer" },
+-  ["<leader>g"] = { '"zy:Telescope live_grep default_text=<C-r>z<cr>', "Live search" },
+-  ["<leader>f"] = { '"zy:Telescope find_files default_text=<C-r>z<cr>', "Search file" },
+-
+-  -- Edit
+-  ["<leader>e"] = { name = "+Edit" },
+-  ["<leader>es"] = { ":sort<cr>", "Sort" },
+-}
+-
+-local motion_mappings = {
+-  ["<leader>f"] = { "<Plug>(leap-forward-to)", "Leap forward to" },
+-  ["<leader>F"] = { "<Plug>(leap-backward-to)", "Leap backward to" },
+-  ["<leader>t"] = { "<Plug>(leap-forward-till)", "Leap forward until" },
+-  ["<leader>T"] = { "<Plug>(leap-backward-till)", "Leap backward until" },
+-}
+-
+ local wk = require("which-key")
+-wk.register(normal_mappings, { mode = "n" })
+-wk.register(visual_mappings, { mode = "v" })
+-wk.register(motion_mappings, { mode = "o" })
++wk.add({
++  -- Normal mode
++  {
++    mode = "n",
++    -- Quick mappings
++    { "<leader>/",        "<cmd>Telescope current_buffer_fuzzy_find<cr>",            desc = "Live search current buffer" },
++    { "<leader>0",        "<cmd>close<cr>",                                          desc = "Close window" },
++    { "<leader>2",        "<cmd>split<cr>",                                          desc = "Split horizontally" },
++    { "<leader>3",        "<cmd>vsplit<cr>",                                         desc = "Split vertically" },
++    { "<leader><leader>", "<cmd>Telescope resume<cr>",                               desc = "Pick resume" },
++    { "<leader>D",        "<cmd>Telescope diagnostics<cr>",                          desc = "Pick workspace diagnostic" },
++    { "<leader>a",        "<cmd>lua vim.lsp.buf.code_action()<cr>",                  desc = "Pick code action" },
++    { "<leader>d",        "<cmd>Telescope diagnostics bufnr=0<cr>",                  desc = "Pick diagnostic" },
++    { "<leader>f",        "<cmd>Telescope file_browser path=%:p:h<cr>",              desc = "Pick file" },
++    { "<leader>g",        "<cmd>Telescope live_grep<cr>",                            desc = "Live search" },
++    { "<leader>w",        "<cmd>Telescope grep_string<cr>",                          desc = "Find word" },
++    { "<leader>o",        "<cmd>Telescope ghq<cr>",                                  desc = "Pick project" },
++    { "<leader>t",        "<cmd>Telescope find_files<cr>",                           desc = "Pick fuzzy file" },
++    { "<leader>u",        "<cmd>Telescope buffers<cr>",                              desc = "Pick buffer" },
++
++    -- Pick table
++    { "<leader>p",        group = "Pick" },
++    { "<leader>pD",       "<cmd>Telescope diagnostics<cr>",                          desc = "Pick workspace diagnostic" },
++    { "<leader>pa",       "<cmd>lua vim.lsp.buf.code_action()<cr>",                  desc = "Pick code action" },
++    { "<leader>pc",       "<cmd>Telescope commands<cr>",                             desc = "Pick command" },
++    { "<leader>pd",       "<cmd>Telescope diagnostics bufnr=0<cr>",                  desc = "Pick diagnostic" },
++    { "<leader>pf",       "<cmd>Telescope file_browser path=%:p:h<cr>",              desc = "Pick file" },
++    { "<leader>po",       "<cmd>Telescope ghq<cr>",                                  desc = "Pick project" },
++    { "<leader>pt",       "<cmd>Telescope find_files<cr>",                           desc = "Pick fuzzy file" },
++    { "<leader>pu",       "<cmd>Telescope buffers<cr>",                              desc = "Pick buffer" },
++    { "<leader>pn",       "<cmd>Telescope notify<cr>",                               desc = "Pick notifications" },
++    { "<leader>pr",       "<cmd>Telescope lsp_references<cr>",                       desc = "Pick references" },
++
++    -- Quit table
++    { "<leader>q",        group = "Quit" },
++    { "<leader>qI",       "<cmd>close!<cr>",                                         desc = "Close window!" },
++    { "<leader>qT",       "<cmd>tabclose!<cr>",                                      desc = "Close tab!" },
++    { "<leader>qU",       "<cmd>bd!<cr>",                                            desc = "Close buffer!" },
++    { "<leader>qi",       "<cmd>close<cr>",                                          desc = "Close window" },
++    { "<leader>qt",       "<cmd>tabclose<cr>",                                       desc = "Close tab" },
++    { "<leader>qu",       "<cmd>bd<cr>",                                             desc = "Close buffer" },
++
++    -- Refactor table
++    { "<leader>r",        group = "Refactor" },
++    { "<leader>rf",       "<cmd>lua vim.lsp.buf.format({ async = true })<cr>",       desc = "Format" },
++    { "<leader>rr",       "<cmd>lua vim.lsp.buf.rename()<cr>",                       desc = "Rename" },
++
++    -- Show table
++    { "<leader>s",        group = "Show" },
++    { "<leader>sc",       "<cmd>Telescope lsp_outgoing_calls<cr>",                   desc = "Show outgoing calls" },
++    { "<leader>sd",       "<cmd>lua vim.diagnostic.open_float()<cr>",                desc = "Show diagnostic" },
++    { "<leader>sh",       "<cmd>lua vim.lsp.buf.hover()<cr>",                        desc = "Show hover" },
++    { "<leader>sn",       "<cmd>Telescope notify<cr>",                               desc = "Show notification history" },
++    { "<leader>sr",       "<cmd>Telescope lsp_references<cr>",                       desc = "Show references" },
++    { "<leader>ss",       "<cmd>lua vim.lsp.buf.signature_help()<cr>",               desc = "Show signature" },
++    { "<leader>st",       "<cmd>Telescope help_tags<cr>",                            desc = "Show help tags" },
++    { "<leader>su",       "<cmd>Telescope lsp_incoming_calls<cr>",                   desc = "Show usages" },
++
++    -- Delete table
++    { "<leader>x",        group = "Delete" },
++    { "<leader>xu",       "<cmd>lua require('lib').confirm_and_delete_buffer()<cr>", desc = "Delete buffer" },
++
++    -- Previous table
++    { "[",                group = "Previous" },
++    { "[b",               "<Plug>(buf-surf-back)",                                   desc = "Previous buffer" },
++    { "[d",               "<cmd>lua vim.diagnostic.goto_prev()<CR>",                 desc = "Previous diagnostic" },
++    { "[t",               "<cmd>tabprevious<cr>",                                    desc = "Previous tab" },
++
++    -- Next table
++    { "]",                group = "Next" },
++    { "]b",               "<Plug>(buf-surf-forward)",                                desc = "Next buffer" },
++    { "]d",               "<cmd>lua vim.diagnostic.goto_next()<CR>",                 desc = "Next diagnostic" },
++    { "]t",               "<cmd>tabnext<cr>",                                        desc = "Next tab" },
++
++    -- Go table
++    { "gD",               "<cmd>lua vim.lsp.buf.declaration()<cr>",                  desc = "Go to declaration" },
++    { "gJ",               "<Plug>(leap-forward-till)",                               desc = "Leap forward until" },
++    { "gK",               "<Plug>(leap-backward-till)",                              desc = "Leap backward until" },
++    { "gd",               "<cmd>Telescope lsp_definitions<cr>",                      desc = "Go to definition" },
++    { "gi",               "<cmd>Telescope lsp_implementations<cr>",                  desc = "Go to implementation" },
++    { "gj",               "<Plug>(leap-forward-to)",                                 desc = "Leap forward to" },
++    { "gk",               "<Plug>(leap-backward-to)",                                desc = "Leap backward to" },
++    { "go",               "<cmd>lua vim.lsp.buf.type_definition()<cr>",              desc = "Go to type definition" },
++  },
++
++  -- Visual mode
++  {
++    mode = { "v" },
++    -- Quick mappings
++    { "<leader>/",  '"zy:Telescope current_buffer_fuzzy_find default_text=<C-r>z<cr>', desc = "Live search current buffer" },
++    { "<leader>f",  '"zy:Telescope find_files default_text=<C-r>z<cr>',                desc = "Search file" },
++    { "<leader>g",  '"zy:Telescope live_grep default_text=<C-r>z<cr>',                 desc = "Live search" },
++    { "<leader>w",  '"zy:Telescope grep_string',                                       desc = "Find word" },
++
++    -- Edit table
++    { "<leader>e",  group = "Edit" },
++    { "<leader>es", ":sort<cr>",                                                       desc = "Sort" },
++  },
++
++  -- Motion mode
++  {
++    mode = { "o" },
++    { "<leader>F", "<Plug>(leap-backward-to)",   desc = "Leap backward to" },
++    { "<leader>T", "<Plug>(leap-backward-till)", desc = "Leap backward until" },
++    { "<leader>f", "<Plug>(leap-forward-to)",    desc = "Leap forward to" },
++    { "<leader>t", "<Plug>(leap-forward-till)",  desc = "Leap forward until" },
++  },
++})
+diff --git a/nvim/nvim/lua/plugins.lua b/nvim/nvim/lua/plugins.lua
+index 36a170b..46cb32c 100644
+--- a/nvim/nvim/lua/plugins.lua
++++ b/nvim/nvim/lua/plugins.lua
+@@ -150,13 +150,15 @@ require("lazy").setup({
+     end,
+   },
+ 
+-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+   -- telescope
+   {
+     "nvim-telescope/telescope.nvim",
+     dependencies = {
+       "nvim-lua/plenary.nvim",
+-      "nvim-telescope/telescope-fzf-native.nvim",
++      {
++        "nvim-telescope/telescope-fzf-native.nvim",
++        build = "make",
++      },
+       "nvim-telescope/telescope-file-browser.nvim",
+       "rcoedo/telescope-ghq.nvim",
+       "rcarriga/nvim-notify",
+@@ -191,24 +193,17 @@ require("lazy").setup({
+               ["<c-bs>"] = actions.delete_buffer,
+               ["<c-b>"] = actions.preview_scrolling_up,
+               ["<c-f>"] = actions.preview_scrolling_down,
+-              ["<c-space>"] = actions.toggle_selection,
++              ["<c-.>"] = actions.toggle_selection,
+               ["<c-cr>"] = actions.select_vertical,
+               ["<c-s-cr>"] = actions.select_horizontal,
++              ["<C-g>"] = actions.to_fuzzy_refine,
+               ["<C-i>"] = "which_key",
+             },
+           },
+         },
+         layout_strategy = "flex",
+         pickers = {
+-          diagnostics = {
+-            theme = "dropdown",
+-            -- previewer = false,
+-            layout_config = {
+-              width = 1,
+-            },
+-          },
+           buffers = {
+-            theme = "dropdown",
+             mappings = {
+               i = {
+                 ["<c-d>"] = actions.delete_buffer,
+@@ -216,10 +211,15 @@ require("lazy").setup({
+               },
+             },
+           },
++          live_grep = {},
+           current_buffer_fuzzy_find = {
+-            theme = "ivy",
++            theme = "cursor",
++            previewer = true,
+             sorting_strategy = "ascending",
+-            previewer = false,
++            layout_config = {
++              width = 0.8,
++              height = 0.4,
++            },
+           },
+           find_files = {
+             theme = "ivy",
+@@ -233,7 +233,7 @@ require("lazy").setup({
+             override_file_sorter = true,
+           },
+           notify = {
+-            theme = "dropdown",
++            theme = "ivy",
+           },
+           file_browser = {
+             theme = "ivy",
+@@ -255,6 +255,7 @@ require("lazy").setup({
+           },
+         },
+       })
++
+       telescope.load_extension("fzf")
+       telescope.load_extension("notify")
+       telescope.load_extension("file_browser")
+@@ -277,10 +278,15 @@ require("lazy").setup({
+     end,
+   },
+ 
++  {
++    "HiPhish/rainbow-delimiters.nvim",
++    after = "nvim-treesitter/nvim-treesitter",
++  },
++
+   -- treesitter
+   {
+     "nvim-treesitter/nvim-treesitter",
+-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", "HiPhish/nvim-ts-rainbow2" },
++    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+     config = function()
+       require("nvim-treesitter.configs").setup({
+         ensure_installed = {
+@@ -297,7 +303,11 @@ require("lazy").setup({
+           "html",
+           "scss",
+           "markdown",
++          "prisma",
+         },
++        sync_install = false,
++        auto_install = true,
++        ignore_install = { "javascript" },
+         indent = {
+           enable = true,
+         },
+@@ -307,11 +317,7 @@ require("lazy").setup({
+         autotag = {
+           enable = true,
+         },
+-        -- rainbow = {
+-        --   enable = true,
+-        --   query = "rainbow-parens",
+-        --   strategy = require("ts-rainbow").strategy.global,
+-        -- },
++        modules = {},
+         textobjects = {
+           select = {
+             enable = true,
+@@ -353,14 +359,42 @@ require("lazy").setup({
+           },
+         },
+       })
++
++      -- local rainbow_delimiters = require("rainbow-delimiters")
++      -- require("rainbow-delimiters.setup").setup({
++      --   strategy = {
++      --     [""] = rainbow_delimiters.strategy["global"],
++      --     vim = rainbow_delimiters.strategy["local"],
++      --   },
++      --   query = {
++      --     [""] = "rainbow-delimiters",
++      --     lua = "rainbow-blocks",
++      --   },
++      --   priority = {
++      --     [""] = 110,
++      --     lua = 210,
++      --   },
++      --   highlight = {
++      --     "RainbowDelimiterRed",
++      --     "RainbowDelimiterYellow",
++      --     "RainbowDelimiterBlue",
++      --     "RainbowDelimiterViolet",
++      --   },
++      -- })
+     end,
+   },
+ 
++  {
++    "nvim-treesitter/nvim-treesitter-textobjects",
++    after = "nvim-treesitter",
++    requires = "nvim-treesitter/nvim-treesitter",
++  },
++
+   -- Better indentation for .tsx
+   "HerringtonDarkholme/yats.vim",
+ 
+   -- Edgedb (no treesitter support as of April 2023)
+-  "edgedb/edgedb-vim",
++  -- "edgedb/edgedb-vim",
+ 
+   "windwp/nvim-ts-autotag",
+   {
+@@ -437,9 +471,12 @@ require("lazy").setup({
+           -- ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+           ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+           ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+-          ["<CR>"] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }),
++          ["<CR>"] = cmp.mapping.confirm({
++            select = false,
++            behavior = cmp.ConfirmBehavior.Insert,
++          }),
+           -- Toggle completion
+-          ["<c-space>"] = cmp.mapping(function()
++          ["<c-cr>"] = cmp.mapping(function()
+             if cmp.visible() then
+               cmp.close()
+             else
+@@ -595,7 +632,7 @@ require("lazy").setup({
+       }
+ 
+       local option_overrides = {
+-        ["tsserver"] = {
++        ["ts_ls"] = {
+           single_file_support = false,
+           root_dir = lspconfig.util.root_pattern("package.json"),
+         },
+@@ -699,7 +736,9 @@ require("lazy").setup({
+             null_ls.builtins.formatting.shfmt,
+             -- null_ls.builtins.code_actions.shellcheck,
+             -- css
+-            null_ls.builtins.diagnostics.stylelint.with({ only_local = "node_modules/.bin" }),
++            null_ls.builtins.diagnostics.stylelint.with({
++              only_local = "node_modules/.bin",
++            }),
+             -- js/ts
+             -- null_ls.builtins.formatting.rome.with({
+             --   command = { "biome" },
+@@ -733,8 +772,9 @@ require("lazy").setup({
+           "taplo",
+           "rust_analyzer",
+           "biome",
++          "prismals",
+           -- "rustfmt",
+-          "tsserver",
++          "ts_ls",
+           "vimls",
+           "denols",
+         },
+@@ -751,7 +791,7 @@ require("lazy").setup({
+     "folke/which-key.nvim",
+     config = function()
+       require("which-key").setup({
+-        window = {
++        win = {
+           border = "single",
+           padding = { 0, 0, 0, 0 },
+         },
+-- 
+2.49.0
+

@@ -150,13 +150,15 @@ require("lazy").setup({
     end,
   },
 
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   -- telescope
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-fzf-native.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      },
       "nvim-telescope/telescope-file-browser.nvim",
       "rcoedo/telescope-ghq.nvim",
       "rcarriga/nvim-notify",
@@ -191,24 +193,17 @@ require("lazy").setup({
               ["<c-bs>"] = actions.delete_buffer,
               ["<c-b>"] = actions.preview_scrolling_up,
               ["<c-f>"] = actions.preview_scrolling_down,
-              ["<c-space>"] = actions.toggle_selection,
+              ["<c-.>"] = actions.toggle_selection,
               ["<c-cr>"] = actions.select_vertical,
               ["<c-s-cr>"] = actions.select_horizontal,
+              ["<C-g>"] = actions.to_fuzzy_refine,
               ["<C-i>"] = "which_key",
             },
           },
         },
         layout_strategy = "flex",
         pickers = {
-          diagnostics = {
-            theme = "dropdown",
-            -- previewer = false,
-            layout_config = {
-              width = 1,
-            },
-          },
           buffers = {
-            theme = "dropdown",
             mappings = {
               i = {
                 ["<c-d>"] = actions.delete_buffer,
@@ -216,10 +211,15 @@ require("lazy").setup({
               },
             },
           },
+          live_grep = {},
           current_buffer_fuzzy_find = {
-            theme = "ivy",
+            theme = "cursor",
+            previewer = true,
             sorting_strategy = "ascending",
-            previewer = false,
+            layout_config = {
+              width = 0.8,
+              height = 0.4,
+            },
           },
           find_files = {
             theme = "ivy",
@@ -233,7 +233,7 @@ require("lazy").setup({
             override_file_sorter = true,
           },
           notify = {
-            theme = "dropdown",
+            theme = "ivy",
           },
           file_browser = {
             theme = "ivy",
@@ -255,6 +255,7 @@ require("lazy").setup({
           },
         },
       })
+
       telescope.load_extension("fzf")
       telescope.load_extension("notify")
       telescope.load_extension("file_browser")
@@ -277,10 +278,15 @@ require("lazy").setup({
     end,
   },
 
+  {
+    "HiPhish/rainbow-delimiters.nvim",
+    after = "nvim-treesitter/nvim-treesitter",
+  },
+
   -- treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects", "HiPhish/nvim-ts-rainbow2" },
+    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
@@ -297,7 +303,11 @@ require("lazy").setup({
           "html",
           "scss",
           "markdown",
+          "prisma",
         },
+        sync_install = false,
+        auto_install = true,
+        ignore_install = { "javascript" },
         indent = {
           enable = true,
         },
@@ -307,11 +317,7 @@ require("lazy").setup({
         autotag = {
           enable = true,
         },
-        -- rainbow = {
-        --   enable = true,
-        --   query = "rainbow-parens",
-        --   strategy = require("ts-rainbow").strategy.global,
-        -- },
+        modules = {},
         textobjects = {
           select = {
             enable = true,
@@ -353,14 +359,42 @@ require("lazy").setup({
           },
         },
       })
+
+      -- local rainbow_delimiters = require("rainbow-delimiters")
+      -- require("rainbow-delimiters.setup").setup({
+      --   strategy = {
+      --     [""] = rainbow_delimiters.strategy["global"],
+      --     vim = rainbow_delimiters.strategy["local"],
+      --   },
+      --   query = {
+      --     [""] = "rainbow-delimiters",
+      --     lua = "rainbow-blocks",
+      --   },
+      --   priority = {
+      --     [""] = 110,
+      --     lua = 210,
+      --   },
+      --   highlight = {
+      --     "RainbowDelimiterRed",
+      --     "RainbowDelimiterYellow",
+      --     "RainbowDelimiterBlue",
+      --     "RainbowDelimiterViolet",
+      --   },
+      -- })
     end,
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    after = "nvim-treesitter",
+    requires = "nvim-treesitter/nvim-treesitter",
   },
 
   -- Better indentation for .tsx
   "HerringtonDarkholme/yats.vim",
 
   -- Edgedb (no treesitter support as of April 2023)
-  "edgedb/edgedb-vim",
+  -- "edgedb/edgedb-vim",
 
   "windwp/nvim-ts-autotag",
   {
@@ -437,9 +471,12 @@ require("lazy").setup({
           -- ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
           ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
           ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          ["<CR>"] = cmp.mapping.confirm({ select = false, behavior = cmp.ConfirmBehavior.Insert }),
+          ["<CR>"] = cmp.mapping.confirm({
+            select = false,
+            behavior = cmp.ConfirmBehavior.Insert,
+          }),
           -- Toggle completion
-          ["<c-space>"] = cmp.mapping(function()
+          ["<c-cr>"] = cmp.mapping(function()
             if cmp.visible() then
               cmp.close()
             else
@@ -595,7 +632,7 @@ require("lazy").setup({
       }
 
       local option_overrides = {
-        ["tsserver"] = {
+        ["ts_ls"] = {
           single_file_support = false,
           root_dir = lspconfig.util.root_pattern("package.json"),
         },
@@ -699,7 +736,9 @@ require("lazy").setup({
             null_ls.builtins.formatting.shfmt,
             -- null_ls.builtins.code_actions.shellcheck,
             -- css
-            null_ls.builtins.diagnostics.stylelint.with({ only_local = "node_modules/.bin" }),
+            null_ls.builtins.diagnostics.stylelint.with({
+              only_local = "node_modules/.bin",
+            }),
             -- js/ts
             -- null_ls.builtins.formatting.rome.with({
             --   command = { "biome" },
@@ -733,8 +772,9 @@ require("lazy").setup({
           "taplo",
           "rust_analyzer",
           "biome",
+          "prismals",
           -- "rustfmt",
-          "tsserver",
+          "ts_ls",
           "vimls",
           "denols",
         },
@@ -751,7 +791,7 @@ require("lazy").setup({
     "folke/which-key.nvim",
     config = function()
       require("which-key").setup({
-        window = {
+        win = {
           border = "single",
           padding = { 0, 0, 0, 0 },
         },
