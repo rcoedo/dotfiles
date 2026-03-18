@@ -60,6 +60,8 @@ abbr mh "microk8s helm"
 abbr w "wezterm cli"
 abbr b bun
 abbr p pnpm
+abbr t tmux
+abbr tn "tmux new -c"
 
 alias vim nvim
 alias v "neovide --frame none"

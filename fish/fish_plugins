@@ -1,12 +1,9 @@
 jorgebucaran/fisher
 rcoedo/fuzzy-fish
-edc/bass
 rcoedo/dir-abbr-fish
 rcoedo/direnv-fish
 rcoedo/docker-utils-fish
 rcoedo/ghq-fish
-rcoedo/host-conf-fish
-rcoedo/kiex-fish
 rcoedo/prompt-fish
+rcoedo/host-conf-fish
 rcoedo/utils-fish
-rcoedo/asdf-fish
