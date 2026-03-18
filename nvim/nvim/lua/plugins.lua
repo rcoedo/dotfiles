@@ -53,10 +53,8 @@ require("lazy").setup({
   "tpope/vim-surround",
   "tpope/vim-abolish",
   "tpope/vim-repeat",
-  -- "tpope/vim-vinegar",
   "tpope/vim-ragtag",
   "tpope/vim-endwise",
-  -- "tpope/vim-speeddating",
   "tpope/vim-fugitive",
   "wellle/targets.vim",
   "ton/vim-bufsurf",
@@ -85,38 +83,6 @@ require("lazy").setup({
   -- 	end,
   -- },
 
-  -- {
-  --   "ggandor/leap.nvim",
-  --   config = function()
-  --     local leap = require("leap")
-  --     leap.opts.case_sensitive = true
-  --     leap.opts.max_highlighted_traversal_targets = 0
-  --   end,
-  -- },
-
-  -- {
-  -- 	"rapan931/lasterisk.nvim",
-  -- 	config = function()
-  -- 		vim.keymap.set("n", "*", function()
-  -- 			require("lasterisk").search()
-  -- 		end)
-  -- 		vim.keymap.set({ "n", "x" }, "g*", function()
-  -- 			require("lasterisk").search({ is_whole = false })
-  -- 		end)
-  -- 	end,
-  -- },
-  --
-  -- {
-  -- 	"mrjones2014/smart-splits.nvim",
-  -- 	lazy = false,
-  -- 	version = ">=1.0.0",
-  -- 	config = function()
-  -- 		require("smart-splits").setup({
-  -- 			at_edge = "stop",
-  -- 		})
-  -- 	end,
-  -- },
-
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
@@ -129,10 +95,7 @@ require("lazy").setup({
   },
 
   {
-    "norcalli/nvim-colorizer.lua",
-    config = function()
-      require("colorizer").setup()
-    end,
+    "nvim-mini/mini.nvim",
   },
 
   {
@@ -281,6 +244,7 @@ require("lazy").setup({
   {
     "HiPhish/rainbow-delimiters.nvim",
     after = "nvim-treesitter/nvim-treesitter",
+    requires = "nvim-treesitter/nvim-treesitter",
   },
 
   -- treesitter
@@ -359,28 +323,6 @@ require("lazy").setup({
           },
         },
       })
-
-      -- local rainbow_delimiters = require("rainbow-delimiters")
-      -- require("rainbow-delimiters.setup").setup({
-      --   strategy = {
-      --     [""] = rainbow_delimiters.strategy["global"],
-      --     vim = rainbow_delimiters.strategy["local"],
-      --   },
-      --   query = {
-      --     [""] = "rainbow-delimiters",
-      --     lua = "rainbow-blocks",
-      --   },
-      --   priority = {
-      --     [""] = 110,
-      --     lua = 210,
-      --   },
-      --   highlight = {
-      --     "RainbowDelimiterRed",
-      --     "RainbowDelimiterYellow",
-      --     "RainbowDelimiterBlue",
-      --     "RainbowDelimiterViolet",
-      --   },
-      -- })
     end,
   },
 
@@ -392,9 +334,6 @@ require("lazy").setup({
 
   -- Better indentation for .tsx
   "HerringtonDarkholme/yats.vim",
-
-  -- Edgedb (no treesitter support as of April 2023)
-  -- "edgedb/edgedb-vim",
 
   "windwp/nvim-ts-autotag",
   {
@@ -494,8 +433,8 @@ require("lazy").setup({
           format = function(entry, vim_item)
             local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
             local strings = vim.split(kind.kind, "%s", { trimempty = true })
-            kind.kind = " " .. strings[1] .. " "
-            kind.menu = "        " .. strings[2] --.. " (" .. entry.source.name .. ")"
+            kind.kind = " " .. (strings[1] or "") .. " "
+            kind.menu = "        " .. (strings[2] or "") --.. " (" .. entry.source.name .. ")"
             return kind
           end,
         },
@@ -586,7 +525,7 @@ require("lazy").setup({
     dependencies = {
       "williamboman/mason.nvim",
       "neovim/nvim-lspconfig",
-      "jose-elias-alvarez/null-ls.nvim",
+      "nvimtools/none-ls.nvim",
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
@@ -606,26 +545,6 @@ require("lazy").setup({
         },
       })
 
-      -- local function auto_on_buffer_save(callback)
-      --   return function(augroup, client, bufnr)
-      --     if client.supports_method("textDocument/formatting") then
-      --       vim.api.nvim_create_autocmd("BufWritePre", {
-      --         group = "Buffer",
-      --         buffer = bufnr,
-      --         callback = function()
-      --           callback(client, bufnr)
-      --           -- vim.lsp.buf.format({ async = false })
-      --           -- vim.lsp.buf.code_action({ context = { only = { "source.organizeImports.rome" } }, apply = true })
-      --         end,
-      --       })
-      --     end
-      --   end
-      -- end
-
-      -- local auto_format_on_save = auto_on_buffer_save(function()
-      --   vim.lsp.buf.format({ async = false })
-      -- end)
-
       local default_options = {
         flags = { debounce_text_changes = 150 },
         capabilities = cmp_nvim_lsp.default_capabilities(),
@@ -641,14 +560,10 @@ require("lazy").setup({
         },
         ["jsonls"] = {
           init_options = {
-            provideFormatter = false,
+            provideFormatter = true,
           },
         },
         ["biome"] = {
-          -- on_attach = function( client, bufnr)
-          --   local augroup = vim.api.nvim_create_augroup("RomeOnSave", {})
-          --   auto_format_on_save(augroup, client, bufnr)
-          -- end,
           root_dir = lspconfig.util.root_pattern("biome.json", "biome.jsonc"),
           single_file_support = false,
         },
@@ -691,39 +606,6 @@ require("lazy").setup({
           },
         },
         ["null-ls"] = {
-          -- on_attach = function(client, bufnr)
-          -- auto_format_on_save(client, bufnr)
-          -- end,
-          -- on_attach = function(attached_client, bufnr)
-          --   if attached_client.supports_method("textDocument/formatting") then
-          --   	local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-          --   	vim.api.nvim_create_autocmd("BufWritePre", {
-          --   		group = augroup,
-          --   		buffer = bufnr,
-          --   		callback = function()
-          --   			vim.lsp.buf.format({
-          --   				bufnr = bufnr,
-          --   				filter = function(client)
-          --   					return client.name == "null-ls"
-          --   				end,
-          --   			})
-          --   		end,
-          --   	})
-          --   end
-          -- on_attach = function(client, bufnr)
-          -- if client.supports_method("textDocument/formatting") then
-          --   vim.api.nvim_clear_autocmds({ group = LspActions, buffer = bufnr })
-          --   vim.api.nvim_create_autocmd("BufWritePre", {
-          --     group = LspActions,
-          --     buffer = bufnr,
-          --     callback = function()
-          --       -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-          --       -- on later neovim version, you should use vim.lsp.buf.format({ async = false }) instead
-          --       vim.lsp.buf.format({ async = false })
-          --     end,
-          --   })
-          -- end
-          -- end, -- end,
           sources = {
             -- fish
             null_ls.builtins.diagnostics.fish,
@@ -739,16 +621,6 @@ require("lazy").setup({
             null_ls.builtins.diagnostics.stylelint.with({
               only_local = "node_modules/.bin",
             }),
-            -- js/ts
-            -- null_ls.builtins.formatting.rome.with({
-            --   command = { "biome" },
-            --   extra_filetypes = { "jsonc" },
-            --   only_local = "node_modules/.bin",
-            -- }),
-            -- null_ls.builtins.code_actions.eslint.with({ only_local = "node_modules/.bin" }),
-            -- null_ls.builtins.diagnostics.eslint.with({ only_local = "node_modules/.bin" }),
-            -- null_ls.builtins.formatting.prettier.with({ only_local = "node_modules/.bin" }),
-            -- null_ls.builtins.completion.spell,
           },
         },
       }
