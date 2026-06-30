@@ -12,107 +12,27 @@ hs.application.enableSpotlightForNameSearches(true)
 hs.alert("Config loaded")
 
 local key = Spacebar.new({
-  prefix = "cmd-return",
+  prefix = "ctrl-space",
   bindings = {
     {
-      "cmd-return",
+      "ctrl-space",
       "hints",
       function()
         hs.hints.windowHints()
       end,
     },
     {
-      "g",
-      "g",
-      function()
-        app.launchOrFocus("IntelliJ IDEA")
-      end,
-    },
-    {
-      "i",
-      "intellij",
-      function()
-        app.launchOrFocus("IntelliJ IDEA")
-      end,
-    },
-    {
-      "u",
-      "android studio",
-      function()
-        app.launchOrFocus("Android Studio")
-      end,
-    },
-    {
-      "o",
-      "code",
-      function()
-        app.launchOrFocus("Visual Studio Code")
-      end,
-    },
-    --      {"r", "webstorm", function() app.launchOrFocus("WebStorm") end},
-    {
-      "e",
-      "emacs",
-      function()
-        app.launchOrFocus("Emacs.app")
-      end,
-    },
-    {
       "b",
-      "brave",
+      "browser",
       function()
         app.launchOrFocus("Brave Browser")
-      end,
-    },
-    {
-      "r",
-      "fork",
-      function()
-        app.launchOrFocus("Fork")
-      end,
-    },
-    {
-      "f",
-      "firefox",
-      function()
-        app.launchOrFocus("Firefox")
-      end,
-    },
-    --      {"r", "trello", function() app.launchOrFocus("Trello") end},
-    {
-      "a",
-      "safari",
-      function()
-        app.launchOrFocus("Safari")
       end,
     },
     {
       "t",
       "terminal",
       function()
-        app.launchOrFocus("iTerm")
-      end,
-    },
-    --      {"t", "terminal", function() app.launchOrFocus("Alacritty") end},
-    {
-      "c",
-      "chrome",
-      function()
-        app.launchOrSwitch("Google Chrome")
-      end,
-    },
-    {
-      "z",
-      "zoom",
-      function()
-        app.launchOrSwitch("zoom.us")
-      end,
-    },
-    {
-      "n",
-      "notion",
-      function()
-        app.launchOrSwitch("Notion")
+        app.launchOrFocus("WezTerm")
       end,
     },
     {
@@ -127,31 +47,10 @@ local key = Spacebar.new({
           end,
         },
         {
-          "d",
-          "discord",
-          function()
-            app.launchOrSwitch("Discord")
-          end,
-        },
-        {
-          "t",
-          "telegram",
-          function()
-            app.launchOrFocus("Telegram")
-          end,
-        },
-        {
           "l",
           "slack",
           function()
             app.launchOrFocus("Slack")
-          end,
-        },
-        {
-          "n",
-          "Nheko",
-          function()
-            app.launchOrFocus("Nheko")
           end,
         },
       },
