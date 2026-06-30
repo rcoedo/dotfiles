@@ -4,7 +4,7 @@ local act = wezterm.action
 local config = {
   color_scheme = "tokyonight",
   font = wezterm.font("JetBrainsMono NF", { weight = "Regular" }),
-  font_size = 14,
+  font_size = 15,
   audible_bell = "Disabled",
   window_decorations = "RESIZE",
   enable_kitty_keyboard = true,
@@ -27,6 +27,7 @@ local config = {
     { key = "d",         mods = "SUPER",       action = act.ScrollByPage(0.5) },
     { key = "/",         mods = "SUPER",       action = act.Search({ CaseSensitiveString = "" }) },
     { key = ".",         mods = "SUPER",       action = act.TogglePaneZoomState },
+    { key = "Enter",     mods = "SHIFT",       action = act.SendString("\x1b[13;2u") },
 
     -- Leader bindings
     { key = ",",         mods = "CTRL|LEADER", action = act.ActivatePaneDirection("Next") },
